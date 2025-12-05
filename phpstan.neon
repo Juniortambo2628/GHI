@@ -1,0 +1,18 @@
+includes:
+  - phpstan-baseline.neon
+
+parameters:
+  level: 6
+  paths:
+    - src
+    - admin
+  excludePaths:
+    - vendor
+    - node_modules
+    - dist
+  ignoreErrors:
+    - '#Method .* has no return type specified#'
+    - '#Parameter .* has no type specified#'
+    - identifier: missingType.iterableValue
+    - identifier: missingType.generics
+  tmpDir: .phpstan

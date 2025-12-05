@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build outputs
+dist/
+build/
+
+# Generated files
+*.min.js
+*.min.css
+
+# Third-party libraries
+lib/
+
+# Uploads and user-generated content
+uploads/
+
+# Logs
+*.log
+
+# Cache
+.cache/
+.phpstan/
+
+# Images and media
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.svg
+*.ico
+*.webp
+
+# Documentation
+*.md
+!README.md
+

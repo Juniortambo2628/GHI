@@ -1,0 +1,376 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Function clear_cache not found\\.$#"
+			count: 1
+			path: admin/api/update-order.php
+
+		-
+			message: "#^Function get_db not found\\.$#"
+			count: 1
+			path: admin/api/update-order.php
+
+		-
+			message: "#^Variable \\$db might not be defined\\.$#"
+			count: 2
+			path: admin/api/update-order.php
+
+		-
+			message: "#^Result of && is always true\\.$#"
+			count: 4
+			path: admin/cause-edit.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: admin/cause-view.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: admin/causes.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: admin/clear-cache.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: admin/contact-submissions.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: admin/contact-view.php
+
+		-
+			message: "#^Result of && is always true\\.$#"
+			count: 1
+			path: admin/contact-view.php
+
+		-
+			message: "#^Result of && is always true\\.$#"
+			count: 5
+			path: admin/event-edit.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: admin/event-view.php
+
+		-
+			message: "#^Result of && is always true\\.$#"
+			count: 4
+			path: admin/impact-edit.php
+
+		-
+			message: "#^Call to method all\\(\\) on an unknown class GHI\\\\Models\\\\Impact\\.$#"
+			count: 1
+			path: admin/impact-stories.php
+
+		-
+			message: "#^Call to method count\\(\\) on an unknown class GHI\\\\Models\\\\Impact\\.$#"
+			count: 1
+			path: admin/impact-stories.php
+
+		-
+			message: "#^Instantiated class GHI\\\\Models\\\\Impact not found\\.$#"
+			count: 1
+			path: admin/impact-stories.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: admin/impact-view.php
+
+		-
+			message: "#^Variable \\$item might not be defined\\.$#"
+			count: 8
+			path: admin/includes/grid-templates/event-card.php
+
+		-
+			message: "#^Variable \\$item might not be defined\\.$#"
+			count: 7
+			path: admin/includes/grid-templates/impact-card.php
+
+		-
+			message: "#^Variable \\$item might not be defined\\.$#"
+			count: 6
+			path: admin/includes/grid-templates/initiative-card.php
+
+		-
+			message: "#^Variable \\$item might not be defined\\.$#"
+			count: 10
+			path: admin/includes/grid-templates/story-card.php
+
+		-
+			message: "#^Constant ENVIRONMENT not found\\.$#"
+			count: 1
+			path: admin/includes/header.php
+
+		-
+			message: "#^Variable \\$addNewUrl might not be defined\\.$#"
+			count: 1
+			path: admin/includes/list-page-actions.php
+
+		-
+			message: "#^Variable \\$pageTitle might not be defined\\.$#"
+			count: 1
+			path: admin/includes/list-page-actions.php
+
+		-
+			message: "#^Variable \\$tableColumns might not be defined\\.$#"
+			count: 1
+			path: admin/includes/list-page-view-container.php
+
+		-
+			message: "#^Variable \\$tableData might not be defined\\.$#"
+			count: 2
+			path: admin/includes/list-page-view-container.php
+
+		-
+			message: "#^Variable \\$tableId might not be defined\\.$#"
+			count: 1
+			path: admin/includes/list-page-view-container.php
+
+		-
+			message: "#^Variable \\$viewSwitcherKey might not be defined\\.$#"
+			count: 1
+			path: admin/includes/list-page-view-container.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: admin/index.php
+
+		-
+			message: "#^Result of && is always true\\.$#"
+			count: 4
+			path: admin/initiative-edit.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: admin/initiative-view.php
+
+		-
+			message: "#^Strict comparison using \\!\\=\\= between '' and '' will always evaluate to false\\.$#"
+			count: 1
+			path: admin/login.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: admin/newsletter.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: admin/security.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: admin/sessions.php
+
+		-
+			message: "#^Offset 'heading' on array\\{image\\: string, heading\\: string, subheading\\: string, primary_text\\: string, primary_url\\: string, secondary_text\\: string, secondary_url\\: string\\} in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: admin/settings.php
+
+		-
+			message: "#^Offset 'image' on array\\{image\\: string, heading\\: string, subheading\\: string, primary_text\\: string, primary_url\\: string, secondary_text\\: string, secondary_url\\: string\\} in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: admin/settings.php
+
+		-
+			message: "#^Result of && is always true\\.$#"
+			count: 6
+			path: admin/settings.php
+
+		-
+			message: "#^Result of && is always true\\.$#"
+			count: 4
+			path: admin/story-edit.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: admin/story-view.php
+
+		-
+			message: "#^Cannot unset offset 'created_at' on array\\{firstname\\: string, lastname\\: string, email\\: string, subject\\: string, message\\: string, status\\: 'new'\\}\\.$#"
+			count: 1
+			path: api/contact.php
+
+		-
+			message: "#^Variable \\$email on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: api/contact.php
+
+		-
+			message: "#^Parameter \\#1 \\$params of static method Stripe\\\\Checkout\\\\Session\\:\\:create\\(\\) expects array\\{adaptive_pricing\\?\\: array\\{enabled\\?\\: bool\\}, after_expiration\\?\\: array\\{recovery\\?\\: array\\{allow_promotion_codes\\?\\: bool, enabled\\: bool\\}\\}, allow_promotion_codes\\?\\: bool, automatic_tax\\?\\: array\\{enabled\\: bool, liability\\?\\: array\\{account\\?\\: string, type\\: string\\}\\}, billing_address_collection\\?\\: string, branding_settings\\?\\: array\\{background_color\\?\\: string\\|null, border_style\\?\\: string\\|null, button_color\\?\\: string\\|null, display_name\\?\\: string, font_family\\?\\: string\\|null, icon\\?\\: array\\{file\\?\\: string, type\\: string, url\\?\\: string\\}, logo\\?\\: array\\{file\\?\\: string, type\\: string, url\\?\\: string\\}\\}, cancel_url\\?\\: string, client_reference_id\\?\\: string, \\.\\.\\.\\}\\|null, array\\{payment_method_types\\: array\\{'card'\\}, line_items\\: array\\{array\\{price_data\\: array\\{currency\\: 'usd', product_data\\: array\\{name\\: non\\-falsy\\-string, description\\: mixed\\}, unit_amount\\: int\\}, quantity\\: 1\\}\\}, mode\\: 'payment'\\|'subscription', success_url\\: non\\-falsy\\-string, cancel_url\\: non\\-falsy\\-string, customer_email\\: mixed, metadata\\: array\\{donation_id\\: int\\<min, \\-1\\>\\|int\\<1, max\\>, donor_name\\: non\\-falsy\\-string\\}\\} given\\.$#"
+			count: 1
+			path: api/donate.php
+
+		-
+			message: "#^Parameter \\#2 \\$message of function log_message expects string, array given\\.$#"
+			count: 1
+			path: api/donate.php
+
+		-
+			message: "#^Parameter \\#3 \\$context of function log_message expects array, string given\\.$#"
+			count: 1
+			path: api/donate.php
+
+		-
+			message: "#^Variable \\$email on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: api/newsletter.php
+
+		-
+			message: "#^Variable \\$email on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: api/volunteer.php
+
+		-
+			message: "#^Variable \\$firstname in empty\\(\\) always exists and is not falsy\\.$#"
+			count: 1
+			path: api/volunteer.php
+
+		-
+			message: "#^Constant ENVIRONMENT not found\\.$#"
+			count: 4
+			path: includes/email-config.php
+
+		-
+			message: "#^Constant IS_PRODUCTION not found\\.$#"
+			count: 2
+			path: includes/email-config.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: includes/footer.php
+
+		-
+			message: "#^Constant ENVIRONMENT not found\\.$#"
+			count: 2
+			path: includes/functions.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: includes/header.php
+
+		-
+			message: "#^Offset 'education'\\|'empowerment'\\|'health'\\|'livelihood'\\|'partnerships' on array\\{education\\: int, health\\: int, livelihood\\: int, empowerment\\: int, partnerships\\: int\\} on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: scripts/seed-database.php
+
+		-
+			message: "#^Access to an undefined property GHI\\\\Models\\\\Donation\\:\\:\\$conn\\.$#"
+			count: 4
+			path: src/Models/Donation.php
+
+		-
+			message: "#^Call to an undefined static method GHI\\\\Models\\\\BaseModel\\:\\:insert\\(\\)\\.$#"
+			count: 1
+			path: src/Models/Donation.php
+
+		-
+			message: "#^Constant ENVIRONMENT not found\\.$#"
+			count: 1
+			path: src/Services/DatabaseService.php
+
+		-
+			message: "#^Static property GHI\\\\Services\\\\HttpService\\:\\:\\$defaultOptions is never read, only written\\.$#"
+			count: 1
+			path: src/Services/HttpService.php
+
+		-
+			message: "#^Variable \\$originalMemoryLimit in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 2
+			path: src/Services/ImageService.php
+
+		-
+			message: "#^Parameter \\#2 \\$level of class Monolog\\\\Handler\\\\StreamHandler constructor expects 100\\|200\\|250\\|300\\|400\\|500\\|550\\|600\\|'ALERT'\\|'alert'\\|'CRITICAL'\\|'critical'\\|'DEBUG'\\|'debug'\\|'EMERGENCY'\\|'emergency'\\|'ERROR'\\|'error'\\|'INFO'\\|'info'\\|'NOTICE'\\|'notice'\\|'WARNING'\\|'warning'\\|Monolog\\\\Level, int given\\.$#"
+			count: 1
+			path: src/Services/LoggerService.php
+
+		-
+			message: "#^Parameter \\#3 \\$level of class Monolog\\\\Handler\\\\RotatingFileHandler constructor expects 100\\|200\\|250\\|300\\|400\\|500\\|550\\|600\\|'ALERT'\\|'alert'\\|'CRITICAL'\\|'critical'\\|'DEBUG'\\|'debug'\\|'EMERGENCY'\\|'emergency'\\|'ERROR'\\|'error'\\|'INFO'\\|'info'\\|'NOTICE'\\|'notice'\\|'WARNING'\\|'warning'\\|Monolog\\\\Level, int given\\.$#"
+			count: 1
+			path: src/Services/LoggerService.php
+
+		-
+			message: "#^Variable \\$pageData might not be defined\\.$#"
+			count: 14
+			path: src/Views/causes/content.php
+
+		-
+			message: "#^Variable \\$pageData might not be defined\\.$#"
+			count: 14
+			path: src/Views/events/content.php
+
+		-
+			message: "#^Variable \\$pageData might not be defined\\.$#"
+			count: 4
+			path: src/Views/home/counter.php
+
+		-
+			message: "#^Variable \\$pageData might not be defined\\.$#"
+			count: 1
+			path: src/Views/home/foundation.php
+
+		-
+			message: "#^Variable \\$pageData might not be defined\\.$#"
+			count: 1
+			path: src/Views/home/initiatives.php
+
+		-
+			message: "#^Variable \\$pageData might not be defined\\.$#"
+			count: 1
+			path: src/Views/home/objectives.php
+
+		-
+			message: "#^Variable \\$pageData might not be defined\\.$#"
+			count: 14
+			path: src/Views/impact/content.php
+
+		-
+			message: "#^Variable \\$pageData might not be defined\\.$#"
+			count: 14
+			path: src/Views/initiatives/content.php
+
+		-
+			message: "#^Constant ENVIRONMENT not found\\.$#"
+			count: 1
+			path: src/Views/partials/head.php
+
+		-
+			message: "#^Variable \\$pageDescription might not be defined\\.$#"
+			count: 1
+			path: src/Views/partials/head.php
+
+		-
+			message: "#^Variable \\$pageTitle might not be defined\\.$#"
+			count: 1
+			path: src/Views/partials/head.php
+
+		-
+			message: "#^Variable \\$preloadImages might not be defined\\.$#"
+			count: 1
+			path: src/Views/partials/head.php
+
+		-
+			message: "#^Variable \\$themeCssFile might not be defined\\.$#"
+			count: 3
+			path: src/Views/partials/head.php
+
+		-
+			message: "#^Variable \\$pageData might not be defined\\.$#"
+			count: 14
+			path: src/Views/stories/content.php

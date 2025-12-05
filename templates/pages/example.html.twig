@@ -1,0 +1,17 @@
+{% extends "layouts/base.html.twig" %}
+
+{% block title %}Example Page - {{ parent() }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Example Page</h1>
+    <p>This is an example Twig template.</p>
+    
+    <p>Site Name: {{ site_name }}</p>
+    <p>Base URL: {{ base_url }}</p>
+    
+    <p>Formatted Date: {{ format_date('now') }}</p>
+    <p>Truncated Text: {{ truncate('This is a long text that will be truncated', 20) }}</p>
+</div>
+{% endblock %}
+

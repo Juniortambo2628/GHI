@@ -1,0 +1,11 @@
+{
+  "entryPoints": ["./js/**/*.ts", "./js/**/*.js"],
+  "out": "./docs/js",
+  "exclude": ["**/node_modules/**", "**/vendor/**", "**/dist/**"],
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeExternals": true,
+  "includeVersion": true,
+  "readme": "none",
+  "plugin": []
+}

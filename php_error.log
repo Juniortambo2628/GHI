@@ -1,0 +1,511 @@
+[11-Nov-2025 10:26:06 America/New_York] PHP Parse error:  syntax error, unexpected token "?", expecting "->" or "?->" or "{" or "[" in C:\wamp64\www\GHI\includes\email-config.php on line 158
+[11-Nov-2025 10:33:00 America/New_York] PHP Fatal error:  Cannot redeclare send_email() (previously declared in C:\wamp64\www\GHI\includes\functions.php:255) in C:\wamp64\www\GHI\includes\email-config.php on line 72
+[11-Nov-2025 10:33:00 America/New_York] PHP Stack trace:
+[11-Nov-2025 10:33:00 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\index.php:0
+[11-Nov-2025 10:33:00 America/New_York] PHP   2. require_once() C:\wamp64\www\GHI\index.php:8
+[15-Nov-2025 04:48:35 America/New_York] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'location' in 'field list' in C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Driver\PDO\Connection.php:59
+Stack trace:
+#0 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Driver\PDO\Connection.php(59): PDO->prepare('SELECT COUNT(DI...')
+#1 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(1100): Doctrine\DBAL\Driver\PDO\Connection->prepare('SELECT COUNT(DI...')
+#2 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(593): Doctrine\DBAL\Connection->executeQuery('SELECT COUNT(DI...', Array, Array)
+#3 C:\wamp64\www\GHI\src\Models\ImpactActivity.php(51): Doctrine\DBAL\Connection->fetchAssociative('SELECT COUNT(DI...', Array)
+#4 C:\wamp64\www\GHI\src\Services\HomePageService.php(225): GHI\Models\ImpactActivity->getCommunitiesCount()
+#5 C:\wamp64\www\GHI\src\Services\CacheService.php(65): GHI\Services\HomePageService->GHI\Services\{closure}()
+#6 C:\wamp64\www\GHI\src\Services\CacheService.php(175): GHI\Services\CacheService::get('homepage.commun...', Object(Closure), 3600)
+#7 C:\wamp64\www\GHI\includes\functions.php(335): GHI\Services\CacheService::remember('homepage.commun...', Object(Closure), 3600)
+#8 C:\wamp64\www\GHI\src\Services\HomePageService.php(224): cache_remember('homepage.commun...', Object(Closure), 3600)
+#9 C:\wamp64\www\GHI\src\Services\HomePageService.php(56): GHI\Services\HomePageService->getCounters()
+#10 C:\wamp64\www\GHI\index.php(21): GHI\Services\HomePageService->getPageData()
+#11 {main}
+
+Next Doctrine\DBAL\Driver\PDO\Exception: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'location' in 'field list' in C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Driver\PDO\Exception.php:24
+Stack trace:
+#0 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Driver\PDO\Connection.php(64): Doctrine\DBAL\Driver\PDO\Exception::new(Object(PDOException))
+#1 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(1100): Doctrine\DBAL\Driver\PDO\Connection->prepare('SELECT COUNT(DI...')
+#2 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(593): Doctrine\DBAL\Connection->executeQuery('SELECT COUNT(DI...', Array, Array)
+#3 C:\wamp64\www\GHI\src\Models\ImpactActivity.php(51): Doctrine\DBAL\Connection->fetchAssociative('SELECT COUNT(DI...', Array)
+#4 C:\wamp64\www\GHI\src\Services\HomePageService.php(225): GHI\Models\ImpactActivity->getCommunitiesCount()
+#5 C:\wamp64\www\GHI\src\Services\CacheService.php(65): GHI\Services\HomePageService->GHI\Services\{closure}()
+#6 C:\wamp64\www\GHI\src\Services\CacheService.php(175): GHI\Services\CacheService::get('homepage.commun...', Object(Closure), 3600)
+#7 C:\wamp64\www\GHI\includes\functions.php(335): GHI\Services\CacheService::remember('homepage.commun...', Object(Closure), 3600)
+#8 C:\wamp64\www\GHI\src\Services\HomePageService.php(224): cache_remember('homepage.commun...', Object(Closure), 3600)
+#9 C:\wamp64\www\GHI\src\Services\HomePageService.php(56): GHI\Services\HomePageService->getCounters()
+#10 C:\wamp64\www\GHI\index.php(21): GHI\Services\HomePageService->getPageData()
+#11 {main}
+
+Next Doctrine\DBAL\Exception\InvalidFieldNameException: An exception occurred while executing a query: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'location' in 'field list' in C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Driver\API\MySQL\ExceptionConverter.php:69
+Stack trace:
+#0 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(1976): Doctrine\DBAL\Driver\API\MySQL\ExceptionConverter->convert(Object(Doctrine\DBAL\Driver\PDO\Exception), Object(Doctrine\DBAL\Query))
+#1 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(1918): Doctrine\DBAL\Connection->handleDriverException(Object(Doctrine\DBAL\Driver\PDO\Exception), Object(Doctrine\DBAL\Query))
+#2 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(1111): Doctrine\DBAL\Connection->convertExceptionDuringQuery(Object(Doctrine\DBAL\Driver\PDO\Exception), 'SELECT COUNT(DI...', Array, Array)
+#3 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(593): Doctrine\DBAL\Connection->executeQuery('SELECT COUNT(DI...', Array, Array)
+#4 C:\wamp64\www\GHI\src\Models\ImpactActivity.php(51): Doctrine\DBAL\Connection->fetchAssociative('SELECT COUNT(DI...', Array)
+#5 C:\wamp64\www\GHI\src\Services\HomePageService.php(225): GHI\Models\ImpactActivity->getCommunitiesCount()
+#6 C:\wamp64\www\GHI\src\Services\CacheService.php(65): GHI\Services\HomePageService->GHI\Services\{closure}()
+#7 C:\wamp64\www\GHI\src\Services\CacheService.php(175): GHI\Services\CacheService::get('homepage.commun...', Object(Closure), 3600)
+#8 C:\wamp64\www\GHI\includes\functions.php(335): GHI\Services\CacheService::remember('homepage.commun...', Object(Closure), 3600)
+#9 C:\wamp64\www\GHI\src\Services\HomePageService.php(224): cache_remember('homepage.commun...', Object(Closure), 3600)
+#10 C:\wamp64\www\GHI\src\Services\HomePageService.php(56): GHI\Services\HomePageService->getCounters()
+#11 C:\wamp64\www\GHI\index.php(21): GHI\Services\HomePageService->getPageData()
+#12 {main}
+  thrown in C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Driver\API\MySQL\ExceptionConverter.php on line 69
+[15-Nov-2025 04:55:32 America/New_York] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'location' in 'field list' in C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Driver\PDO\Connection.php:59
+Stack trace:
+#0 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Driver\PDO\Connection.php(59): PDO->prepare('SELECT COUNT(DI...')
+#1 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(1100): Doctrine\DBAL\Driver\PDO\Connection->prepare('SELECT COUNT(DI...')
+#2 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(593): Doctrine\DBAL\Connection->executeQuery('SELECT COUNT(DI...', Array, Array)
+#3 C:\wamp64\www\GHI\src\Models\ImpactActivity.php(51): Doctrine\DBAL\Connection->fetchAssociative('SELECT COUNT(DI...', Array)
+#4 C:\wamp64\www\GHI\src\Services\HomePageService.php(225): GHI\Models\ImpactActivity->getCommunitiesCount()
+#5 C:\wamp64\www\GHI\src\Services\CacheService.php(65): GHI\Services\HomePageService->GHI\Services\{closure}()
+#6 C:\wamp64\www\GHI\src\Services\CacheService.php(175): GHI\Services\CacheService::get('homepage.commun...', Object(Closure), 3600)
+#7 C:\wamp64\www\GHI\includes\functions.php(335): GHI\Services\CacheService::remember('homepage.commun...', Object(Closure), 3600)
+#8 C:\wamp64\www\GHI\src\Services\HomePageService.php(224): cache_remember('homepage.commun...', Object(Closure), 3600)
+#9 C:\wamp64\www\GHI\src\Services\HomePageService.php(56): GHI\Services\HomePageService->getCounters()
+#10 C:\wamp64\www\GHI\index.php(21): GHI\Services\HomePageService->getPageData()
+#11 {main}
+
+Next Doctrine\DBAL\Driver\PDO\Exception: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'location' in 'field list' in C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Driver\PDO\Exception.php:24
+Stack trace:
+#0 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Driver\PDO\Connection.php(64): Doctrine\DBAL\Driver\PDO\Exception::new(Object(PDOException))
+#1 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(1100): Doctrine\DBAL\Driver\PDO\Connection->prepare('SELECT COUNT(DI...')
+#2 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(593): Doctrine\DBAL\Connection->executeQuery('SELECT COUNT(DI...', Array, Array)
+#3 C:\wamp64\www\GHI\src\Models\ImpactActivity.php(51): Doctrine\DBAL\Connection->fetchAssociative('SELECT COUNT(DI...', Array)
+#4 C:\wamp64\www\GHI\src\Services\HomePageService.php(225): GHI\Models\ImpactActivity->getCommunitiesCount()
+#5 C:\wamp64\www\GHI\src\Services\CacheService.php(65): GHI\Services\HomePageService->GHI\Services\{closure}()
+#6 C:\wamp64\www\GHI\src\Services\CacheService.php(175): GHI\Services\CacheService::get('homepage.commun...', Object(Closure), 3600)
+#7 C:\wamp64\www\GHI\includes\functions.php(335): GHI\Services\CacheService::remember('homepage.commun...', Object(Closure), 3600)
+#8 C:\wamp64\www\GHI\src\Services\HomePageService.php(224): cache_remember('homepage.commun...', Object(Closure), 3600)
+#9 C:\wamp64\www\GHI\src\Services\HomePageService.php(56): GHI\Services\HomePageService->getCounters()
+#10 C:\wamp64\www\GHI\index.php(21): GHI\Services\HomePageService->getPageData()
+#11 {main}
+
+Next Doctrine\DBAL\Exception\InvalidFieldNameException: An exception occurred while executing a query: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'location' in 'field list' in C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Driver\API\MySQL\ExceptionConverter.php:69
+Stack trace:
+#0 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(1976): Doctrine\DBAL\Driver\API\MySQL\ExceptionConverter->convert(Object(Doctrine\DBAL\Driver\PDO\Exception), Object(Doctrine\DBAL\Query))
+#1 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(1918): Doctrine\DBAL\Connection->handleDriverException(Object(Doctrine\DBAL\Driver\PDO\Exception), Object(Doctrine\DBAL\Query))
+#2 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(1111): Doctrine\DBAL\Connection->convertExceptionDuringQuery(Object(Doctrine\DBAL\Driver\PDO\Exception), 'SELECT COUNT(DI...', Array, Array)
+#3 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(593): Doctrine\DBAL\Connection->executeQuery('SELECT COUNT(DI...', Array, Array)
+#4 C:\wamp64\www\GHI\src\Models\ImpactActivity.php(51): Doctrine\DBAL\Connection->fetchAssociative('SELECT COUNT(DI...', Array)
+#5 C:\wamp64\www\GHI\src\Services\HomePageService.php(225): GHI\Models\ImpactActivity->getCommunitiesCount()
+#6 C:\wamp64\www\GHI\src\Services\CacheService.php(65): GHI\Services\HomePageService->GHI\Services\{closure}()
+#7 C:\wamp64\www\GHI\src\Services\CacheService.php(175): GHI\Services\CacheService::get('homepage.commun...', Object(Closure), 3600)
+#8 C:\wamp64\www\GHI\includes\functions.php(335): GHI\Services\CacheService::remember('homepage.commun...', Object(Closure), 3600)
+#9 C:\wamp64\www\GHI\src\Services\HomePageService.php(224): cache_remember('homepage.commun...', Object(Closure), 3600)
+#10 C:\wamp64\www\GHI\src\Services\HomePageService.php(56): GHI\Services\HomePageService->getCounters()
+#11 C:\wamp64\www\GHI\index.php(21): GHI\Services\HomePageService->getPageData()
+#12 {main}
+  thrown in C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Driver\API\MySQL\ExceptionConverter.php on line 69
+[15-Nov-2025 05:16:49 America/New_York] PHP Warning:  Undefined array key "initiative" in C:\wamp64\www\GHI\src\Views\home\gallery.php on line 22
+[15-Nov-2025 05:16:49 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:16:49 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\index.php:0
+[15-Nov-2025 05:16:49 America/New_York] PHP   2. require() C:\wamp64\www\GHI\index.php:35
+[15-Nov-2025 05:16:49 America/New_York] PHP Fatal error:  Uncaught TypeError: e(): Argument #1 ($string) must be of type string, null given, called in C:\wamp64\www\GHI\src\Views\home\gallery.php on line 22 and defined in C:\wamp64\www\GHI\includes\functions.php:23
+Stack trace:
+#0 C:\wamp64\www\GHI\src\Views\home\gallery.php(22): e(NULL)
+#1 C:\wamp64\www\GHI\index.php(35): require('C:\\wamp64\\www\\G...')
+#2 {main}
+  thrown in C:\wamp64\www\GHI\includes\functions.php on line 23
+[15-Nov-2025 05:34:37 America/New_York] PHP Warning:  require(C:\wamp64\www\GHI\src\Views\causes/../../includes/sidebar.php): Failed to open stream: No such file or directory in C:\wamp64\www\GHI\src\Views\causes\content.php on line 19
+[15-Nov-2025 05:34:37 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:34:37 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\causes.php:0
+[15-Nov-2025 05:34:37 America/New_York] PHP   2. require() C:\wamp64\www\GHI\causes.php:32
+[15-Nov-2025 05:34:37 America/New_York] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\wamp64\www\GHI\src\Views\causes/../../includes/sidebar.php' (include_path='.;C:\php\pear') in C:\wamp64\www\GHI\src\Views\causes\content.php:19
+Stack trace:
+#0 C:\wamp64\www\GHI\causes.php(32): require()
+#1 {main}
+  thrown in C:\wamp64\www\GHI\src\Views\causes\content.php on line 19
+[15-Nov-2025 05:35:18 America/New_York] PHP Fatal error:  Uncaught TypeError: Cannot assign PDO to property GHI\Services\InitiativesPageService::$db of type Database in C:\wamp64\www\GHI\src\Services\InitiativesPageService.php:16
+Stack trace:
+#0 C:\wamp64\www\GHI\initiatives.php(20): GHI\Services\InitiativesPageService->__construct()
+#1 {main}
+  thrown in C:\wamp64\www\GHI\src\Services\InitiativesPageService.php on line 16
+[15-Nov-2025 05:35:41 America/New_York] PHP Warning:  require(C:\wamp64\www\GHI\src\Views\events/../../includes/sidebar.php): Failed to open stream: No such file or directory in C:\wamp64\www\GHI\src\Views\events\content.php on line 19
+[15-Nov-2025 05:35:41 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:35:41 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\events.php:0
+[15-Nov-2025 05:35:41 America/New_York] PHP   2. require() C:\wamp64\www\GHI\events.php:32
+[15-Nov-2025 05:35:41 America/New_York] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\wamp64\www\GHI\src\Views\events/../../includes/sidebar.php' (include_path='.;C:\php\pear') in C:\wamp64\www\GHI\src\Views\events\content.php:19
+Stack trace:
+#0 C:\wamp64\www\GHI\events.php(32): require()
+#1 {main}
+  thrown in C:\wamp64\www\GHI\src\Views\events\content.php on line 19
+[15-Nov-2025 05:35:59 America/New_York] PHP Warning:  require(C:\wamp64\www\GHI\src\Views\impact/../../includes/sidebar.php): Failed to open stream: No such file or directory in C:\wamp64\www\GHI\src\Views\impact\content.php on line 19
+[15-Nov-2025 05:35:59 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:35:59 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:35:59 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:35:59 America/New_York] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\wamp64\www\GHI\src\Views\impact/../../includes/sidebar.php' (include_path='.;C:\php\pear') in C:\wamp64\www\GHI\src\Views\impact\content.php:19
+Stack trace:
+#0 C:\wamp64\www\GHI\impact.php(32): require()
+#1 {main}
+  thrown in C:\wamp64\www\GHI\src\Views\impact\content.php on line 19
+[15-Nov-2025 05:36:24 America/New_York] PHP Warning:  require(C:\wamp64\www\GHI\src\Views\stories/../../includes/sidebar.php): Failed to open stream: No such file or directory in C:\wamp64\www\GHI\src\Views\stories\content.php on line 19
+[15-Nov-2025 05:36:24 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:36:24 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\stories.php:0
+[15-Nov-2025 05:36:24 America/New_York] PHP   2. require() C:\wamp64\www\GHI\stories.php:32
+[15-Nov-2025 05:36:24 America/New_York] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\wamp64\www\GHI\src\Views\stories/../../includes/sidebar.php' (include_path='.;C:\php\pear') in C:\wamp64\www\GHI\src\Views\stories\content.php:19
+Stack trace:
+#0 C:\wamp64\www\GHI\stories.php(32): require()
+#1 {main}
+  thrown in C:\wamp64\www\GHI\src\Views\stories\content.php on line 19
+[15-Nov-2025 05:57:32 America/New_York] PHP Warning:  Undefined array key "lives_impacted" in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:32 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:32 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:32 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:32 America/New_York] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:32 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:32 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:32 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:32 America/New_York] PHP   3. number_format($num = NULL) C:\wamp64\www\GHI\src\Views\impact\content.php:61
+[15-Nov-2025 05:57:33 America/New_York] PHP Warning:  Undefined array key "lives_impacted" in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP   3. number_format($num = NULL) C:\wamp64\www\GHI\src\Views\impact\content.php:61
+[15-Nov-2025 05:57:33 America/New_York] PHP Warning:  Undefined array key "lives_impacted" in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP   3. number_format($num = NULL) C:\wamp64\www\GHI\src\Views\impact\content.php:61
+[15-Nov-2025 05:57:33 America/New_York] PHP Warning:  Undefined array key "lives_impacted" in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP   3. number_format($num = NULL) C:\wamp64\www\GHI\src\Views\impact\content.php:61
+[15-Nov-2025 05:57:33 America/New_York] PHP Warning:  Undefined array key "lives_impacted" in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP   3. number_format($num = NULL) C:\wamp64\www\GHI\src\Views\impact\content.php:61
+[15-Nov-2025 05:57:33 America/New_York] PHP Warning:  Undefined array key "lives_impacted" in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP   3. number_format($num = NULL) C:\wamp64\www\GHI\src\Views\impact\content.php:61
+[15-Nov-2025 05:57:33 America/New_York] PHP Warning:  Undefined array key "lives_impacted" in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP   3. number_format($num = NULL) C:\wamp64\www\GHI\src\Views\impact\content.php:61
+[15-Nov-2025 05:57:33 America/New_York] PHP Warning:  Undefined array key "lives_impacted" in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP   3. number_format($num = NULL) C:\wamp64\www\GHI\src\Views\impact\content.php:61
+[15-Nov-2025 05:57:33 America/New_York] PHP Warning:  Undefined array key "lives_impacted" in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP   3. number_format($num = NULL) C:\wamp64\www\GHI\src\Views\impact\content.php:61
+[15-Nov-2025 05:57:33 America/New_York] PHP Warning:  Undefined array key "lives_impacted" in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP   3. number_format($num = NULL) C:\wamp64\www\GHI\src\Views\impact\content.php:61
+[15-Nov-2025 05:57:33 America/New_York] PHP Warning:  Undefined array key "lives_impacted" in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP   3. number_format($num = NULL) C:\wamp64\www\GHI\src\Views\impact\content.php:61
+[15-Nov-2025 05:57:33 America/New_York] PHP Warning:  Undefined array key "lives_impacted" in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\wamp64\www\GHI\src\Views\impact\content.php on line 61
+[15-Nov-2025 05:57:33 America/New_York] PHP Stack trace:
+[15-Nov-2025 05:57:33 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[15-Nov-2025 05:57:33 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[15-Nov-2025 05:57:33 America/New_York] PHP   3. number_format($num = NULL) C:\wamp64\www\GHI\src\Views\impact\content.php:61
+[18-Nov-2025 16:57:29 America/New_York] PHP Deprecated:  Optional parameter $size declared before required parameter $outputPath is implicitly treated as a required parameter in C:\wamp64\www\GHI\src\Services\ImageService.php on line 75
+[18-Nov-2025 16:57:29 America/New_York] PHP Stack trace:
+[18-Nov-2025 16:57:29 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\causes.php:0
+[18-Nov-2025 16:57:29 America/New_York] PHP   2. require() C:\wamp64\www\GHI\causes.php:32
+[18-Nov-2025 16:57:29 America/New_York] PHP   3. getResponsiveImage($filename = 'pexels-lagosfoodbank-6472487.jpg', $options = ['width' => 400, 'height' => 300, 'alt' => 'Education for All', 'class' => 'card-img-top', 'loading' => 'lazy', 'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw']) C:\wamp64\www\GHI\src\Views\causes\content.php:46
+[18-Nov-2025 16:57:29 America/New_York] PHP   4. class_exists($class = '\\GHI\\Services\\ImageService') C:\wamp64\www\GHI\includes\functions.php:300
+[18-Nov-2025 16:57:29 America/New_York] PHP   5. Composer\Autoload\ClassLoader->loadClass($class = 'GHI\\Services\\ImageService') C:\wamp64\www\GHI\includes\functions.php:300
+[18-Nov-2025 16:57:29 America/New_York] PHP   6. Composer\Autoload\{closure:C:\wamp64\www\GHI\vendor\composer\ClassLoader.php:575-577}($file = 'C:\\wamp64\\www\\GHI\\vendor\\composer/../../src/Services/ImageService.php') C:\wamp64\www\GHI\vendor\composer\ClassLoader.php:427
+[18-Nov-2025 16:58:35 America/New_York] PHP Deprecated:  Optional parameter $size declared before required parameter $outputPath is implicitly treated as a required parameter in C:\wamp64\www\GHI\src\Services\ImageService.php on line 75
+[18-Nov-2025 16:58:35 America/New_York] PHP Stack trace:
+[18-Nov-2025 16:58:35 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\initiatives.php:0
+[18-Nov-2025 16:58:35 America/New_York] PHP   2. require() C:\wamp64\www\GHI\initiatives.php:32
+[18-Nov-2025 16:58:35 America/New_York] PHP   3. getResponsiveImage($filename = 'pexels-finalchoice-147015110-34599374.jpg', $options = ['width' => 400, 'height' => 300, 'alt' => 'Shelter Improvement Project', 'class' => 'card-img-top', 'loading' => 'lazy', 'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw']) C:\wamp64\www\GHI\src\Views\initiatives\content.php:56
+[18-Nov-2025 16:58:35 America/New_York] PHP   4. class_exists($class = '\\GHI\\Services\\ImageService') C:\wamp64\www\GHI\includes\functions.php:300
+[18-Nov-2025 16:58:35 America/New_York] PHP   5. Composer\Autoload\ClassLoader->loadClass($class = 'GHI\\Services\\ImageService') C:\wamp64\www\GHI\includes\functions.php:300
+[18-Nov-2025 16:58:35 America/New_York] PHP   6. Composer\Autoload\{closure:C:\wamp64\www\GHI\vendor\composer\ClassLoader.php:575-577}($file = 'C:\\wamp64\\www\\GHI\\vendor\\composer/../../src/Services/ImageService.php') C:\wamp64\www\GHI\vendor\composer\ClassLoader.php:427
+[18-Nov-2025 16:58:53 America/New_York] PHP Deprecated:  Optional parameter $size declared before required parameter $outputPath is implicitly treated as a required parameter in C:\wamp64\www\GHI\src\Services\ImageService.php on line 75
+[18-Nov-2025 16:58:53 America/New_York] PHP Stack trace:
+[18-Nov-2025 16:58:53 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\events.php:0
+[18-Nov-2025 16:58:53 America/New_York] PHP   2. require() C:\wamp64\www\GHI\events.php:32
+[18-Nov-2025 16:58:53 America/New_York] PHP   3. getResponsiveImage($filename = 'pexels-rdne-6646918.jpg', $options = ['width' => 400, 'height' => 300, 'alt' => 'Clean Water Project Completion', 'class' => 'card-img-top', 'loading' => 'lazy', 'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw']) C:\wamp64\www\GHI\src\Views\events\content.php:46
+[18-Nov-2025 16:58:53 America/New_York] PHP   4. class_exists($class = '\\GHI\\Services\\ImageService') C:\wamp64\www\GHI\includes\functions.php:300
+[18-Nov-2025 16:58:53 America/New_York] PHP   5. Composer\Autoload\ClassLoader->loadClass($class = 'GHI\\Services\\ImageService') C:\wamp64\www\GHI\includes\functions.php:300
+[18-Nov-2025 16:58:53 America/New_York] PHP   6. Composer\Autoload\{closure:C:\wamp64\www\GHI\vendor\composer\ClassLoader.php:575-577}($file = 'C:\\wamp64\\www\\GHI\\vendor\\composer/../../src/Services/ImageService.php') C:\wamp64\www\GHI\vendor\composer\ClassLoader.php:427
+[18-Nov-2025 16:59:12 America/New_York] PHP Deprecated:  Optional parameter $size declared before required parameter $outputPath is implicitly treated as a required parameter in C:\wamp64\www\GHI\src\Services\ImageService.php on line 75
+[18-Nov-2025 16:59:12 America/New_York] PHP Stack trace:
+[18-Nov-2025 16:59:12 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[18-Nov-2025 16:59:12 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[18-Nov-2025 16:59:12 America/New_York] PHP   3. getResponsiveImage($filename = 'pexels-lagosfoodbank-6472487.jpg', $options = ['width' => 400, 'height' => 300, 'alt' => 'Feeding Families in Zanzibar', 'class' => 'card-img-top', 'loading' => 'lazy', 'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw']) C:\wamp64\www\GHI\src\Views\impact\content.php:55
+[18-Nov-2025 16:59:12 America/New_York] PHP   4. class_exists($class = '\\GHI\\Services\\ImageService') C:\wamp64\www\GHI\includes\functions.php:300
+[18-Nov-2025 16:59:12 America/New_York] PHP   5. Composer\Autoload\ClassLoader->loadClass($class = 'GHI\\Services\\ImageService') C:\wamp64\www\GHI\includes\functions.php:300
+[18-Nov-2025 16:59:12 America/New_York] PHP   6. Composer\Autoload\{closure:C:\wamp64\www\GHI\vendor\composer\ClassLoader.php:575-577}($file = 'C:\\wamp64\\www\\GHI\\vendor\\composer/../../src/Services/ImageService.php') C:\wamp64\www\GHI\vendor\composer\ClassLoader.php:427
+[18-Nov-2025 16:59:29 America/New_York] PHP Deprecated:  Optional parameter $size declared before required parameter $outputPath is implicitly treated as a required parameter in C:\wamp64\www\GHI\src\Services\ImageService.php on line 75
+[18-Nov-2025 16:59:29 America/New_York] PHP Stack trace:
+[18-Nov-2025 16:59:29 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\stories.php:0
+[18-Nov-2025 16:59:29 America/New_York] PHP   2. require() C:\wamp64\www\GHI\stories.php:32
+[18-Nov-2025 16:59:29 America/New_York] PHP   3. getResponsiveImage($filename = 'pexels-ezeguna_graphy-sulaiman-muhammad-2153324075-34536427.jpg', $options = ['width' => 400, 'height' => 300, 'alt' => 'Agricultural Training Boosting Incomes', 'class' => 'card-img-top', 'loading' => 'lazy', 'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw']) C:\wamp64\www\GHI\src\Views\stories\content.php:46
+[18-Nov-2025 16:59:29 America/New_York] PHP   4. class_exists($class = '\\GHI\\Services\\ImageService') C:\wamp64\www\GHI\includes\functions.php:300
+[18-Nov-2025 16:59:29 America/New_York] PHP   5. Composer\Autoload\ClassLoader->loadClass($class = 'GHI\\Services\\ImageService') C:\wamp64\www\GHI\includes\functions.php:300
+[18-Nov-2025 16:59:29 America/New_York] PHP   6. Composer\Autoload\{closure:C:\wamp64\www\GHI\vendor\composer\ClassLoader.php:575-577}($file = 'C:\\wamp64\\www\\GHI\\vendor\\composer/../../src/Services/ImageService.php') C:\wamp64\www\GHI\vendor\composer\ClassLoader.php:427
+[18-Nov-2025 16:59:29 America/New_York] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 79847424 bytes) in C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Encoders\WebpEncoder.php on line 24
+[18-Nov-2025 16:59:29 America/New_York] PHP Stack trace:
+[18-Nov-2025 16:59:29 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\stories.php:0
+[18-Nov-2025 16:59:29 America/New_York] PHP   2. require() C:\wamp64\www\GHI\stories.php:32
+[18-Nov-2025 16:59:29 America/New_York] PHP   3. getResponsiveImage($filename = 'pexels-ezeguna_graphy-sulaiman-muhammad-2153324075-34536427.jpg', $options = ['width' => 400, 'height' => 300, 'alt' => 'Agricultural Training Boosting Incomes', 'class' => 'card-img-top', 'loading' => 'lazy', 'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw']) C:\wamp64\www\GHI\src\Views\stories\content.php:46
+[18-Nov-2025 16:59:29 America/New_York] PHP   4. GHI\Services\ImageService->convertToWebP($imagePath = 'Banners-and-portraits/pexels-ezeguna_graphy-sulaiman-muhammad-2153324075-34536427.jpg', $quality = *uninitialized*) C:\wamp64\www\GHI\includes\functions.php:313
+[18-Nov-2025 16:59:29 America/New_York] PHP   5. Intervention\Image\Image->toWebp(...$options = variadic(85)) C:\wamp64\www\GHI\src\Services\ImageService.php:307
+[18-Nov-2025 16:59:29 America/New_York] PHP   6. Intervention\Image\Image->encode($encoder = class Intervention\Image\Encoders\WebpEncoder { protected Intervention\Image\Interfaces\DriverInterface $driver = *uninitialized*; public int $quality = 85; public ?bool $strip = NULL }) C:\wamp64\www\GHI\vendor\intervention\image\src\Image.php:993
+[18-Nov-2025 16:59:29 America/New_York] PHP   7. Intervention\Image\Drivers\Gd\Encoders\WebpEncoder->encode($image = class Intervention\Image\Image { public $width = 5472; public $height = 3648 }) C:\wamp64\www\GHI\vendor\intervention\image\src\Image.php:287
+[18-Nov-2025 16:59:29 America/New_York] PHP   8. Intervention\Image\Drivers\AbstractEncoder->createEncodedImage($callback = class Closure { public $static = ['image' => class Intervention\Image\Image { ... }, 'quality' => 85]; public $this = class Intervention\Image\Drivers\Gd\Encoders\WebpEncoder { protected Intervention\Image\Interfaces\DriverInterface $driver = class Intervention\Image\Drivers\Gd\Driver { ... }; public int $quality = 85; public ?bool $strip = NULL }; public $parameter = ['$pointer' => '<required>'] }, $mediaType = 'image/webp') C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Encoders\WebpEncoder.php:23
+[18-Nov-2025 16:59:29 America/New_York] PHP   9. Intervention\Image\Drivers\Gd\Encoders\WebpEncoder->Intervention\Image\Drivers\Gd\Encoders\{closure:C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Encoders\WebpEncoder.php:23-25}($pointer = resource(259) of type (stream)) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\AbstractEncoder.php:38
+[18-Nov-2025 16:59:29 America/New_York] PHP  10. imagewebp($image = class GdImage {  }, $file = resource(259) of type (stream), $quality = 85) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Encoders\WebpEncoder.php:24
+[18-Nov-2025 17:10:40 America/New_York] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 79847425 bytes) in C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Cloner.php on line 61
+[18-Nov-2025 17:10:40 America/New_York] PHP Stack trace:
+[18-Nov-2025 17:10:40 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\stories.php:0
+[18-Nov-2025 17:10:40 America/New_York] PHP   2. require() C:\wamp64\www\GHI\stories.php:32
+[18-Nov-2025 17:10:40 America/New_York] PHP   3. getResponsiveImage($filename = 'pexels-ezeguna_graphy-sulaiman-muhammad-2153324075-34536427.jpg', $options = ['width' => 400, 'height' => 300, 'alt' => 'Agricultural Training Boosting Incomes', 'class' => 'card-img-top', 'loading' => 'lazy', 'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw']) C:\wamp64\www\GHI\src\Views\stories\content.php:46
+[18-Nov-2025 17:10:40 America/New_York] PHP   4. GHI\Services\ImageService->generateResponsiveSizes($imagePath = 'Banners-and-portraits/pexels-ezeguna_graphy-sulaiman-muhammad-2153324075-34536427.jpg', $sizes = [0 => 400, 1 => 800, 2 => 1200, 3 => 1920]) C:\wamp64\www\GHI\includes\functions.php:330
+[18-Nov-2025 17:10:40 America/New_York] PHP   5. Intervention\Image\Image->__clone() C:\wamp64\www\GHI\src\Services\ImageService.php:266
+[18-Nov-2025 17:10:40 America/New_York] PHP   6. Intervention\Image\Drivers\Gd\Core->__clone() C:\wamp64\www\GHI\vendor\intervention\image\src\Image.php:1079
+[18-Nov-2025 17:10:40 America/New_York] PHP   7. Intervention\Image\Drivers\Gd\Frame->__clone() C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Core.php:114
+[18-Nov-2025 17:10:40 America/New_York] PHP   8. Intervention\Image\Drivers\Gd\Cloner::clone($gd = class GdImage {  }) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Frame.php:191
+[18-Nov-2025 17:10:40 America/New_York] PHP   9. Intervention\Image\Drivers\Gd\Cloner::cloneEmpty($gd = class GdImage {  }, $size = *uninitialized*, $background = *uninitialized*) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Cloner.php:25
+[18-Nov-2025 17:10:40 America/New_York] PHP  10. imagefill($image = class GdImage {  }, $x = 0, $y = 0, $color = 2147483647) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Cloner.php:61
+[18-Nov-2025 17:11:01 America/New_York] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 20480 bytes) in C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Cloner.php on line 51
+[18-Nov-2025 17:11:01 America/New_York] PHP Stack trace:
+[18-Nov-2025 17:11:01 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[18-Nov-2025 17:11:01 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[18-Nov-2025 17:11:01 America/New_York] PHP   3. getResponsiveImage($filename = 'pexels-lagosfoodbank-6472487.jpg', $options = ['width' => 400, 'height' => 300, 'alt' => 'Feeding Families in Zanzibar', 'class' => 'card-img-top', 'loading' => 'lazy', 'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw']) C:\wamp64\www\GHI\src\Views\impact\content.php:55
+[18-Nov-2025 17:11:01 America/New_York] PHP   4. GHI\Services\ImageService->generateResponsiveSizes($imagePath = 'Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg', $sizes = [0 => 400, 1 => 800, 2 => 1200, 3 => 1920]) C:\wamp64\www\GHI\includes\functions.php:330
+[18-Nov-2025 17:11:01 America/New_York] PHP   5. Intervention\Image\Image->__clone() C:\wamp64\www\GHI\src\Services\ImageService.php:266
+[18-Nov-2025 17:11:01 America/New_York] PHP   6. Intervention\Image\Drivers\Gd\Core->__clone() C:\wamp64\www\GHI\vendor\intervention\image\src\Image.php:1079
+[18-Nov-2025 17:11:01 America/New_York] PHP   7. Intervention\Image\Drivers\Gd\Frame->__clone() C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Core.php:114
+[18-Nov-2025 17:11:01 America/New_York] PHP   8. Intervention\Image\Drivers\Gd\Cloner::clone($gd = class GdImage {  }) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Frame.php:191
+[18-Nov-2025 17:11:01 America/New_York] PHP   9. Intervention\Image\Drivers\Gd\Cloner::cloneEmpty($gd = class GdImage {  }, $size = *uninitialized*, $background = *uninitialized*) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Cloner.php:25
+[18-Nov-2025 17:11:01 America/New_York] PHP  10. imagecreatetruecolor($width = 4688, $height = 7025) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Cloner.php:51
+[18-Nov-2025 17:11:06 America/New_York] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 20480 bytes) in C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Cloner.php on line 51
+[18-Nov-2025 17:11:06 America/New_York] PHP Stack trace:
+[18-Nov-2025 17:11:06 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\impact.php:0
+[18-Nov-2025 17:11:06 America/New_York] PHP   2. require() C:\wamp64\www\GHI\impact.php:32
+[18-Nov-2025 17:11:06 America/New_York] PHP   3. getResponsiveImage($filename = 'pexels-lagosfoodbank-6472487.jpg', $options = ['width' => 400, 'height' => 300, 'alt' => 'Feeding Families in Zanzibar', 'class' => 'card-img-top', 'loading' => 'lazy', 'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw']) C:\wamp64\www\GHI\src\Views\impact\content.php:55
+[18-Nov-2025 17:11:06 America/New_York] PHP   4. GHI\Services\ImageService->generateResponsiveSizes($imagePath = 'Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg', $sizes = [0 => 400, 1 => 800, 2 => 1200, 3 => 1920]) C:\wamp64\www\GHI\includes\functions.php:330
+[18-Nov-2025 17:11:06 America/New_York] PHP   5. Intervention\Image\Image->__clone() C:\wamp64\www\GHI\src\Services\ImageService.php:266
+[18-Nov-2025 17:11:06 America/New_York] PHP   6. Intervention\Image\Drivers\Gd\Core->__clone() C:\wamp64\www\GHI\vendor\intervention\image\src\Image.php:1079
+[18-Nov-2025 17:11:06 America/New_York] PHP   7. Intervention\Image\Drivers\Gd\Frame->__clone() C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Core.php:114
+[18-Nov-2025 17:11:06 America/New_York] PHP   8. Intervention\Image\Drivers\Gd\Cloner::clone($gd = class GdImage {  }) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Frame.php:191
+[18-Nov-2025 17:11:06 America/New_York] PHP   9. Intervention\Image\Drivers\Gd\Cloner::cloneEmpty($gd = class GdImage {  }, $size = *uninitialized*, $background = *uninitialized*) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Cloner.php:25
+[18-Nov-2025 17:11:06 America/New_York] PHP  10. imagecreatetruecolor($width = 4688, $height = 7025) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Cloner.php:51
+[18-Nov-2025 17:35:15 America/New_York] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 20480 bytes) in C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Cloner.php on line 51
+[18-Nov-2025 17:35:15 America/New_York] PHP Stack trace:
+[18-Nov-2025 17:35:15 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\causes.php:0
+[18-Nov-2025 17:35:15 America/New_York] PHP   2. require() C:\wamp64\www\GHI\causes.php:32
+[18-Nov-2025 17:35:15 America/New_York] PHP   3. getResponsiveImage($filename = 'pexels-lagosfoodbank-6472487.jpg', $options = ['width' => 400, 'height' => 300, 'alt' => 'Education for All', 'class' => 'card-img-top', 'loading' => 'lazy', 'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw']) C:\wamp64\www\GHI\src\Views\causes\content.php:46
+[18-Nov-2025 17:35:15 America/New_York] PHP   4. GHI\Services\ImageService->generateResponsiveSizes($imagePath = 'Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg', $sizes = [0 => 400, 1 => 800, 2 => 1200, 3 => 1920]) C:\wamp64\www\GHI\includes\functions.php:330
+[18-Nov-2025 17:35:15 America/New_York] PHP   5. Intervention\Image\Image->__clone() C:\wamp64\www\GHI\src\Services\ImageService.php:266
+[18-Nov-2025 17:35:15 America/New_York] PHP   6. Intervention\Image\Drivers\Gd\Core->__clone() C:\wamp64\www\GHI\vendor\intervention\image\src\Image.php:1079
+[18-Nov-2025 17:35:15 America/New_York] PHP   7. Intervention\Image\Drivers\Gd\Frame->__clone() C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Core.php:114
+[18-Nov-2025 17:35:15 America/New_York] PHP   8. Intervention\Image\Drivers\Gd\Cloner::clone($gd = class GdImage {  }) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Frame.php:191
+[18-Nov-2025 17:35:15 America/New_York] PHP   9. Intervention\Image\Drivers\Gd\Cloner::cloneEmpty($gd = class GdImage {  }, $size = *uninitialized*, $background = *uninitialized*) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Cloner.php:25
+[18-Nov-2025 17:35:15 America/New_York] PHP  10. imagecreatetruecolor($width = 4688, $height = 7025) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Cloner.php:51
+[18-Nov-2025 17:35:40 America/New_York] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 88473601 bytes) in C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Cloner.php on line 61
+[18-Nov-2025 17:35:40 America/New_York] PHP Stack trace:
+[18-Nov-2025 17:35:40 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\initiatives.php:0
+[18-Nov-2025 17:35:40 America/New_York] PHP   2. require() C:\wamp64\www\GHI\initiatives.php:32
+[18-Nov-2025 17:35:40 America/New_York] PHP   3. getResponsiveImage($filename = 'pexels-finalchoice-147015110-34599374.jpg', $options = ['width' => 400, 'height' => 300, 'alt' => 'Shelter Improvement Project', 'class' => 'card-img-top', 'loading' => 'lazy', 'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw']) C:\wamp64\www\GHI\src\Views\initiatives\content.php:56
+[18-Nov-2025 17:35:40 America/New_York] PHP   4. GHI\Services\ImageService->generateResponsiveSizes($imagePath = 'Banners-and-portraits/pexels-finalchoice-147015110-34599374.jpg', $sizes = [0 => 400, 1 => 800, 2 => 1200, 3 => 1920]) C:\wamp64\www\GHI\includes\functions.php:330
+[18-Nov-2025 17:35:40 America/New_York] PHP   5. Intervention\Image\Image->__clone() C:\wamp64\www\GHI\src\Services\ImageService.php:266
+[18-Nov-2025 17:35:40 America/New_York] PHP   6. Intervention\Image\Drivers\Gd\Core->__clone() C:\wamp64\www\GHI\vendor\intervention\image\src\Image.php:1079
+[18-Nov-2025 17:35:40 America/New_York] PHP   7. Intervention\Image\Drivers\Gd\Frame->__clone() C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Core.php:114
+[18-Nov-2025 17:35:40 America/New_York] PHP   8. Intervention\Image\Drivers\Gd\Cloner::clone($gd = class GdImage {  }) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Frame.php:191
+[18-Nov-2025 17:35:40 America/New_York] PHP   9. Intervention\Image\Drivers\Gd\Cloner::cloneEmpty($gd = class GdImage {  }, $size = *uninitialized*, $background = *uninitialized*) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Cloner.php:25
+[18-Nov-2025 17:35:40 America/New_York] PHP  10. imagefill($image = class GdImage {  }, $x = 0, $y = 0, $color = 2147483647) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Cloner.php:61
+[18-Nov-2025 17:40:21 America/New_York] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 9830401 bytes) in C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Cloner.php on line 61
+[18-Nov-2025 17:40:21 America/New_York] PHP Stack trace:
+[18-Nov-2025 17:40:21 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\initiatives.php:0
+[18-Nov-2025 17:40:21 America/New_York] PHP   2. require() C:\wamp64\www\GHI\initiatives.php:32
+[18-Nov-2025 17:40:21 America/New_York] PHP   3. getResponsiveImage($filename = 'pexels-finalchoice-147015110-34599374.jpg', $options = ['width' => 400, 'height' => 300, 'alt' => 'Shelter Improvement Project', 'class' => 'card-img-top', 'loading' => 'lazy', 'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw']) C:\wamp64\www\GHI\src\Views\initiatives\content.php:56
+[18-Nov-2025 17:40:21 America/New_York] PHP   4. GHI\Services\ImageService->convertToWebP($imagePath = 'Banners-and-portraits/pexels-finalchoice-147015110-34599374.jpg', $quality = 85, $maxDimension = 1920) C:\wamp64\www\GHI\includes\functions.php:334
+[18-Nov-2025 17:40:21 America/New_York] PHP   5. GHI\Services\ImageService->resizeIfNeeded($fullPath = 'C:\\wamp64\\www\\GHI\\config/../Banners-and-portraits/pexels-finalchoice-147015110-34599374.jpg', $maxDimension = 1920) C:\wamp64\www\GHI\src\Services\ImageService.php:388
+[18-Nov-2025 17:40:21 America/New_York] PHP   6. Intervention\Image\Image->scale($width = 1920, $height = 1920) C:\wamp64\www\GHI\src\Services\ImageService.php:345
+[18-Nov-2025 17:40:21 America/New_York] PHP   7. Intervention\Image\Image->modify($modifier = class Intervention\Image\Modifiers\ScaleModifier { protected Intervention\Image\Interfaces\DriverInterface $driver = *uninitialized*; public ?int $width = 1920; public ?int $height = 1920 }) C:\wamp64\www\GHI\vendor\intervention\image\src\Image.php:655
+[18-Nov-2025 17:40:21 America/New_York] PHP   8. Intervention\Image\Drivers\Gd\Modifiers\ResizeModifier->apply($image = class Intervention\Image\Image { public $width = 5760; public $height = 3840 }) C:\wamp64\www\GHI\vendor\intervention\image\src\Image.php:267
+[18-Nov-2025 17:40:21 America/New_York] PHP   9. Intervention\Image\Drivers\Gd\Modifiers\ResizeModifier->resizeFrame($frame = class Intervention\Image\Drivers\Gd\Frame { public $delay = 0; public $left = 0; public $top = 0; public $dispose = 1 }, $resizeTo = class Intervention\Image\Geometry\Rectangle { public $width = 1920; public $height = 1280; public $pivot = class Intervention\Image\Geometry\Point { protected int $x = 0; protected int $y = 0 } }) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Modifiers\ResizeModifier.php:28
+[18-Nov-2025 17:40:21 America/New_York] PHP  10. Intervention\Image\Drivers\Gd\Cloner::cloneEmpty($gd = class GdImage {  }, $size = class Intervention\Image\Geometry\Rectangle { public $width = 1920; public $height = 1280; public $pivot = class Intervention\Image\Geometry\Point { protected int $x = 0; protected int $y = 0 } }, $background = *uninitialized*) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Modifiers\ResizeModifier.php:40
+[18-Nov-2025 17:40:21 America/New_York] PHP  11. imagefill($image = class GdImage {  }, $x = 0, $y = 0, $color = 2147483647) C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Cloner.php:61
+[18-Nov-2025 17:40:28 America/New_York] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 20480 bytes) in C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Decoders\FilePathImageDecoder.php on line 35
+[18-Nov-2025 17:40:28 America/New_York] PHP Stack trace:
+[18-Nov-2025 17:40:28 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\causes.php:0
+[18-Nov-2025 17:40:28 America/New_York] PHP   2. require() C:\wamp64\www\GHI\causes.php:32
+[18-Nov-2025 17:40:28 America/New_York] PHP   3. getResponsiveImage($filename = 'pexels-lagosfoodbank-6472487.jpg', $options = ['width' => 400, 'height' => 300, 'alt' => 'Education for All', 'class' => 'card-img-top', 'loading' => 'lazy', 'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw']) C:\wamp64\www\GHI\src\Views\causes\content.php:46
+[18-Nov-2025 17:40:28 America/New_York] PHP   4. GHI\Services\ImageService->convertToWebP($imagePath = 'Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg', $quality = 85, $maxDimension = 1920) C:\wamp64\www\GHI\includes\functions.php:334
+[18-Nov-2025 17:40:28 America/New_York] PHP   5. GHI\Services\ImageService->resizeIfNeeded($fullPath = 'C:\\wamp64\\www\\GHI\\config/../Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg', $maxDimension = 1920) C:\wamp64\www\GHI\src\Services\ImageService.php:388
+[18-Nov-2025 17:40:28 America/New_York] PHP   6. Intervention\Image\ImageManager->read($input = 'C:\\wamp64\\www\\GHI\\config/../Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg', $decoders = *uninitialized*) C:\wamp64\www\GHI\src\Services\ImageService.php:344
+[18-Nov-2025 17:40:28 America/New_York] PHP   7. Intervention\Image\Drivers\AbstractDriver->handleInput($input = 'C:\\wamp64\\www\\GHI\\config/../Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg', $decoders = []) C:\wamp64\www\GHI\vendor\intervention\image\src\ImageManager.php:87
+[18-Nov-2025 17:40:28 America/New_York] PHP   8. Intervention\Image\InputHandler->handle($input = 'C:\\wamp64\\www\\GHI\\config/../Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg') C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\AbstractDriver.php:56
+[18-Nov-2025 17:40:28 America/New_York] PHP   9. Intervention\Image\Drivers\Gd\Decoders\FilePathImageDecoder->decode($input = 'C:\\wamp64\\www\\GHI\\config/../Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg') C:\wamp64\www\GHI\vendor\intervention\image\src\InputHandler.php:97
+[18-Nov-2025 17:40:28 America/New_York] PHP  10. imagecreatefromjpeg($filename = 'C:\\wamp64\\www\\GHI\\config/../Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg') C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Decoders\FilePathImageDecoder.php:35
+[18-Nov-2025 17:41:17 America/New_York] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 20480 bytes) in C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Decoders\FilePathImageDecoder.php on line 35
+[18-Nov-2025 17:41:17 America/New_York] PHP Stack trace:
+[18-Nov-2025 17:41:17 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\causes.php:0
+[18-Nov-2025 17:41:17 America/New_York] PHP   2. require() C:\wamp64\www\GHI\causes.php:32
+[18-Nov-2025 17:41:17 America/New_York] PHP   3. getResponsiveImage($filename = 'pexels-lagosfoodbank-6472487.jpg', $options = ['width' => 400, 'height' => 300, 'alt' => 'Education for All', 'class' => 'card-img-top', 'loading' => 'lazy', 'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw']) C:\wamp64\www\GHI\src\Views\causes\content.php:46
+[18-Nov-2025 17:41:17 America/New_York] PHP   4. GHI\Services\ImageService->convertToWebP($imagePath = 'Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg', $quality = 85, $maxDimension = 1920) C:\wamp64\www\GHI\includes\functions.php:334
+[18-Nov-2025 17:41:17 America/New_York] PHP   5. GHI\Services\ImageService->resizeIfNeeded($fullPath = 'C:\\wamp64\\www\\GHI\\config/../Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg', $maxDimension = 1920) C:\wamp64\www\GHI\src\Services\ImageService.php:388
+[18-Nov-2025 17:41:17 America/New_York] PHP   6. Intervention\Image\ImageManager->read($input = 'C:\\wamp64\\www\\GHI\\config/../Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg', $decoders = *uninitialized*) C:\wamp64\www\GHI\src\Services\ImageService.php:344
+[18-Nov-2025 17:41:17 America/New_York] PHP   7. Intervention\Image\Drivers\AbstractDriver->handleInput($input = 'C:\\wamp64\\www\\GHI\\config/../Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg', $decoders = []) C:\wamp64\www\GHI\vendor\intervention\image\src\ImageManager.php:87
+[18-Nov-2025 17:41:17 America/New_York] PHP   8. Intervention\Image\InputHandler->handle($input = 'C:\\wamp64\\www\\GHI\\config/../Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg') C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\AbstractDriver.php:56
+[18-Nov-2025 17:41:17 America/New_York] PHP   9. Intervention\Image\Drivers\Gd\Decoders\FilePathImageDecoder->decode($input = 'C:\\wamp64\\www\\GHI\\config/../Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg') C:\wamp64\www\GHI\vendor\intervention\image\src\InputHandler.php:97
+[18-Nov-2025 17:41:17 America/New_York] PHP  10. imagecreatefromjpeg($filename = 'C:\\wamp64\\www\\GHI\\config/../Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg') C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Decoders\FilePathImageDecoder.php:35
+[18-Nov-2025 17:41:21 America/New_York] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 20480 bytes) in C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Decoders\FilePathImageDecoder.php on line 35
+[18-Nov-2025 17:41:21 America/New_York] PHP Stack trace:
+[18-Nov-2025 17:41:21 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\causes.php:0
+[18-Nov-2025 17:41:21 America/New_York] PHP   2. require() C:\wamp64\www\GHI\causes.php:32
+[18-Nov-2025 17:41:21 America/New_York] PHP   3. getResponsiveImage($filename = 'pexels-lagosfoodbank-6472487.jpg', $options = ['width' => 400, 'height' => 300, 'alt' => 'Education for All', 'class' => 'card-img-top', 'loading' => 'lazy', 'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw']) C:\wamp64\www\GHI\src\Views\causes\content.php:46
+[18-Nov-2025 17:41:21 America/New_York] PHP   4. GHI\Services\ImageService->convertToWebP($imagePath = 'Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg', $quality = 85, $maxDimension = 1920) C:\wamp64\www\GHI\includes\functions.php:334
+[18-Nov-2025 17:41:21 America/New_York] PHP   5. GHI\Services\ImageService->resizeIfNeeded($fullPath = 'C:\\wamp64\\www\\GHI\\config/../Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg', $maxDimension = 1920) C:\wamp64\www\GHI\src\Services\ImageService.php:388
+[18-Nov-2025 17:41:21 America/New_York] PHP   6. Intervention\Image\ImageManager->read($input = 'C:\\wamp64\\www\\GHI\\config/../Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg', $decoders = *uninitialized*) C:\wamp64\www\GHI\src\Services\ImageService.php:344
+[18-Nov-2025 17:41:21 America/New_York] PHP   7. Intervention\Image\Drivers\AbstractDriver->handleInput($input = 'C:\\wamp64\\www\\GHI\\config/../Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg', $decoders = []) C:\wamp64\www\GHI\vendor\intervention\image\src\ImageManager.php:87
+[18-Nov-2025 17:41:21 America/New_York] PHP   8. Intervention\Image\InputHandler->handle($input = 'C:\\wamp64\\www\\GHI\\config/../Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg') C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\AbstractDriver.php:56
+[18-Nov-2025 17:41:21 America/New_York] PHP   9. Intervention\Image\Drivers\Gd\Decoders\FilePathImageDecoder->decode($input = 'C:\\wamp64\\www\\GHI\\config/../Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg') C:\wamp64\www\GHI\vendor\intervention\image\src\InputHandler.php:97
+[18-Nov-2025 17:41:21 America/New_York] PHP  10. imagecreatefromjpeg($filename = 'C:\\wamp64\\www\\GHI\\config/../Banners-and-portraits/pexels-lagosfoodbank-6472487.jpg') C:\wamp64\www\GHI\vendor\intervention\image\src\Drivers\Gd\Decoders\FilePathImageDecoder.php:35
+[18-Nov-2025 23:31:42 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined method GHI\Services\DatabaseService::getInstance() in C:\wamp64\www\GHI\database\run-donations-migration.php:17
+Stack trace:
+#0 {main}
+  thrown in C:\wamp64\www\GHI\database\run-donations-migration.php on line 17
+[18-Nov-2025 23:33:05 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function db() in C:\wamp64\www\GHI\database\run-donations-migration.php:15
+Stack trace:
+#0 {main}
+  thrown in C:\wamp64\www\GHI\database\run-donations-migration.php on line 15
+[19-Nov-2025 15:49:23 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function GHI\Repositories\db() in C:\wamp64\www\GHI\src\Repositories\BaseRepository.php:20
+Stack trace:
+#0 C:\wamp64\www\GHI\src\Models\Event.php(22): GHI\Repositories\BaseRepository->__construct()
+#1 C:\wamp64\www\GHI\src\Services\HomePageService.php(27): GHI\Models\Event->__construct()
+#2 C:\wamp64\www\GHI\index.php(20): GHI\Services\HomePageService->__construct()
+#3 {main}
+  thrown in C:\wamp64\www\GHI\src\Repositories\BaseRepository.php on line 20
+[19-Nov-2025 15:51:32 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function db() in C:\wamp64\www\GHI\src\Repositories\BaseRepository.php:20
+Stack trace:
+#0 C:\wamp64\www\GHI\src\Models\Event.php(22): GHI\Repositories\BaseRepository->__construct()
+#1 C:\wamp64\www\GHI\src\Services\HomePageService.php(27): GHI\Models\Event->__construct()
+#2 C:\wamp64\www\GHI\index.php(20): GHI\Services\HomePageService->__construct()
+#3 {main}
+  thrown in C:\wamp64\www\GHI\src\Repositories\BaseRepository.php on line 20
+[19-Nov-2025 15:51:40 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function db() in C:\wamp64\www\GHI\src\Repositories\BaseRepository.php:20
+Stack trace:
+#0 C:\wamp64\www\GHI\src\Models\Event.php(22): GHI\Repositories\BaseRepository->__construct()
+#1 C:\wamp64\www\GHI\src\Services\HomePageService.php(27): GHI\Models\Event->__construct()
+#2 C:\wamp64\www\GHI\index.php(20): GHI\Services\HomePageService->__construct()
+#3 {main}
+  thrown in C:\wamp64\www\GHI\src\Repositories\BaseRepository.php on line 20
+[19-Nov-2025 15:54:13 America/New_York] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'date' in 'where clause' in C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Driver\PDO\Connection.php:59
+Stack trace:
+#0 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Driver\PDO\Connection.php(59): PDO->prepare('SELECT * FROM e...')
+#1 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(1100): Doctrine\DBAL\Driver\PDO\Connection->prepare('SELECT * FROM e...')
+#2 C:\wamp64\www\GHI\src\Repositories\BaseRepository.php(29): Doctrine\DBAL\Connection->executeQuery('SELECT * FROM e...', Array)
+#3 C:\wamp64\www\GHI\src\Repositories\BaseRepository.php(37): GHI\Repositories\BaseRepository->query('SELECT * FROM e...', Array)
+#4 C:\wamp64\www\GHI\src\Repositories\EventRepository.php(24): GHI\Repositories\BaseRepository->fetchAll('SELECT * FROM e...', Array)
+#5 C:\wamp64\www\GHI\src\Models\Event.php(38): GHI\Repositories\EventRepository->findUpcoming(3)
+#6 C:\wamp64\www\GHI\src\Services\HomePageService.php(163): GHI\Models\Event->getUpcoming(3)
+#7 C:\wamp64\www\GHI\src\Services\CacheService.php(67): GHI\Services\HomePageService->GHI\Services\{closure}()
+#8 C:\wamp64\www\GHI\src\Services\CacheService.php(181): GHI\Services\CacheService::get('homepage.upcomi...', Object(Closure), 1800)
+#9 C:\wamp64\www\GHI\includes\functions.php(638): GHI\Services\CacheService::remember('homepage.upcomi...', Object(Closure), 1800)
+#10 C:\wamp64\www\GHI\src\Services\HomePageService.php(163): cache_remember('homepage.upcomi...', Object(Closure), 1800)
+#11 C:\wamp64\www\GHI\src\Services\HomePageService.php(50): GHI\Services\HomePageService->getUpcomingEvents()
+#12 C:\wamp64\www\GHI\index.php(21): GHI\Services\HomePageService->getPageData()
+#13 {main}
+
+Next Doctrine\DBAL\Driver\PDO\Exception: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'date' in 'where clause' in C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Driver\PDO\Exception.php:24
+Stack trace:
+#0 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Driver\PDO\Connection.php(64): Doctrine\DBAL\Driver\PDO\Exception::new(Object(PDOException))
+#1 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(1100): Doctrine\DBAL\Driver\PDO\Connection->prepare('SELECT * FROM e...')
+#2 C:\wamp64\www\GHI\src\Repositories\BaseRepository.php(29): Doctrine\DBAL\Connection->executeQuery('SELECT * FROM e...', Array)
+#3 C:\wamp64\www\GHI\src\Repositories\BaseRepository.php(37): GHI\Repositories\BaseRepository->query('SELECT * FROM e...', Array)
+#4 C:\wamp64\www\GHI\src\Repositories\EventRepository.php(24): GHI\Repositories\BaseRepository->fetchAll('SELECT * FROM e...', Array)
+#5 C:\wamp64\www\GHI\src\Models\Event.php(38): GHI\Repositories\EventRepository->findUpcoming(3)
+#6 C:\wamp64\www\GHI\src\Services\HomePageService.php(163): GHI\Models\Event->getUpcoming(3)
+#7 C:\wamp64\www\GHI\src\Services\CacheService.php(67): GHI\Services\HomePageService->GHI\Services\{closure}()
+#8 C:\wamp64\www\GHI\src\Services\CacheService.php(181): GHI\Services\CacheService::get('homepage.upcomi...', Object(Closure), 1800)
+#9 C:\wamp64\www\GHI\includes\functions.php(638): GHI\Services\CacheService::remember('homepage.upcomi...', Object(Closure), 1800)
+#10 C:\wamp64\www\GHI\src\Services\HomePageService.php(163): cache_remember('homepage.upcomi...', Object(Closure), 1800)
+#11 C:\wamp64\www\GHI\src\Services\HomePageService.php(50): GHI\Services\HomePageService->getUpcomingEvents()
+#12 C:\wamp64\www\GHI\index.php(21): GHI\Services\HomePageService->getPageData()
+#13 {main}
+
+Next Doctrine\DBAL\Exception\InvalidFieldNameException: An exception occurred while executing a query: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'date' in 'where clause' in C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Driver\API\MySQL\ExceptionConverter.php:69
+Stack trace:
+#0 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(1976): Doctrine\DBAL\Driver\API\MySQL\ExceptionConverter->convert(Object(Doctrine\DBAL\Driver\PDO\Exception), Object(Doctrine\DBAL\Query))
+#1 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(1918): Doctrine\DBAL\Connection->handleDriverException(Object(Doctrine\DBAL\Driver\PDO\Exception), Object(Doctrine\DBAL\Query))
+#2 C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Connection.php(1111): Doctrine\DBAL\Connection->convertExceptionDuringQuery(Object(Doctrine\DBAL\Driver\PDO\Exception), 'SELECT * FROM e...', Array, Array)
+#3 C:\wamp64\www\GHI\src\Repositories\BaseRepository.php(29): Doctrine\DBAL\Connection->executeQuery('SELECT * FROM e...', Array)
+#4 C:\wamp64\www\GHI\src\Repositories\BaseRepository.php(37): GHI\Repositories\BaseRepository->query('SELECT * FROM e...', Array)
+#5 C:\wamp64\www\GHI\src\Repositories\EventRepository.php(24): GHI\Repositories\BaseRepository->fetchAll('SELECT * FROM e...', Array)
+#6 C:\wamp64\www\GHI\src\Models\Event.php(38): GHI\Repositories\EventRepository->findUpcoming(3)
+#7 C:\wamp64\www\GHI\src\Services\HomePageService.php(163): GHI\Models\Event->getUpcoming(3)
+#8 C:\wamp64\www\GHI\src\Services\CacheService.php(67): GHI\Services\HomePageService->GHI\Services\{closure}()
+#9 C:\wamp64\www\GHI\src\Services\CacheService.php(181): GHI\Services\CacheService::get('homepage.upcomi...', Object(Closure), 1800)
+#10 C:\wamp64\www\GHI\includes\functions.php(638): GHI\Services\CacheService::remember('homepage.upcomi...', Object(Closure), 1800)
+#11 C:\wamp64\www\GHI\src\Services\HomePageService.php(163): cache_remember('homepage.upcomi...', Object(Closure), 1800)
+#12 C:\wamp64\www\GHI\src\Services\HomePageService.php(50): GHI\Services\HomePageService->getUpcomingEvents()
+#13 C:\wamp64\www\GHI\index.php(21): GHI\Services\HomePageService->getPageData()
+#14 {main}
+  thrown in C:\wamp64\www\GHI\vendor\doctrine\dbal\src\Driver\API\MySQL\ExceptionConverter.php on line 69
+[20-Nov-2025 01:20:42 America/New_York] PHP Warning:  Undefined variable $preloadImages in C:\wamp64\www\GHI\src\Views\partials\head.php on line 22
+[20-Nov-2025 01:20:42 America/New_York] PHP Stack trace:
+[20-Nov-2025 01:20:42 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\donate.php:0
+[20-Nov-2025 01:20:42 America/New_York] PHP   2. require_once() C:\wamp64\www\GHI\donate.php:12
+[20-Nov-2025 01:20:42 America/New_York] PHP Warning:  Undefined variable $themeCssFile in C:\wamp64\www\GHI\src\Views\partials\head.php on line 63
+[20-Nov-2025 01:20:42 America/New_York] PHP Stack trace:
+[20-Nov-2025 01:20:42 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\donate.php:0
+[20-Nov-2025 01:20:42 America/New_York] PHP   2. require_once() C:\wamp64\www\GHI\donate.php:12
+[20-Nov-2025 01:20:42 America/New_York] PHP Deprecated:  file_exists(): Passing null to parameter #1 ($filename) of type string is deprecated in C:\wamp64\www\GHI\src\Views\partials\head.php on line 63
+[20-Nov-2025 01:20:42 America/New_York] PHP Stack trace:
+[20-Nov-2025 01:20:42 America/New_York] PHP   1. {main}() C:\wamp64\www\GHI\donate.php:0
+[20-Nov-2025 01:20:42 America/New_York] PHP   2. require_once() C:\wamp64\www\GHI\donate.php:12
+[20-Nov-2025 01:20:42 America/New_York] PHP   3. file_exists($filename = NULL) C:\wamp64\www\GHI\src\Views\partials\head.php:63

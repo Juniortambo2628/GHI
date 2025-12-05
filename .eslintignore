@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build outputs
+dist/
+build/
+
+# Generated files
+*.min.js
+
+# Third-party libraries
+lib/
+
+# Uploads
+uploads/
+
+# Cache
+.cache/
+
+# Images and media
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.svg
+*.ico
+*.webp
+

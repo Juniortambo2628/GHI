@@ -1,0 +1,280 @@
+/**
+ * Admin Login Page Styles
+ * Global Harmony Initiative Admin Dashboard
+ */
+
+ :root {
+  --ghi-primary: #000656;
+  --ghi-secondary: #f1b829;
+  --ghi-accent-3: #f4f7fa;
+  --ghi-accent-4: #7695bb;
+  --ghi-accent-5: #01317a;
+  --ghi-accent-6: #41699f;
+  --ghi-accent-7: #aec6dc;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  background-color: #1a1a1a;
+  color: #333;
+  overflow: hidden;
+}
+
+.login-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+/* Left Panel - Login Form */
+.login-form-panel {
+  flex: 1;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.login-content {
+  width: 100%;
+  max-width: 450px;
+}
+
+.login-header {
+  margin-bottom: 2.5rem;
+}
+
+.login-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+
+.wave-emoji {
+  display: inline-block;
+}
+
+.login-subtitle {
+  font-size: 0.95rem;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Form Styles */
+.login-form {
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 0.95rem;
+  color: #333;
+  background-color: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--ghi-primary);
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(0, 6, 86, 0.1);
+}
+
+.form-control::placeholder {
+  color: #999;
+}
+
+.forgot-password-link {
+  font-size: 0.875rem;
+  color: var(--ghi-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.forgot-password-link:hover {
+  color: var(--ghi-accent-5);
+  text-decoration: underline;
+}
+
+/* Sign In Button */
+.btn-signin {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--ghi-primary);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 0.5rem;
+}
+
+.btn-signin:hover {
+  background-color: var(--ghi-accent-5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 6, 86, 0.3);
+}
+
+.btn-signin:active {
+  transform: translateY(0);
+}
+
+/* Alert Messages */
+.alert {
+  padding: 0.875rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.alert-danger {
+  background-color: #fee;
+  color: #c33;
+  border: 1px solid #fcc;
+}
+
+.alert-success {
+  background-color: #efe;
+  color: #3c3;
+  border: 1px solid #cfc;
+}
+
+/* Footer Links */
+.login-footer {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.signup-link {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.signup-link-text {
+  color: var(--ghi-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.signup-link-text:hover {
+  color: var(--ghi-accent-5);
+  text-decoration: underline;
+}
+
+.copyright {
+  font-size: 0.75rem;
+  color: #999;
+  margin: 0;
+}
+
+/* Right Panel - Image */
+.login-image-panel {
+  flex: 1;
+  background-color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.login-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Mobile Responsive */
+@media (max-width: 992px) {
+  .login-container {
+    flex-direction: column;
+  }
+
+  .login-form-panel {
+    flex: 0 0 auto;
+    min-height: auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .login-image-panel {
+    flex: 0 0 40vh;
+    min-height: 300px;
+  }
+
+  .login-image {
+    border-radius: 12px 12px 0 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .login-title {
+    font-size: 1.75rem;
+  }
+
+  .login-subtitle {
+    font-size: 0.875rem;
+  }
+
+  .login-content {
+    max-width: 100%;
+  }
+
+  .login-form-panel {
+    padding: 1.5rem 1rem;
+  }
+}
+
+/* Tablet Portrait */
+@media (max-width: 1024px) and (orientation: portrait) {
+  .login-container {
+    flex-direction: column;
+  }
+
+  .login-form-panel {
+    flex: 1;
+  }
+
+  .login-image-panel {
+    flex: 0 0 35vh;
+  }
+}
