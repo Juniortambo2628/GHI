@@ -55,7 +55,7 @@ export default function ListingRow({ image, imageAlt, badges = [], title, descri
             <div className="listing-row-body">
                 <div className="listing-row-badges">
                     {badges.map((badge, idx) => (
-                        <span key={idx} className={`glass-pill glass-pill-sm ${badge.className || ''}`}>{badge.text}</span>
+                        <span key={idx} className={`glass-pill ${badge.className || ''}`}>{badge.text}</span>
                     ))}
                 </div>
                 <h5 className="listing-row-title">{title}</h5>

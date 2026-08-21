@@ -3,6 +3,11 @@ import { Link, Head } from '@inertiajs/react';
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import AnimatedSection, { AnimatedCard } from '../Components/Shared/AnimatedSection';
+import SectionHeader from '../Components/Shared/SectionHeader';
+import SectionCTA from '../Components/Shared/SectionCTA';
+import CounterItem from '../Components/Shared/CounterItem';
+import EventListItem from '../Components/Shared/EventListItem';
+import VolunteerImage from '../Components/Shared/VolunteerImage';
 
 Home.layout = page => <PublicLayout>{page}</PublicLayout>;
 
@@ -86,70 +91,16 @@ export default function Home({ initiatives, events, stories, recentActivities, c
                             <h5 className="text-uppercase text-secondary">About Us</h5>
                             <h1 className="mb-4">Bridging Global Compassion with Local Action</h1>
                             <p className="fs-5 mb-4">At Global Harmony Initiative Inc., we believe that harmony begins when humanity comes together — across borders, beliefs, and backgrounds — to create lasting change. From classrooms in Kenya to community wells in Zanzibar, we connect people and resources to nurture sustainable growth and empower local leaders to build a brighter tomorrow.</p>
-                            <div className="tab-class bg-secondary p-4">
-                                <ul className="nav d-flex flex-wrap mb-2">
-                                    <li className="nav-item mb-3">
-                                        <a className="d-flex py-2 text-center bg-white active" data-bs-toggle="pill" href="#tab-1">
-                                            <span className="text-dark about-tab-label">About</span>
-                                        </a>
-                                    </li>
-                                    <li className="nav-item mb-3">
-                                        <a className="d-flex py-2 mx-2 mx-md-3 text-center bg-white" data-bs-toggle="pill" href="#tab-2">
-                                            <span className="text-dark about-tab-label">Mission</span>
-                                        </a>
-                                    </li>
-                                    <li className="nav-item mb-3">
-                                        <a className="d-flex py-2 text-center bg-white" data-bs-toggle="pill" href="#tab-3">
-                                            <span className="text-dark about-tab-label">Vision</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                                <div className="tab-content">
-                                    <div id="tab-1" className="tab-pane fade show p-0 active">
-                                        <div className="row">
-                                            <div className="col-12">
-                                                <div className="d-flex">
-                                                    <div className="text-start my-auto">
-                                                        <h5 className="text-uppercase mb-3">Who We Are</h5>
-                                                        <p className="mb-4">Global Harmony Initiative Inc. (GHI) is a U.S.-registered 501(c)(3) nonprofit organization working hand in hand with communities across East Africa to alleviate poverty and promote sustainable development. We connect compassion with action — linking donors, volunteers, and local leaders to transform lives through education, health, and economic empowerment. Founded on the belief that every person deserves opportunity and dignity, GHI stands as a bridge between global goodwill and community-driven impact.</p>
-                                                        <div className="d-flex align-items-center justify-content-start">
-                                                            <Link className="btn-hover-bg btn btn-primary text-white py-2 px-4" href="/about">Read More</Link>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="tab-2" className="tab-pane fade show p-0">
-                                        <div className="row">
-                                            <div className="col-12">
-                                                <div className="d-flex">
-                                                    <div className="text-start my-auto">
-                                                        <h5 className="text-uppercase mb-3">Our Mission</h5>
-                                                        <p className="mb-4">To alleviate poverty and promote sustainable development in East Africa by supporting community-led initiatives in education, health, and economic empowerment, while fostering global partnerships built on compassion and accountability.</p>
-                                                        <div className="d-flex align-items-center justify-content-start">
-                                                            <Link className="btn-hover-bg btn btn-primary text-white py-2 px-4" href="/about">Read More</Link>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="tab-3" className="tab-pane fade show p-0">
-                                        <div className="row">
-                                            <div className="col-12">
-                                                <div className="d-flex">
-                                                    <div className="text-start my-auto">
-                                                        <h5 className="text-uppercase mb-3">Our Vision</h5>
-                                                        <p className="mb-4">A world where communities thrive in harmony — free from poverty, empowered with opportunity, and united by shared humanity.</p>
-                                                        <div className="d-flex align-items-center justify-content-start">
-                                                            <Link className="btn-hover-bg btn btn-primary text-white py-2 px-4" href="/about">Read More</Link>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div className="foundation-card rounded p-4 foundation-card-gradient">
+                                <div className="d-flex justify-content-between align-items-start mb-3">
+                                    <h5 className="text-white mb-0">Who We Are</h5>
+                                    <i className="bi bi-people text-white foundation-icon"></i>
+                                </div>
+                                <p className="mb-3 text-white">Global Harmony Initiative Inc. (GHI) is a U.S.-registered 501(c)(3) nonprofit organization working hand in hand with communities across East Africa to alleviate poverty and promote sustainable development.</p>
+                                <p className="mb-3 text-white">We connect compassion with action — linking donors, volunteers, and local leaders to transform lives through education, health, and economic empowerment.</p>
+                                <p className="mb-0 text-white">Founded on the belief that every person deserves opportunity and dignity, GHI stands as a bridge between global goodwill and community-driven impact.</p>
+                                <div className="mt-3">
+                                    <Link className="btn btn-outline-light py-2 px-4" href="/about">Read More <i className="bi bi-arrow-right ms-1"></i></Link>
                                 </div>
                             </div>
                         </div>
@@ -177,10 +128,7 @@ export default function Home({ initiatives, events, stories, recentActivities, c
             <AnimatedSection animation="fadeUp">
                 <div className="container-fluid py-5 foundation-section-bg">
                     <div className="container py-5">
-                        <div className="text-center mx-auto mb-5 section-header-container">
-                            <h5 className="text-uppercase text-secondary">About Us</h5>
-                            <h1 className="mb-0">Our Foundation</h1>
-                        </div>
+                        <SectionHeader subtitle="About Us" title="Our Foundation" className="mb-5" />
                         <div className="row g-4 align-items-stretch">
                             <div className="col-lg-5 d-flex flex-column">
                                 <div className="foundation-card rounded p-4 mb-4 foundation-card-gradient flex-grow-1">
@@ -226,10 +174,7 @@ export default function Home({ initiatives, events, stories, recentActivities, c
             <AnimatedSection animation="fadeUp">
             <div className="container-fluid py-5 service bg-light">
                 <div className="container">
-                    <div className="text-center mx-auto pb-5 section-header-container">
-                        <h5 className="text-uppercase text-secondary">What we do</h5>
-                        <h1 className="mb-0">Our Core Objectives</h1>
-                    </div>
+                    <SectionHeader subtitle="What we do" title="Our Core Objectives" className="pb-5" />
                     <div className="row justify-content-center core-objectives-grid">
                         {objectives && objectives.map((objective, index) => {
                             const imgUrl = objectiveImages[index % objectiveImages.length];
@@ -251,11 +196,7 @@ export default function Home({ initiatives, events, stories, recentActivities, c
                                 </div>
                             );
                         })}
-                        <div className="col-12">
-                            <div className="d-flex align-items-center justify-content-center">
-                                <Link className="btn-hover-bg btn btn-primary text-white py-2 px-4" href="/initiatives">View All Initiatives</Link>
-                            </div>
-                        </div>
+                        <SectionCTA href="/initiatives">View All Initiatives</SectionCTA>
                     </div>
                 </div>
             </div>
@@ -265,57 +206,13 @@ export default function Home({ initiatives, events, stories, recentActivities, c
             <AnimatedSection animation="fadeUp">
             <div className="container-fluid counter py-5 counter-section-bg">
                 <div className="container">
-                    <div className="text-center mx-auto pb-5 section-header-container">
-                        <h5 className="text-uppercase text-secondary">Our Impact</h5>
-                        <h1 className="text-white mb-3">Making a Measurable Difference</h1>
-                        <p className="mb-4 text-white">Through our collective efforts, we've made significant progress in empowering communities across East Africa. Every number represents lives touched and futures transformed.</p>
-                    </div>
+                    <SectionHeader subtitle="Our Impact" title="Making a Measurable Difference" description="Through our collective efforts, we've made significant progress in empowering communities across East Africa. Every number represents lives touched and futures transformed." light className="pb-5" />
                     <div className="row">
-                        <div className="col-md-6 col-lg-6 col-xl-3">
-                            <div className="counter-item text-center p-5">
-                                <i className="bi bi-diagram-3 text-white counter-icon"></i>
-                                <h3 className="text-white my-4">Initiatives</h3>
-                                <div className="counter-counting">
-                                    <span className="text-white fs-2 fw-bold">{(counters?.initiatives || 0).toLocaleString()}</span>
-                                    <span className="h1 fw-bold text-white">+</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-6 col-lg-6 col-xl-3">
-                            <div className="counter-item text-center p-5">
-                                <i className="bi bi-calendar-check text-white counter-icon"></i>
-                                <h3 className="text-white my-4">Activities</h3>
-                                <div className="counter-counting text-center w-100 counter-display">
-                                    <span className="text-white fs-2 fw-bold">{(counters?.events || 0).toLocaleString()}</span>
-                                    <span className="h1 fw-bold text-white">+</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-6 col-lg-6 col-xl-3">
-                            <div className="counter-item text-center p-5">
-                                <i className="bi bi-geo-alt text-white counter-icon"></i>
-                                <h3 className="text-white my-4">Communities</h3>
-                                <div className="counter-counting text-center w-100 counter-display">
-                                    <span className="text-white fs-2 fw-bold">{(counters?.communities || 0).toLocaleString()}</span>
-                                    <span className="h1 fw-bold text-white">+</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-6 col-lg-6 col-xl-3">
-                            <div className="counter-item text-center p-5">
-                                <i className="bi bi-heart-fill text-white counter-icon"></i>
-                                <h3 className="text-white my-4">Lives Changed</h3>
-                                <div className="counter-counting text-center w-100 counter-display">
-                                    <span className="text-white fs-2 fw-bold">{(counters?.lives_impacted || 0).toLocaleString()}</span>
-                                    <span className="h1 fw-bold text-white">+</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-12">
-                            <div className="d-flex align-items-center justify-content-center">
-                                <Link className="btn-hover-bg btn btn-primary text-white py-2 px-4" href="/coming-soon-get-involved">Join With Us</Link>
-                            </div>
-                        </div>
+                        <CounterItem icon="diagram-3" label="Initiatives" value={counters?.initiatives} />
+                        <CounterItem icon="calendar-check" label="Activities" value={counters?.events} />
+                        <CounterItem icon="geo-alt" label="Communities" value={counters?.communities} />
+                        <CounterItem icon="heart-fill" label="Lives Changed" value={counters?.lives_impacted} />
+                        <SectionCTA href="/coming-soon-get-involved">Join With Us</SectionCTA>
                     </div>
                 </div>
             </div>
@@ -324,11 +221,7 @@ export default function Home({ initiatives, events, stories, recentActivities, c
             {/* Initiatives Section */}
             <div className="container-fluid py-5 causes">
                 <div className="container">
-                    <div className="text-center mx-auto pb-5 section-header-container">
-                        <h5 className="text-uppercase text-secondary">Our Initiatives</h5>
-                        <h1 className="mb-4">Strategic Initiatives for Lasting Impact</h1>
-                        <p className="mb-0">We work across multiple areas to address critical needs and create lasting positive change in East African communities.</p>
-                    </div>
+                    <SectionHeader subtitle="Our Initiatives" title="Strategic Initiatives for Lasting Impact" description="We work across multiple areas to address critical needs and create lasting positive change in East African communities." className="pb-5" />
                     <div className="row g-0 initiatives-grid">
                         {initiatives && initiatives.map((initiative, idx) => {
                             const eventCount = initiative.event_count || 0;
@@ -363,9 +256,7 @@ export default function Home({ initiatives, events, stories, recentActivities, c
                         })}
                     </div>
                     <div className="row mt-4">
-                        <div className="col-12 text-center">
-                            <Link className="btn-hover-bg btn btn-primary text-white py-3 px-5" href="/initiatives">See All Initiatives</Link>
-                        </div>
+                        <SectionCTA href="/initiatives">See All Initiatives</SectionCTA>
                     </div>
                 </div>
             </div>
@@ -373,52 +264,21 @@ export default function Home({ initiatives, events, stories, recentActivities, c
             {/* Events Section */}
             <div className="container-fluid event col-bg-subtle py-5">
                 <div className="container">
-                    <div className="text-center mx-auto mb-5 section-header-container">
-                        <h5 className="text-uppercase text-secondary">Events & Activities</h5>
-                        <h1 className="mb-0">Each step brings us closer to our vision of a brighter future for All. Join us in making a difference!</h1>
-                    </div>
+                        <SectionHeader subtitle="Events & Activities" title="Each step brings us closer to our vision of a brighter future for All. Join us in making a difference!" className="mb-5" />
                     {!events || events.length === 0 ? (
                         <div className="text-center py-5">
                             <p className="mb-4">No upcoming events at this time. Please check back later.</p>
-                            <Link className="btn-hover-bg btn btn-primary text-white py-3 px-5" href="/events">See All Events</Link>
+                            <SectionCTA href="/events">See All Events</SectionCTA>
                         </div>
                     ) : (
                         <div className="events-list-container">
-                            {events.map((event, idx) => {
-                                const eventDate = new Date(event.date || event.event_date);
-                                const day = String(eventDate.getDate()).padStart(2, '0');
-                                const month = eventDate.toLocaleString('en-US', { month: 'long' });
-                                const time = eventDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-                                const eventImage = event.image ? `/uploads/images/${event.image}` : '/Banners-and-portraits/pexels-rdne-6646883.jpg';
-                                return (
-                                    <div key={idx} className="event-list-item">
-                                        <div className="event-date-block">
-                                            <div className="event-day">{day}</div>
-                                            <div className="event-month">{month}</div>
-                                        </div>
-                                        <div className="event-image-container">
-                                            <img src={eventImage} alt={event.title} className="event-image" loading="lazy" width="300" height="200" />
-                                        </div>
-                                        <div className="event-details">
-                                            <h4 className="event-title"><Link href="/events">{event.title}</Link></h4>
-                                            <p className="event-subtitle">{event.initiative || 'General'}</p>
-                                            <div className="event-meta">
-                                                <span className="glass-pill-sm"><i className="bi bi-geo-alt"></i></span>
-                                                <span className="event-location ms-1">{event.location || ''}</span>
-                                                <span className="glass-pill-sm ms-2"><i className="bi bi-clock"></i></span>
-                                                <span className="event-time ms-1">{time}</span>
-                                            </div>
-                                        </div>
-                                        <div className="event-action">
-                                            <Link className="btn btn-dark btn-sm" href={`/events`}>view details</Link>
-                                        </div>
-                                    </div>
-                                );
-                            })}
+                            {events.map((event, idx) => (
+                                <EventListItem key={idx} event={event} />
+                            ))}
                         </div>
                     )}
                     <div className="text-center mt-4">
-                        <Link className="btn-hover-bg btn btn-primary text-white py-3 px-5" href="/events">See All Events</Link>
+                        <SectionCTA href="/events">See All Events</SectionCTA>
                     </div>
                 </div>
             </div>
@@ -426,11 +286,7 @@ export default function Home({ initiatives, events, stories, recentActivities, c
             {/* Stories Section */}
             <div className="container-fluid blog py-5">
                 <div className="container">
-                    <div className="text-center mx-auto pb-5 section-header-container">
-                        <h5 className="text-uppercase text-secondary">Our Impact</h5>
-                        <h1 className="mb-0">Stories of Transformation and Positive Outcomes</h1>
-                        <p className="mb-0 mt-3">Discover how our activities are creating lasting change in communities across East Africa. Read, engage, and share these inspiring stories.</p>
-                    </div>
+                    <SectionHeader subtitle="Our Impact" title="Stories of Transformation and Positive Outcomes" description="Discover how our activities are creating lasting change in communities across East Africa. Read, engage, and share these inspiring stories." className="pb-5" />
                     <div className="row g-4 no-animation justify-content-center" data-disable-animation="true">
                         {!stories || stories.length === 0 ? (
                             <div className="col-12">
@@ -474,9 +330,7 @@ export default function Home({ initiatives, events, stories, recentActivities, c
                         )}
                     </div>
                     <div className="row mt-4">
-                        <div className="col-12 text-center">
-                            <Link className="btn-hover-bg btn btn-primary text-white py-3 px-5" href="/stories">See All Stories</Link>
-                        </div>
+                        <SectionCTA href="/stories">See All Stories</SectionCTA>
                     </div>
                 </div>
             </div>
@@ -484,11 +338,7 @@ export default function Home({ initiatives, events, stories, recentActivities, c
             {/* Gallery Section */}
             <div className="container-fluid gallery py-5">
                 <div className="container py-5">
-                    <div className="text-center mx-auto pb-5 section-header-container">
-                        <h5 className="text-uppercase text-secondary">Our work</h5>
-                        <h1 className="mb-4">Recent Activities Gallery</h1>
-                        <p className="mb-0">See the impact of our programs through images from our most recent activities across East Africa.</p>
-                    </div>
+                    <SectionHeader subtitle="Our work" title="Recent Activities Gallery" description="See the impact of our programs through images from our most recent activities across East Africa." className="pb-5" />
                     <div className="row g-0">
                         {recentActivities && recentActivities.slice(0, 6).map((activity, idx) => {
                             const actImage = activity.image ? `/uploads/images/${activity.image}` : '/Banners-and-portraits/pexels-rdne-6646918.jpg';
@@ -520,42 +370,10 @@ export default function Home({ initiatives, events, stories, recentActivities, c
                     <div className="row g-5">
                         <div className="col-lg-5">
                             <div className="row g-4">
-                                <div className="col-lg-6">
-                                    <div className="volunteer-img">
-                                        <img src="/Banners-and-portraits/pexels-belle-co-99483-1000445.jpg" className="img-fluid w-100 impact-card-img" alt="Image" loading="lazy" width="400" height="500" />
-                                        <div className="volunteer-title">
-                                            <h5 className="mb-2 text-white">Community Leader</h5>
-                                            <p className="mb-0 text-white">Volunteer</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-6">
-                                    <div className="volunteer-img">
-                                        <img src="/Banners-and-portraits/pexels-seyhmuskino-30403185.jpg" className="img-fluid w-100 impact-card-img" alt="Image" loading="lazy" width="400" height="500" />
-                                        <div className="volunteer-title">
-                                            <h5 className="mb-2 text-white">Program Coordinator</h5>
-                                            <p className="mb-0 text-white">Volunteer</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-6">
-                                    <div className="volunteer-img">
-                                        <img src="/Banners-and-portraits/pexels-seyhmuskino-30616621.jpg" className="img-fluid w-100 impact-card-img" alt="Image" loading="lazy" width="400" height="500" />
-                                        <div className="volunteer-title">
-                                            <h5 className="mb-2 text-white">Education Specialist</h5>
-                                            <p className="mb-0 text-white">Volunteer</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-6">
-                                    <div className="volunteer-img">
-                                        <img src="/Banners-and-portraits/pexels-seyhmuskino-30668435.jpg" className="img-fluid w-100 impact-card-img" alt="Image" loading="lazy" width="400" height="500" />
-                                        <div className="volunteer-title">
-                                            <h5 className="mb-2 text-white">Healthcare Volunteer</h5>
-                                            <p className="mb-0 text-white">Volunteer</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                <VolunteerImage src="/Banners-and-portraits/pexels-belle-co-99483-1000445.jpg" title="Community Leader" role="Volunteer" />
+                                <VolunteerImage src="/Banners-and-portraits/pexels-seyhmuskino-30403185.jpg" title="Program Coordinator" role="Volunteer" />
+                                <VolunteerImage src="/Banners-and-portraits/pexels-seyhmuskino-30616621.jpg" title="Education Specialist" role="Volunteer" />
+                                <VolunteerImage src="/Banners-and-portraits/pexels-seyhmuskino-30668435.jpg" title="Healthcare Volunteer" role="Volunteer" />
                             </div>
                         </div>
                         <div className="col-lg-7">

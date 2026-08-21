@@ -55,11 +55,11 @@ export default function TimelineCard({ image, imageAlt, badges = [], title, desc
                     </div>
                 )}
                 <div className="timeline-card-body">
-                    <div className="timeline-card-badges">
-                        {badges.map((badge, idx) => (
-                            <span key={idx} className={`glass-pill glass-pill-sm ${badge.className || ''}`}>{badge.text}</span>
-                        ))}
-                    </div>
+                <div className="timeline-card-badges">
+                    {badges.map((badge, idx) => (
+                        <span key={idx} className={`glass-pill ${badge.className || ''}`}>{badge.text}</span>
+                    ))}
+                </div>
                     <h5 className="timeline-card-title">{title}</h5>
                     <div className="timeline-card-meta">
                         {meta.map((item, idx) => (

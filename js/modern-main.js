@@ -570,7 +570,6 @@ export {
   editorService,
   chartService,
   errorTracking,
-  animations,
   useStore,
   usePersistentStore,
   initLazyLoad,
