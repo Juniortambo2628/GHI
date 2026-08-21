@@ -1,0 +1,85 @@
+import PublicLayout from '../Layouts/PublicLayout';
+import { Head, router } from '@inertiajs/react';
+import { useState } from 'react';
+import { categoryToObjective } from '../Constants/categoryToObjective';
+import PageHeader from '../Components/Shared/PageHeader';
+import SearchSidebar from '../Components/Shared/SearchSidebar';
+import ResultsCount from '../Components/Shared/ResultsCount';
+import ListingCard from '../Components/Shared/ListingCard';
+import ListingRow from '../Components/Shared/ListingRow';
+import TimelineCard from '../Components/Shared/TimelineCard';
+import ListingCardGrid from '../Components/Shared/ListingCardGrid';
+import Pagination from '../Components/Shared/Pagination';
+
+Stories.layout = page => <PublicLayout>{page}</PublicLayout>;
+
+export default function Stories({ stories }) {
+    const [search, setSearch] = useState('');
+    const [category, setCategory] = useState('');
+    const [sortBy, setSortBy] = useState('');
+    const [viewMode, setViewMode] = useState('grid');
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        router.get('/stories', { search, category, sort: sortBy }, { preserveState: true });
+    };
+
+    const renderCard = (story, idx, mode) => {
+        const storyImage = story.image ? `/uploads/images/${story.image}` : '/Banners-and-portraits/pexels-ezeguna_graphy-sulaiman-muhammad-2153324075-34536427.jpg';
+        const formattedDate = story.created_at ? new Date(story.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+        const props = {
+            key: story.id,
+            index: idx,
+            image: storyImage,
+            imageAlt: story.title,
+            badges: [{ text: (story.category || '').charAt(0).toUpperCase() + (story.category || '').slice(1) }],
+            title: story.title,
+            description: story.content,
+            meta: [
+                { icon: 'bi bi-calendar', text: formattedDate },
+                { icon: 'bi bi-person', text: story.author || 'Staff' }
+            ],
+            buttonText: 'Read More',
+        };
+        if (mode === 'list') return <ListingRow {...props} />;
+        if (mode === 'timeline') return <TimelineCard {...props} side={idx % 2 === 0 ? 'left' : 'right'} />;
+        return <ListingCard {...props} />;
+    };
+
+    return (
+        <>
+            <Head>
+                <title>Our Stories - Global Harmony Initiative</title>
+                <meta name="description" content="Read inspiring stories from our community." />
+            </Head>
+            <PageHeader title="Our Stories" breadcrumb={[{ label: 'Our Stories' }]} />
+            <div className="container-fluid px-5">
+                <div className="row g-4">
+                    <SearchSidebar title="Search & Filter" onSubmit={handleSubmit} viewMode={viewMode} setViewMode={setViewMode}>
+                        <input type="text" name="search" className="form-control mb-3" placeholder="Search stories..." value={search} onChange={e => setSearch(e.target.value)} />
+                        <select name="category" className="form-select mb-3" value={category} onChange={e => setCategory(e.target.value)}>
+                            <option value="">All Categories</option>
+                            {Object.entries(categoryToObjective).map(([key, label]) => (
+                                <option key={key} value={key}>{label}</option>
+                            ))}
+                        </select>
+                        <select name="sort" className="form-select mb-3" value={sortBy} onChange={e => setSortBy(e.target.value)}>
+                            <option value="">Sort by</option>
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="alpha">A – Z</option>
+                        </select>
+                        <button type="submit" className="btn btn-primary w-100">Search</button>
+                    </SearchSidebar>
+                    <div className="col-lg-9">
+                        <ResultsCount data={stories} />
+                        <ListingCardGrid data={stories} emptyMessage="No stories found." viewMode={viewMode}>
+                            {renderCard}
+                        </ListingCardGrid>
+                        <Pagination data={stories} />
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+}

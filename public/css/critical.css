@@ -1,0 +1,327 @@
+/* Critical CSS - Above the Fold Styles
+ * Global Harmony Initiative Website
+ * 
+ * This file contains only the CSS needed for initial page render.
+ * Full CSS is loaded asynchronously.
+ * 
+ * Target: < 14KB (gzipped) for optimal performance
+ */
+
+/* ============================================
+   CRITICAL: Root Variables & Base Styles
+   ============================================ */
+:root {
+  --ghi-primary: #000656;
+  --ghi-secondary: #f1b829;
+  --ghi-accent-3: #f4f7fa;
+  --ghi-accent-4: #7695bb;
+  --ghi-accent-5: #01317a;
+  --ghi-accent-6: #41699f;
+  --ghi-accent-7: #aec6dc;
+  --bs-primary: #000656;
+  --bs-secondary: #f1b829;
+}
+
+/* ============================================
+   CRITICAL: Base Typography & Layout
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Jost', sans-serif;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.text-primary {
+  color: var(--ghi-primary) !important;
+}
+
+.bg-primary {
+  background-color: var(--ghi-primary) !important;
+}
+
+/* ============================================
+   CRITICAL: Spinner (First Visible Element)
+   ============================================ */
+#spinner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#spinner:not(.show) {
+  display: none;
+}
+
+/* ============================================
+   CRITICAL: Navbar (Above the Fold)
+   ============================================ */
+.fixed-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+}
+
+.navbar {
+  padding: 0.5rem 0;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo-img {
+  height: 50px;
+  width: auto;
+}
+
+/* ============================================
+   CRITICAL: Hero Section (Above the Fold)
+   ============================================ */
+.carousel-item {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.carousel-item img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+/* ============================================
+   CRITICAL: Container & Grid
+   ============================================ */
+.container-fluid {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+/* ============================================
+   CRITICAL: Buttons (Common UI Element)
+   ============================================ */
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background-color: var(--ghi-primary);
+  color: #fff;
+  border-color: var(--ghi-primary);
+}
+
+.btn-primary:hover {
+  background-color: var(--ghi-accent-5);
+  border-color: var(--ghi-accent-5);
+}
+
+/* ============================================
+   CRITICAL: Prevent FOUC (Flash of Unstyled Content)
+   ============================================ */
+[data-animate-on-scroll] {
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* Show elements immediately on mobile */
+@media (max-width: 768px) {
+  [data-animate-on-scroll] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ============================================
+   CRITICAL: Image Optimization
+   ============================================ */
+img {
+  max-width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+
+/* ============================================
+   CRITICAL: Responsive Utilities
+   ============================================ */
+.d-none {
+  display: none !important;
+}
+
+.d-block {
+  display: block !important;
+}
+
+.d-flex {
+  display: flex !important;
+}
+
+@media (max-width: 767px) {
+  .d-md-none {
+    display: none !important;
+  }
+}
+
+/* ============================================
+   CRITICAL: Text Utilities
+   ============================================ */
+.text-center {
+  text-align: center !important;
+}
+
+.text-white {
+  color: #fff !important;
+}
+
+/* ============================================
+   CRITICAL: Spacing Utilities (Most Common)
+   ============================================ */
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem !important;
+}
+
+.mb-3 {
+  margin-bottom: 1rem !important;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem !important;
+}
+
+.mt-2 {
+  margin-top: 0.5rem !important;
+}
+
+.mt-3 {
+  margin-top: 1rem !important;
+}
+
+.p-0 {
+  padding: 0 !important;
+}
+
+.p-2 {
+  padding: 0.5rem !important;
+}
+
+.p-3 {
+  padding: 1rem !important;
+}
+
+.p-4 {
+  padding: 1.5rem !important;
+}
+
+.py-3 {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+
+.py-4 {
+  padding-top: 1.5rem !important;
+  padding-bottom: 1.5rem !important;
+}
+
+.py-5 {
+  padding-top: 3rem !important;
+  padding-bottom: 3rem !important;
+}
+
+/* ============================================
+   CRITICAL: Loading States
+   ============================================ */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ============================================
+   CRITICAL: Accessibility
+   ============================================ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ============================================
+   END OF CRITICAL CSS
+   ============================================ */
+
