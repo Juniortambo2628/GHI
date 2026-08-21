@@ -18,3 +18,7 @@ yarn-error.log
 /.vscode
 composer.lock
 package-lock.json
+node_modules
+/storage
+*.json.bak
+new-session-*.json
