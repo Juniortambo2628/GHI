@@ -210,12 +210,12 @@ export default function AdminResourceIndex({
                                 <p key={column.header}><strong>{column.header}:</strong> {column.render ? column.render(item) : item[column.key]}</p>
                             ))}
                             <div>
-                                {modalCrud && onView ? (
+                                {modalCrud ? (
                                     <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => handleView(item)}>View</button>
                                 ) : (
                                     <Link href={`${resource}/${item.id}`} className="btn btn-sm btn-outline-secondary">View</Link>
                                 )}
-                                {!readOnly && (modalCrud && onEdit ? (
+                                {!readOnly && (modalCrud ? (
                                     <button type="button" className="btn btn-sm btn-outline-primary ms-2" onClick={() => handleEdit(item)}>Edit</button>
                                 ) : (
                                     <Link href={`${resource}/${item.id}/edit`} className="btn btn-sm btn-outline-primary ms-2">Edit</Link>
