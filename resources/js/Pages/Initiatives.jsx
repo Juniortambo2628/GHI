@@ -27,7 +27,6 @@ export default function Initiatives({ initiatives, hero }) {
 
     const renderCard = (initiative, idx, mode) => {
         const props = {
-            key: initiative.id,
             index: idx,
             image: initiative.image ? mediaUrl(initiative.image) : null,
             imageAlt: initiative.title,
@@ -35,9 +34,9 @@ export default function Initiatives({ initiatives, hero }) {
             title: initiative.title,
             description: initiative.description,
         };
-        if (mode === 'list') return <ListingRow {...props} />;
-        if (mode === 'timeline') return <TimelineCard {...props} side={idx % 2 === 0 ? 'left' : 'right'} />;
-        return <ListingCard {...props} />;
+        if (mode === 'list') return <ListingRow key={initiative.id} {...props} />;
+        if (mode === 'timeline') return <TimelineCard key={initiative.id} {...props} side={idx % 2 === 0 ? 'left' : 'right'} />;
+        return <ListingCard key={initiative.id} {...props} />;
     };
 
     return (

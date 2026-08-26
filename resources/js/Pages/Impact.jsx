@@ -27,7 +27,6 @@ export default function Impact({ impactActivities, hero }) {
     const renderCard = (impact, idx, mode) => {
         const formattedDate = impact.created_at ? new Date(impact.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
         const props = {
-            key: impact.id,
             index: idx,
             image: impact.image ? mediaUrl(impact.image) : null,
             imageAlt: impact.title,
@@ -42,9 +41,9 @@ export default function Impact({ impactActivities, hero }) {
                 { icon: 'bi bi-calendar', text: formattedDate }
             ],
         };
-        if (mode === 'list') return <ListingRow {...props} />;
-        if (mode === 'timeline') return <TimelineCard {...props} side={idx % 2 === 0 ? 'left' : 'right'} />;
-        return <ListingCard {...props} />;
+        if (mode === 'list') return <ListingRow key={impact.id} {...props} />;
+        if (mode === 'timeline') return <TimelineCard key={impact.id} {...props} side={idx % 2 === 0 ? 'left' : 'right'} />;
+        return <ListingCard key={impact.id} {...props} />;
     };
 
     return (

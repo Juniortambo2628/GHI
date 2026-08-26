@@ -3301,6 +3301,12 @@ h6 {
   line-height: 1.4;
 }
 
+.glass-pill-on-light {
+  background: rgba(0, 6, 86, 0.08);
+  border: 1px solid rgba(0, 6, 86, 0.15);
+  color: var(--ghi-primary);
+}
+
 .glass-pill-sm {
   display: inline-flex;
   align-items: center;
@@ -3391,12 +3397,12 @@ h6 {
 
 .card-title-link {
   text-decoration: none !important;
-  color: var(--ghi-secondary) !important;
+  color: var(--ghi-primary) !important;
   transition: color 0.2s ease;
 }
 
 .card-title-link:hover {
-  color: #ffd54f !important;
+  color: #fff !important;
 }
 
 /* ============================================

@@ -32,7 +32,6 @@ export default function Events({ events, hero }) {
         const eventDate = new Date(event.event_date);
         const isUpcoming = eventDate >= new Date();
         const props = {
-            key: event.id,
             index: idx,
             image: event.image ? mediaUrl(event.image) : null,
             imageAlt: event.title,
@@ -47,9 +46,9 @@ export default function Events({ events, hero }) {
                 { icon: 'bi bi-geo-alt', text: event.location }
             ],
         };
-        if (mode === 'list') return <ListingRow {...props} />;
-        if (mode === 'timeline') return <TimelineCard {...props} side={idx % 2 === 0 ? 'left' : 'right'} />;
-        return <ListingCard {...props} />;
+        if (mode === 'list') return <ListingRow key={event.id} {...props} />;
+        if (mode === 'timeline') return <TimelineCard key={event.id} {...props} side={idx % 2 === 0 ? 'left' : 'right'} />;
+        return <ListingCard key={event.id} {...props} />;
     };
 
     return (

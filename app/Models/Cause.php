@@ -37,6 +37,11 @@ class Cause extends Model
         });
     }
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function initiatives()
     {
         return $this->belongsToMany(Initiative::class);

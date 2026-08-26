@@ -24,20 +24,20 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin']
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // Causes
-    Route::resource('causes', CauseController::class);
+    Route::resource('causes', CauseController::class)->parameters(['causes' => 'cause:id']);
 
     // Initiatives
-    Route::resource('initiatives', InitiativeController::class);
+    Route::resource('initiatives', InitiativeController::class)->parameters(['initiatives' => 'initiative:id']);
 
     // Events
-    Route::resource('events', EventController::class);
-    Route::post('events/{event}/images', [EventController::class, 'syncImages'])->name('events.images');
+    Route::resource('events', EventController::class)->parameters(['events' => 'event:id']);
+    Route::post('events/{event:id}/images', [EventController::class, 'syncImages'])->name('events.images');
 
     // Impact Activities
-    Route::resource('impact', ImpactController::class);
+    Route::resource('impact', ImpactController::class)->parameters(['impact' => 'impact:id']);
 
     // Stories
-    Route::resource('stories', StoryController::class);
+    Route::resource('stories', StoryController::class)->parameters(['stories' => 'story:id']);
 
     Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics');
     Route::get('contacts', [ContactSubmissionController::class, 'index'])->name('contacts.index');

@@ -39,6 +39,11 @@ class Event extends Model
         });
     }
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function initiative()
     {
         return $this->belongsTo(Initiative::class);

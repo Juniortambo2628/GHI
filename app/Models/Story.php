@@ -35,6 +35,11 @@ class Story extends Model
         });
     }
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function scopePublished($query)
     {
         return $query->where('status', 'published');

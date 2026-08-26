@@ -34,6 +34,11 @@ class Initiative extends Model
         });
     }
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function causes()
     {
         return $this->belongsToMany(Cause::class);

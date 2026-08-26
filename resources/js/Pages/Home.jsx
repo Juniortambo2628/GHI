@@ -241,8 +241,8 @@ export default function Home({ initiatives, events, stories, recentActivities, g
                                                 </div>
                                             </div>
                                             <div className="causes-content p-4 flex-grow-1 d-flex flex-column">
-                                                <div className="mb-2">
-                                                    <span className="glass-pill mb-2">{initiative.objective || 'Community Development'}</span>
+                                        <div className="mb-2">
+                                            <span className="glass-pill glass-pill-on-light mb-2">{initiative.objective || 'Community Development'}</span>
                                                 </div>
                                                 <Link className="h5 mb-3 card-title-link" href={`/initiatives?initiative=${initiative.slug || ''}`}>{initiative.title}</Link>
                                                 <p className="mb-3">{(initiative.description || '').substring(0, 100)}{(initiative.description || '').length > 100 ? '...' : ''}</p>
@@ -322,7 +322,7 @@ export default function Home({ initiatives, events, stories, recentActivities, g
                                         <div className="blog-content p-4 flex-grow-1 d-flex flex-column">
                                             <div className="blog-comment d-flex align-items-center mb-3">
                                                 <div className="small">
-                                                    <span className="glass-pill">{story.objective || 'Community Development'}</span>
+                                                    <span className="glass-pill glass-pill-on-light">{story.objective || 'Community Development'}</span>
                                                 </div>
                                             </div>
                                             <Link href={`/stories/${story.slug || story.id}`} className="h4 d-inline-block mb-3 card-title-link">{story.title}</Link>

@@ -48,6 +48,11 @@ class ImpactActivity extends Model
         });
     }
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function event()
     {
         return $this->belongsTo(Event::class);

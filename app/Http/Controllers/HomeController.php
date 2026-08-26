@@ -15,7 +15,7 @@ class HomeController extends Controller
     public function index()
     {
         $initiatives = Initiative::published()->latest()->limit(3)->get();
-        $events = Event::upcoming()->limit(3)->get();
+        $events = Event::published()->latest()->limit(3)->get();
         $stories = Story::published()->latest()->limit(3)->get();
         $impactStories = ImpactActivity::published()->limit(3)->get();
         $recentEvents = Event::published()->latest()->limit(5)->get();

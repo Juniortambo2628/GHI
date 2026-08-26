@@ -29,7 +29,6 @@ export default function Stories({ stories, hero }) {
         const storyImage = story.image ? mediaUrl(story.image) : '/Banners-and-portraits/pexels-ezeguna_graphy-sulaiman-muhammad-2153324075-34536427.jpg';
         const formattedDate = story.created_at ? new Date(story.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
         const props = {
-            key: story.id,
             index: idx,
             image: storyImage,
             imageAlt: story.title,
@@ -42,9 +41,9 @@ export default function Stories({ stories, hero }) {
             ],
             buttonText: 'Read More',
         };
-        if (mode === 'list') return <ListingRow {...props} />;
-        if (mode === 'timeline') return <TimelineCard {...props} side={idx % 2 === 0 ? 'left' : 'right'} />;
-        return <ListingCard {...props} />;
+        if (mode === 'list') return <ListingRow key={story.id} {...props} />;
+        if (mode === 'timeline') return <TimelineCard key={story.id} {...props} side={idx % 2 === 0 ? 'left' : 'right'} />;
+        return <ListingCard key={story.id} {...props} />;
     };
 
     return (
