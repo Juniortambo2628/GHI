@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Story;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -25,7 +26,15 @@ class StoryController extends Controller
 
         $stories = $query->latest()->paginate(12);
 
-        return inertia('Stories', compact('stories'));
+        $hero = SiteSetting::grouped([
+            'hero_stories_title' => 'Our Stories',
+            'hero_stories_subtitle' => '',
+            'hero_stories_image' => '',
+            'hero_stories_button_text' => '',
+            'hero_stories_button_url' => '',
+        ]);
+
+        return inertia('Stories', compact('stories', 'hero'));
     }
 
     public function show(Story $story)

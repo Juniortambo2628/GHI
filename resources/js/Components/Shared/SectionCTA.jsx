@@ -8,7 +8,7 @@ export default function SectionCTA({ href, children, size = 'md', className = ''
     };
     return (
         <div className="col-12">
-            <div className={`d-flex align-items-center justify-content-center ${className}`}>
+            <div className={`d-flex align-items-center justify-content-center mt-4 ${className}`}>
                 <Link className={`btn-hover-bg btn btn-primary text-white ${sizeClasses[size] || sizeClasses.md}`} href={href}>{children}</Link>
             </div>
         </div>

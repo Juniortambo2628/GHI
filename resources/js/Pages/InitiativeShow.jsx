@@ -1,4 +1,8 @@
 import PublicLayout from '../Layouts/PublicLayout';
+import sanitizeHtml from '../Components/Shared/sanitizeHtml';
+import { mediaUrl } from '../Components/Shared/ImageUploadField';
+import FallbackImage from '../Components/Shared/FallbackImage';
+import StatusBadge from '../Components/Shared/StatusBadge';
 import { Head, Link } from '@inertiajs/react';
 
 InitiativeShow.layout = page => <PublicLayout>{page}</PublicLayout>;
@@ -27,13 +31,13 @@ export default function InitiativeShow({ initiative, events }) {
                 <div className="row g-5">
                     <div className="col-lg-8">
                         {initiative.image && (
-                            <img src={`/uploads/images/${initiative.image}`} className="img-fluid rounded mb-4 w-100" alt={initiative.title} />
+                            <FallbackImage src={mediaUrl(initiative.image)} className="img-fluid rounded mb-4 w-100" alt={initiative.title} />
                         )}
                         <div className="mb-4">
                             {initiative.description}
                         </div>
                         {initiative.content && (
-                            <div className="mb-4" dangerouslySetInnerHTML={{ __html: initiative.content }} />
+                            <div className="mb-4" dangerouslySetInnerHTML={{ __html: sanitizeHtml(initiative.content) }} />
                         )}
                     </div>
                     <div className="col-lg-4">
@@ -41,7 +45,7 @@ export default function InitiativeShow({ initiative, events }) {
                             <h5 className="mb-3">Details</h5>
                             <ul className="list-unstyled">
                                 <li className="mb-2"><strong>Category:</strong> {initiative.category}</li>
-                                <li className="mb-2"><strong>Status:</strong> <span className={`badge bg-${initiative.status === 'published' ? 'success' : 'warning'}`}>{initiative.status}</span></li>
+                                <li className="mb-2"><strong>Status:</strong> <StatusBadge status={initiative.status} /></li>
                                 {initiative.cause && <li className="mb-2"><strong>Cause:</strong> {initiative.cause.title}</li>}
                             </ul>
                         </div>
@@ -57,7 +61,7 @@ export default function InitiativeShow({ initiative, events }) {
                                 return (
                                     <div key={idx} className="col-md-6">
                                         <div className="card h-100">
-                                            {event.image && <img src={`/uploads/images/${event.image}`} className="card-img-top" alt={event.title} />}
+                                            {event.image && <FallbackImage src={mediaUrl(event.image)} className="card-img-top" alt={event.title} />}
                                             <div className="card-body">
                                                 <h5 className="card-title">{event.title}</h5>
                                                 <p className="text-muted"><i className="bi bi-calendar me-1"></i>{eventDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>

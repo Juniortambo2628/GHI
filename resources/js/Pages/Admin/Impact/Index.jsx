@@ -1,43 +1,103 @@
-import AdminLayout from '../../../Layouts/AdminLayout';
-import { Head, Link, router } from '@inertiajs/react';
+import AdminResourceIndex from '../../../Components/Shared/AdminResourceIndex';
+import AdminCrudModalForm from '../../../Components/Shared/AdminCrudModalForm';
+import StatusBadge from '../../../Components/Shared/StatusBadge';
+import { useForm } from '@inertiajs/react';
+import ImageUploadField from '../../../Components/Shared/ImageUploadField';
+import RichTextField from '../../../Components/Shared/RichTextField';
+import { mediaUrl } from '../../../Components/Shared/ImageUploadField';
 
-Index.layout = page => <AdminLayout title="Impact">{page}</AdminLayout>;
+const stripHtml = (html) => html ? html.replace(/<[^>]+>/g, '') : '';
 
-export default function Index({ impacts }) {
-    const handleDelete = (id) => {
-        if (confirm('Delete this impact activity?')) {
-            router.delete(`/admin/impact/${id}`);
+const viewFields = [
+    { label: 'Image', key: 'image', isImage: true, getSrc: item => mediaUrl(item.image), col: 'col-12', render: () => null },
+    { label: 'Title', key: 'title' },
+    { label: 'Status', render: item => <StatusBadge status={item.status} /> },
+    { label: 'People Affected', render: item => item.people_affected?.toLocaleString() || 0 },
+    { label: 'Location', key: 'location' },
+    { label: 'Activity Date', render: item => item.activity_date ? new Date(item.activity_date).toLocaleDateString() : 'N/A' },
+    { label: 'Description', col: 'col-12', render: item => item.description ? <p className="mt-1 mb-0">{stripHtml(item.description)}</p> : 'N/A' },
+    { label: 'Outcome Summary', col: 'col-12', render: item => item.outcome_summary ? <p className="mt-1 mb-0">{stripHtml(item.outcome_summary)}</p> : 'N/A' },
+];
+
+function ImpactForm({ mode, item, onClose, onSuccess, events }) {
+    const isEdit = mode === 'edit';
+    const { data, setData, post, put, processing, errors } = useForm({
+        title: item?.title || '', description: item?.description || '', event_id: item?.event_id || '',
+        people_affected: item?.people_affected || '', activity_date: item?.activity_date || '',
+        location: item?.location || '', outcome_summary: item?.outcome_summary || '',
+        image: item?.image || '', status: item?.status || 'draft',
+    });
+
+    const submit = (e) => {
+        e.preventDefault();
+        if (isEdit) {
+            put(`/admin/impact/${item.id}`, { onSuccess });
+        } else {
+            post('/admin/impact', { onSuccess });
         }
     };
 
     return (
-        <>
-            <Head title="Impact - Admin" />
-            <div className="d-flex justify-content-between mb-4">
-                <div></div>
-                <Link href="/admin/impact/create" className="btn btn-primary"><i className="bi bi-plus-circle me-2"></i>Add Impact</Link>
+        <AdminCrudModalForm entity="Impact Activity" mode={mode} data={data} setData={setData} processing={processing} errors={errors} onSubmit={submit} onCancel={onClose}>
+            <div className="col-12">
+                <RichTextField label="Description" value={data.description} onChange={value => setData('description', value)} />
             </div>
-            <div className="content-card">
-                <div className="card-body p-0">
-                    <table className="table table-hover mb-0">
-                        <thead><tr><th>Title</th><th>Date</th><th>People Affected</th><th>Status</th><th>Actions</th></tr></thead>
-                        <tbody>
-                            {impacts?.data?.map(impact => (
-                                <tr key={impact.id}>
-                                    <td>{impact.title}</td>
-                                    <td>{impact.activity_date}</td>
-                                    <td>{impact.people_affected}</td>
-                                    <td><span className={`badge bg-${impact.status === 'published' ? 'success' : 'warning'}`}>{impact.status}</span></td>
-                                    <td>
-                                        <Link href={`/admin/impact/${impact.id}/edit`} className="btn btn-sm btn-outline-primary me-1"><i className="bi bi-pencil"></i></Link>
-                                        <button onClick={() => handleDelete(impact.id)} className="btn btn-sm btn-outline-danger"><i className="bi bi-trash"></i></button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+            <div className="col-md-4">
+                <label className="form-label">Event</label>
+                <select className="form-select" value={data.event_id} onChange={e => setData('event_id', e.target.value)}>
+                    <option value="">-- Select Event --</option>
+                    {events?.map(event => <option key={event.id} value={event.id}>{event.title}</option>)}
+                </select>
             </div>
-        </>
+            <div className="col-md-4">
+                <label className="form-label">People Affected</label>
+                <input type="number" className="form-control" value={data.people_affected} onChange={e => setData('people_affected', e.target.value)} min="0" />
+            </div>
+            <div className="col-md-4">
+                <label className="form-label">Activity Date</label>
+                <input type="date" className="form-control" value={data.activity_date} onChange={e => setData('activity_date', e.target.value)} />
+            </div>
+            <div className="col-md-6">
+                <label className="form-label">Location</label>
+                <input type="text" className="form-control" value={data.location} onChange={e => setData('location', e.target.value)} />
+            </div>
+            <div className="col-md-6">
+                <ImageUploadField name="image" value={data.image} onChange={value => setData('image', value)} />
+            </div>
+            <div className="col-12">
+                <label className="form-label">Outcome Summary</label>
+                <RichTextField label="Outcome Summary" value={data.outcome_summary} onChange={value => setData('outcome_summary', value)} />
+            </div>
+        </AdminCrudModalForm>
+    );
+}
+
+export default function Index({ impacts, filters, events, statusOptions }) {
+    return (
+        <AdminResourceIndex
+            title="Impact"
+            description="Track measurable community outcomes."
+            resource="/admin/impact"
+            data={impacts}
+            filters={filters}
+            statusOptions={statusOptions}
+            filterTypes={['search', 'status', 'dates']}
+            createLabel="Add Impact"
+            columns={[
+                { header: 'Title', key: 'title' },
+                { header: 'Date', key: 'activity_date' },
+                { header: 'People Affected', key: 'people_affected' },
+                { header: 'Status', render: item => <StatusBadge status={item.status} /> },
+            ]}
+            modalCrud
+            entityName="Impact Activity"
+            viewFields={viewFields}
+            renderCreateContent={({ onClose, onSuccess }) => (
+                <ImpactForm mode="create" onClose={onClose} onSuccess={onSuccess} events={events} />
+            )}
+            renderEditContent={({ item, onClose, onSuccess }) => (
+                <ImpactForm mode="edit" item={item} onClose={onClose} onSuccess={onSuccess} events={events} />
+            )}
+        />
     );
 }

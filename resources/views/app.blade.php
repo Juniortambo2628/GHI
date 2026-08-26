@@ -20,6 +20,9 @@
     <!-- Custom GHI Styles -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('css/site-theme.css') }}?v={{ filemtime(public_path('css/site-theme.css')) }}" rel="stylesheet">
+    @if (request()->is('admin*'))
+        <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
+    @endif
 
     <!-- Vite + React -->
     @viteReactRefresh

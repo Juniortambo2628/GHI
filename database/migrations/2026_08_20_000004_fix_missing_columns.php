@@ -67,12 +67,15 @@ return new class extends Migration
             }
         });
 
-        // Fix status enums to include 'archived' (code uses draft/published/archived but DB only has draft/published)
-        DB::statement("ALTER TABLE causes MODIFY status VARCHAR(20) NOT NULL DEFAULT 'draft'");
-        DB::statement("ALTER TABLE initiatives MODIFY status VARCHAR(20) NOT NULL DEFAULT 'draft'");
-        DB::statement("ALTER TABLE events MODIFY status VARCHAR(20) NOT NULL DEFAULT 'draft'");
-        DB::statement("ALTER TABLE impact_activities MODIFY status VARCHAR(20) NOT NULL DEFAULT 'draft'");
-        DB::statement("ALTER TABLE stories MODIFY status VARCHAR(20) NOT NULL DEFAULT 'draft'");
+        // Fix status enums to include 'archived' for MySQL-based deployments.
+        // SQLite does not support ALTER TABLE ... MODIFY, so we skip this for local development.
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE causes MODIFY status VARCHAR(20) NOT NULL DEFAULT 'draft'");
+            DB::statement("ALTER TABLE initiatives MODIFY status VARCHAR(20) NOT NULL DEFAULT 'draft'");
+            DB::statement("ALTER TABLE events MODIFY status VARCHAR(20) NOT NULL DEFAULT 'draft'");
+            DB::statement("ALTER TABLE impact_activities MODIFY status VARCHAR(20) NOT NULL DEFAULT 'draft'");
+            DB::statement("ALTER TABLE stories MODIFY status VARCHAR(20) NOT NULL DEFAULT 'draft'");
+        }
     }
 
     public function down(): void

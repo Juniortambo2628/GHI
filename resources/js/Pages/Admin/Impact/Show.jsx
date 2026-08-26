@@ -1,12 +1,12 @@
 import AdminLayout from '../../../Layouts/AdminLayout';
 import { Head, Link } from '@inertiajs/react';
-
-Show.layout = page => <AdminLayout title="View Impact Activity">{page}</AdminLayout>;
+import { mediaUrl } from '../../../Components/Shared/ImageUploadField';
+import StatusBadge from '../../../Components/Shared/StatusBadge';
 
 export default function Show({ impactActivity }) {
     return (
-        <>
-            <Head title="View Impact Activity - Admin" />
+        <AdminLayout title="Impact Details" breadcrumbs={[{ label: 'Dashboard', href: '/admin' }, { label: 'Impact', href: '/admin/impact' }, { label: 'View' }]}>
+            <Head title="Impact Details - Admin" />
             <div className="d-flex justify-content-between mb-4">
                 <h4 className="mb-0">{impactActivity.title}</h4>
                 <div>
@@ -21,7 +21,7 @@ export default function Show({ impactActivity }) {
                             <strong>Title:</strong> {impactActivity.title}
                         </div>
                         <div className="col-md-6">
-                            <strong>Status:</strong> <span className={`badge bg-${impactActivity.status === 'published' ? 'success' : 'warning'}`}>{impactActivity.status}</span>
+                            <strong>Status:</strong> <StatusBadge status={impactActivity.status} />
                         </div>
                         <div className="col-md-6">
                             <strong>People Affected:</strong> {impactActivity.people_affected?.toLocaleString() || 0}
@@ -33,10 +33,10 @@ export default function Show({ impactActivity }) {
                         {impactActivity.metric_type && <div className="col-md-6"><strong>Metric:</strong> {impactActivity.metric_type}: {impactActivity.metric_value}</div>}
                         {impactActivity.description && <div className="col-12"><strong>Description:</strong><p className="mt-1 mb-0">{impactActivity.description}</p></div>}
                         {impactActivity.outcome_summary && <div className="col-12"><strong>Outcome Summary:</strong><p className="mt-1 mb-0">{impactActivity.outcome_summary}</p></div>}
-                        {impactActivity.image && <div className="col-12"><strong>Image:</strong><img src={`/uploads/images/${impactActivity.image}`} className="img-fluid mt-2 rounded" style={{maxHeight: '200px'}} alt={impactActivity.title} /></div>}
+                        {impactActivity.image && <div className="col-12"><strong>Image:</strong><img src={mediaUrl(impactActivity.image)} className="img-fluid mt-2 rounded admin-media-preview" alt={impactActivity.title} /></div>}
                     </div>
                 </div>
             </div>
-        </>
+        </AdminLayout>
     );
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Initiative;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -25,7 +26,15 @@ class InitiativeController extends Controller
 
         $initiatives = $query->latest()->paginate(12);
 
-        return inertia('Initiatives', compact('initiatives'));
+        $hero = SiteSetting::grouped([
+            'hero_initiatives_title' => 'Our Initiatives',
+            'hero_initiatives_subtitle' => '',
+            'hero_initiatives_image' => '',
+            'hero_initiatives_button_text' => '',
+            'hero_initiatives_button_url' => '',
+        ]);
+
+        return inertia('Initiatives', compact('initiatives', 'hero'));
     }
 
     public function show(Initiative $initiative)

@@ -2,6 +2,15 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\SiteSetting;
+use App\Models\Cause;
+use App\Models\Initiative;
+use App\Models\Event;
+use App\Models\ImpactActivity;
+use App\Models\ContactSubmission;
+use App\Models\NewsletterSubscriber;
+use App\Models\Story;
+use App\Models\PageView;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -49,6 +58,35 @@ class HandleInertiaRequests extends Middleware
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),
             ],
+            'site_settings' => fn () => SiteSetting::grouped([
+                'site_name' => config('app.name'),
+                'site_tagline' => 'Bridging Global Compassion with Local Action',
+                'site_description' => 'Global Harmony Initiative is a U.S.-registered 501(c)(3) nonprofit organization working in East Africa to create positive change through education, healthcare, and community development.',
+                'site_logo' => '/Logo/Square-White-BG.png',
+                'site_favicon' => '/Logo/Square-White-BG.png',
+                'contact_email' => 'info@globalharmonyinitiative.com',
+                'contact_phone' => '+1 (437) 297-7977',
+                'facebook_url' => '',
+                'instagram_url' => '',
+                'twitter_url' => '',
+                'linkedin_url' => '',
+                'footer_text' => 'Bridging Global Compassion with Local Action.',
+            ]),
+            'admin_stats' => function () use ($request) {
+                if (!$request->user()?->is_admin) {
+                    return null;
+                }
+                return [
+                    'causes' => Cause::count(),
+                    'initiatives' => Initiative::count(),
+                    'events' => Event::count(),
+                    'stories' => Story::count(),
+                    'impact' => ImpactActivity::count(),
+                    'contacts' => ContactSubmission::where('status', 'new')->count(),
+                    'subscribers' => NewsletterSubscriber::where('status', 'active')->count(),
+                    'visitors' => PageView::where('occurred_at', '>=', now()->subDays(30))->distinct('visitor_hash')->count('visitor_hash'),
+                ];
+            },
         ];
     }
 }

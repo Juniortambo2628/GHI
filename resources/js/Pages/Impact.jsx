@@ -2,6 +2,7 @@ import PublicLayout from '../Layouts/PublicLayout';
 import { Head, router } from '@inertiajs/react';
 import { useState } from 'react';
 import { categoryToObjective } from '../Constants/categoryToObjective';
+import { mediaUrl } from '../Components/Shared/ImageUploadField';
 import PageHeader from '../Components/Shared/PageHeader';
 import SearchSidebar from '../Components/Shared/SearchSidebar';
 import ResultsCount from '../Components/Shared/ResultsCount';
@@ -13,7 +14,7 @@ import Pagination from '../Components/Shared/Pagination';
 
 Impact.layout = page => <PublicLayout>{page}</PublicLayout>;
 
-export default function Impact({ impactActivities }) {
+export default function Impact({ impactActivities, hero }) {
     const [search, setSearch] = useState('');
     const [sortBy, setSortBy] = useState('');
     const [viewMode, setViewMode] = useState('grid');
@@ -28,7 +29,7 @@ export default function Impact({ impactActivities }) {
         const props = {
             key: impact.id,
             index: idx,
-            image: impact.image ? `/uploads/images/${impact.image}` : null,
+            image: impact.image ? mediaUrl(impact.image) : null,
             imageAlt: impact.title,
             badges: [
                 { text: (impact.region || '').charAt(0).toUpperCase() + (impact.region || '').slice(1) },
@@ -52,7 +53,7 @@ export default function Impact({ impactActivities }) {
                 <title>Our Impact - Global Harmony Initiative</title>
                 <meta name="description" content="See the impact of our work in East Africa." />
             </Head>
-            <PageHeader title="Our Impact" breadcrumb={[{ label: 'Our Impact' }]} />
+            <PageHeader title={hero?.hero_impact_title || 'Our Impact'} subtitle={hero?.hero_impact_subtitle} image={hero?.hero_impact_image} buttonText={hero?.hero_impact_button_text} buttonUrl={hero?.hero_impact_button_url} breadcrumb={[{ label: 'Our Impact' }]} />
             <div className="container-fluid px-5">
                 <div className="row g-4">
                     <SearchSidebar onSubmit={handleSubmit} viewMode={viewMode} setViewMode={setViewMode}>

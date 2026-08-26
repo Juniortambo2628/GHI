@@ -1,4 +1,7 @@
 import PublicLayout from '../Layouts/PublicLayout';
+import { mediaUrl } from '../Components/Shared/ImageUploadField';
+import FallbackImage from '../Components/Shared/FallbackImage';
+import StatusBadge from '../Components/Shared/StatusBadge';
 import { Head, Link } from '@inertiajs/react';
 
 CauseShow.layout = page => <PublicLayout>{page}</PublicLayout>;
@@ -27,7 +30,7 @@ export default function CauseShow({ cause, initiatives }) {
                 <div className="row g-5">
                     <div className="col-lg-8">
                         {cause.image && (
-                            <img src={`/uploads/images/${cause.image}`} className="img-fluid rounded mb-4 w-100" alt={cause.title} />
+                            <FallbackImage src={mediaUrl(cause.image)} className="img-fluid rounded mb-4 w-100" alt={cause.title} />
                         )}
                         {cause.quote && (
                             <blockquote className="blockquote mb-4">
@@ -42,7 +45,7 @@ export default function CauseShow({ cause, initiatives }) {
                         <div className="bg-light p-4 rounded mb-4">
                             <h5 className="mb-3">Details</h5>
                             <ul className="list-unstyled">
-                                <li className="mb-2"><strong>Status:</strong> <span className={`badge bg-${cause.status === 'published' ? 'success' : 'warning'}`}>{cause.status}</span></li>
+                                <li className="mb-2"><strong>Status:</strong> <StatusBadge status={cause.status} /></li>
                                 {cause.icon && <li className="mb-2"><strong>Icon:</strong> <i className={`bi bi-${cause.icon}`}></i> {cause.icon}</li>}
                             </ul>
                         </div>
@@ -56,7 +59,7 @@ export default function CauseShow({ cause, initiatives }) {
                             {initiatives.map((init, idx) => (
                                 <div key={idx} className="col-md-6 col-lg-4">
                                     <div className="card h-100">
-                                        {init.image && <img src={`/uploads/images/${init.image}`} className="card-img-top" alt={init.title} />}
+                                        {init.image && <FallbackImage src={mediaUrl(init.image)} className="card-img-top" alt={init.title} />}
                                         <div className="card-body">
                                             <h5 className="card-title">{init.title}</h5>
                                             <p className="card-text">{(init.description || '').substring(0, 100)}...</p>

@@ -1,39 +1,42 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { apiService } from '../../js/api.js';
-import axios from 'axios';
 
-// Mock axios
-vi.mock('axios');
+const mockInstance = {
+  get: vi.fn(),
+  post: vi.fn(),
+  put: vi.fn(),
+  delete: vi.fn(),
+  interceptors: {
+    request: { use: vi.fn() },
+    response: { use: vi.fn() },
+  },
+};
+
+vi.mock('axios', () => ({
+  default: {
+    create: vi.fn(() => mockInstance),
+  },
+}));
+
+const { apiService } = await import('../../js/api.js');
 
 describe('API Service', () => {
   beforeEach(() => {
-    // Clear all mocks before each test
     vi.clearAllMocks();
   });
 
   describe('GET requests', () => {
     it('should make successful GET request', async () => {
-      const mockData = { id: 1, name: 'Test' };
       const mockResponse = {
-        data: mockData,
+        data: { id: 1, name: 'Test' },
         status: 200,
-        headers: { 'content-type': 'application/json' }
+        headers: { 'content-type': 'application/json' },
       };
-
-      // Mock axios.create to return an object with get method
-      const mockGet = vi.fn().mockResolvedValue(mockResponse);
-      axios.create = vi.fn(() => ({
-        get: mockGet,
-        interceptors: {
-          request: { use: vi.fn() },
-          response: { use: vi.fn() }
-        }
-      }));
+      mockInstance.get.mockResolvedValueOnce(mockResponse);
 
       const result = await apiService.get('/api/test');
 
       expect(result.success).toBe(true);
-      expect(result.data).toEqual(mockData);
+      expect(result.data).toEqual({ id: 1, name: 'Test' });
       expect(result.status).toBe(200);
     });
 
@@ -41,18 +44,10 @@ describe('API Service', () => {
       const mockError = {
         response: {
           data: { message: 'Not found' },
-          status: 404
-        }
+          status: 404,
+        },
       };
-
-      const mockGet = vi.fn().mockRejectedValue(mockError);
-      axios.create = vi.fn(() => ({
-        get: mockGet,
-        interceptors: {
-          request: { use: vi.fn() },
-          response: { use: vi.fn() }
-        }
-      }));
+      mockInstance.get.mockRejectedValueOnce(mockError);
 
       const result = await apiService.get('/api/missing');
 
@@ -68,17 +63,9 @@ describe('API Service', () => {
       const mockResponse = {
         data: { id: 1, ...postData },
         status: 201,
-        headers: { 'content-type': 'application/json' }
+        headers: { 'content-type': 'application/json' },
       };
-
-      const mockPost = vi.fn().mockResolvedValue(mockResponse);
-      axios.create = vi.fn(() => ({
-        post: mockPost,
-        interceptors: {
-          request: { use: vi.fn() },
-          response: { use: vi.fn() }
-        }
-      }));
+      mockInstance.post.mockResolvedValueOnce(mockResponse);
 
       const result = await apiService.post('/api/create', postData);
 
@@ -91,18 +78,10 @@ describe('API Service', () => {
       const mockError = {
         response: {
           data: { errors: { email: 'Invalid email' } },
-          status: 422
-        }
+          status: 422,
+        },
       };
-
-      const mockPost = vi.fn().mockRejectedValue(mockError);
-      axios.create = vi.fn(() => ({
-        post: mockPost,
-        interceptors: {
-          request: { use: vi.fn() },
-          response: { use: vi.fn() }
-        }
-      }));
+      mockInstance.post.mockRejectedValueOnce(mockError);
 
       const result = await apiService.post('/api/create', { email: 'bad' });
 
@@ -118,17 +97,9 @@ describe('API Service', () => {
       const mockResponse = {
         data: { id: 1, ...updateData },
         status: 200,
-        headers: {}
+        headers: {},
       };
-
-      const mockPut = vi.fn().mockResolvedValue(mockResponse);
-      axios.create = vi.fn(() => ({
-        put: mockPut,
-        interceptors: {
-          request: { use: vi.fn() },
-          response: { use: vi.fn() }
-        }
-      }));
+      mockInstance.put.mockResolvedValueOnce(mockResponse);
 
       const result = await apiService.put('/api/update/1', updateData);
 
@@ -142,17 +113,9 @@ describe('API Service', () => {
       const mockResponse = {
         data: { message: 'Deleted successfully' },
         status: 200,
-        headers: {}
+        headers: {},
       };
-
-      const mockDelete = vi.fn().mockResolvedValue(mockResponse);
-      axios.create = vi.fn(() => ({
-        delete: mockDelete,
-        interceptors: {
-          request: { use: vi.fn() },
-          response: { use: vi.fn() }
-        }
-      }));
+      mockInstance.delete.mockResolvedValueOnce(mockResponse);
 
       const result = await apiService.delete('/api/delete/1');
 
@@ -165,20 +128,12 @@ describe('API Service', () => {
     it('should upload file with progress tracking', async () => {
       const formData = new FormData();
       formData.append('file', new Blob(['test']), 'test.txt');
-      
+
       const mockResponse = {
         data: { fileId: 123, filename: 'test.txt' },
-        status: 200
+        status: 200,
       };
-
-      const mockPost = vi.fn().mockResolvedValue(mockResponse);
-      axios.create = vi.fn(() => ({
-        post: mockPost,
-        interceptors: {
-          request: { use: vi.fn() },
-          response: { use: vi.fn() }
-        }
-      }));
+      mockInstance.post.mockResolvedValueOnce(mockResponse);
 
       const progressCallback = vi.fn();
       const result = await apiService.upload('/api/upload', formData, progressCallback);

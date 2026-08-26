@@ -1,4 +1,7 @@
 import PublicLayout from '../Layouts/PublicLayout';
+import { mediaUrl } from '../Components/Shared/ImageUploadField';
+import FallbackImage from '../Components/Shared/FallbackImage';
+import StatusBadge from '../Components/Shared/StatusBadge';
 import { Head, Link } from '@inertiajs/react';
 
 StoryShow.layout = page => <PublicLayout>{page}</PublicLayout>;
@@ -29,7 +32,7 @@ export default function StoryShow({ story }) {
                 <div className="row g-5">
                     <div className="col-lg-8">
                         {(story.image || story.featured_image) && (
-                            <img src={`/uploads/images/${story.image || story.featured_image}`} className="img-fluid rounded mb-4 w-100" alt={story.title} />
+                            <FallbackImage src={mediaUrl(story.image || story.featured_image)} className="img-fluid rounded mb-4 w-100" alt={story.title} />
                         )}
                         <div className="mb-4">
                             {story.content}
@@ -42,7 +45,7 @@ export default function StoryShow({ story }) {
                                 {story.author && <li className="mb-2"><i className="bi bi-person me-2"></i>{story.author}</li>}
                                 {storyDate && <li className="mb-2"><i className="bi bi-calendar me-2"></i>{storyDate}</li>}
                                 {story.category && <li className="mb-2"><strong>Category:</strong> <span className="badge bg-primary">{story.category}</span></li>}
-                                <li className="mb-2"><strong>Status:</strong> <span className={`badge bg-${story.status === 'published' ? 'success' : 'warning'}`}>{story.status}</span></li>
+                                <li className="mb-2"><strong>Status:</strong> <StatusBadge status={story.status} /></li>
                             </ul>
                         </div>
                     </div>

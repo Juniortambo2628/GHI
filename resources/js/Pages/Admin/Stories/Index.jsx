@@ -1,43 +1,89 @@
-import AdminLayout from '../../../Layouts/AdminLayout';
-import { Head, Link, router } from '@inertiajs/react';
+import AdminResourceIndex from '../../../Components/Shared/AdminResourceIndex';
+import AdminCrudModalForm from '../../../Components/Shared/AdminCrudModalForm';
+import StatusBadge from '../../../Components/Shared/StatusBadge';
+import { useForm } from '@inertiajs/react';
+import ImageUploadField from '../../../Components/Shared/ImageUploadField';
+import RichTextField from '../../../Components/Shared/RichTextField';
+import { mediaUrl } from '../../../Components/Shared/ImageUploadField';
 
-Index.layout = page => <AdminLayout title="Stories">{page}</AdminLayout>;
+const stripHtml = (html) => html ? html.replace(/<[^>]+>/g, '') : '';
 
-export default function Index({ stories }) {
-    const handleDelete = (id) => {
-        if (confirm('Delete this story?')) {
-            router.delete(`/admin/stories/${id}`);
+const viewFields = [
+    { label: 'Image', key: 'image', isImage: true, getSrc: item => mediaUrl(item.image), col: 'col-12', render: () => null },
+    { label: 'Title', key: 'title' },
+    { label: 'Status', render: item => <StatusBadge status={item.status} /> },
+    { label: 'Author', key: 'author' },
+    { label: 'Category', key: 'category' },
+    { label: 'Content', col: 'col-12', render: item => item.content ? <p className="mt-1 mb-0">{stripHtml(item.content)}</p> : 'N/A' },
+    { label: 'Featured Image', col: 'col-12', render: item => item.featured_image ? <img src={mediaUrl(item.featured_image)} className="img-fluid mt-2 rounded admin-media-preview" alt={item.title} style={{ maxWidth: '300px' }} /> : 'N/A' },
+];
+
+function StoryForm({ mode, item, onClose, onSuccess }) {
+    const isEdit = mode === 'edit';
+    const { data, setData, post, put, processing, errors } = useForm({
+        title: item?.title || '', content: item?.content || '', author: item?.author || '',
+        category: item?.category || '', image: item?.image || '', featured_image: item?.featured_image || '',
+        status: item?.status || 'draft',
+    });
+
+    const submit = (e) => {
+        e.preventDefault();
+        if (isEdit) {
+            put(`/admin/stories/${item.id}`, { onSuccess });
+        } else {
+            post('/admin/stories', { onSuccess });
         }
     };
 
     return (
-        <>
-            <Head title="Stories - Admin" />
-            <div className="d-flex justify-content-between mb-4">
-                <div></div>
-                <Link href="/admin/stories/create" className="btn btn-primary"><i className="bi bi-plus-circle me-2"></i>Add Story</Link>
+        <AdminCrudModalForm entity="Story" mode={mode} data={data} setData={setData} processing={processing} errors={errors} onSubmit={submit} onCancel={onClose}>
+            <div className="col-12">
+                <RichTextField label="Content" value={data.content} onChange={value => setData('content', value)} />
             </div>
-            <div className="content-card">
-                <div className="card-body p-0">
-                    <table className="table table-hover mb-0">
-                        <thead><tr><th>Title</th><th>Author</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead>
-                        <tbody>
-                            {stories?.data?.map(story => (
-                                <tr key={story.id}>
-                                    <td>{story.title}</td>
-                                    <td>{story.author}</td>
-                                    <td>{story.category}</td>
-                                    <td><span className={`badge bg-${story.status === 'published' ? 'success' : 'warning'}`}>{story.status}</span></td>
-                                    <td>
-                                        <Link href={`/admin/stories/${story.id}/edit`} className="btn btn-sm btn-outline-primary me-1"><i className="bi bi-pencil"></i></Link>
-                                        <button onClick={() => handleDelete(story.id)} className="btn btn-sm btn-outline-danger"><i className="bi bi-trash"></i></button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+            <div className="col-md-4">
+                <label className="form-label">Author</label>
+                <input type="text" className="form-control" value={data.author} onChange={e => setData('author', e.target.value)} />
             </div>
-        </>
+            <div className="col-md-4">
+                <label className="form-label">Category</label>
+                <input type="text" className="form-control" value={data.category} onChange={e => setData('category', e.target.value)} />
+            </div>
+            <div className="col-md-4">
+                <ImageUploadField name="image" value={data.image} onChange={value => setData('image', value)} />
+            </div>
+            <div className="col-md-6">
+                <ImageUploadField name="featured_image" value={data.featured_image} onChange={value => setData('featured_image', value)} label="Featured Image" />
+            </div>
+        </AdminCrudModalForm>
+    );
+}
+
+export default function Index({ stories, filters, statusOptions }) {
+    return (
+        <AdminResourceIndex
+            title="Stories"
+            description="Manage stories and public impact updates."
+            resource="/admin/stories"
+            data={stories}
+            filters={filters}
+            statusOptions={statusOptions}
+            filterTypes={['search', 'status', 'category']}
+            createLabel="Add Story"
+            columns={[
+                { header: 'Title', key: 'title' },
+                { header: 'Author', key: 'author' },
+                { header: 'Category', key: 'category' },
+                { header: 'Status', render: item => <StatusBadge status={item.status} /> },
+            ]}
+            modalCrud
+            entityName="Story"
+            viewFields={viewFields}
+            renderCreateContent={({ onClose, onSuccess }) => (
+                <StoryForm mode="create" onClose={onClose} onSuccess={onSuccess} />
+            )}
+            renderEditContent={({ item, onClose, onSuccess }) => (
+                <StoryForm mode="edit" item={item} onClose={onClose} onSuccess={onSuccess} />
+            )}
+        />
     );
 }

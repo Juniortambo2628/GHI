@@ -66,12 +66,7 @@
             function hideSpinner() {
                 var spinner = document.getElementById('spinner');
                 if (spinner) {
-                    spinner.classList.remove('show');
-                    setTimeout(function() {
-                        if (spinner.classList.contains('show')) {
-                            spinner.style.display = 'none';
-                        }
-                    }, 1000);
+                    spinner.style.display = 'none';
                 }
             }
             if (document.readyState === 'complete') {

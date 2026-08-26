@@ -4,7 +4,7 @@ import PageHeader from '../Components/Shared/PageHeader';
 
 Contact.layout = page => <PublicLayout>{page}</PublicLayout>;
 
-export default function Contact() {
+export default function Contact({ hero }) {
     const { data, setData, post, processing, errors, wasSuccessful } = useForm({
         firstname: '', lastname: '', email: '', subject: '', message: ''
     });
@@ -17,7 +17,7 @@ export default function Contact() {
     return (
         <>
             <Head title="Contact" />
-            <PageHeader title="Contact Us" breadcrumb={[{ label: 'Contact Us' }]} />
+            <PageHeader title={hero?.hero_contact_title || 'Contact Us'} subtitle={hero?.hero_contact_subtitle} image={hero?.hero_contact_image} buttonText={hero?.hero_contact_button_text} buttonUrl={hero?.hero_contact_button_url} breadcrumb={[{ label: 'Contact Us' }]} />
             <div className="container py-5">
                 <div className="row g-5">
                     <div className="col-lg-5">

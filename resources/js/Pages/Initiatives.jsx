@@ -2,6 +2,7 @@ import PublicLayout from '../Layouts/PublicLayout';
 import { Head, router } from '@inertiajs/react';
 import { useState } from 'react';
 import { categoryToObjective } from '../Constants/categoryToObjective';
+import { mediaUrl } from '../Components/Shared/ImageUploadField';
 import PageHeader from '../Components/Shared/PageHeader';
 import SearchSidebar from '../Components/Shared/SearchSidebar';
 import ResultsCount from '../Components/Shared/ResultsCount';
@@ -13,7 +14,7 @@ import Pagination from '../Components/Shared/Pagination';
 
 Initiatives.layout = page => <PublicLayout>{page}</PublicLayout>;
 
-export default function Initiatives({ initiatives }) {
+export default function Initiatives({ initiatives, hero }) {
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('');
     const [sortBy, setSortBy] = useState('');
@@ -28,7 +29,7 @@ export default function Initiatives({ initiatives }) {
         const props = {
             key: initiative.id,
             index: idx,
-            image: initiative.image ? `/uploads/images/${initiative.image}` : null,
+            image: initiative.image ? mediaUrl(initiative.image) : null,
             imageAlt: initiative.title,
             badges: [{ text: categoryToObjective[initiative.category] || 'Community Development' }],
             title: initiative.title,
@@ -45,7 +46,7 @@ export default function Initiatives({ initiatives }) {
                 <title>Our Initiatives - Global Harmony Initiative</title>
                 <meta name="description" content="Explore our initiatives and programs that are creating lasting change in East Africa." />
             </Head>
-            <PageHeader title="Our Initiatives" breadcrumb={[{ label: 'Our Initiatives' }]} />
+            <PageHeader title={hero?.hero_initiatives_title || 'Our Initiatives'} subtitle={hero?.hero_initiatives_subtitle} image={hero?.hero_initiatives_image} buttonText={hero?.hero_initiatives_button_text} buttonUrl={hero?.hero_initiatives_button_url} breadcrumb={[{ label: 'Our Initiatives' }]} />
             <div className="container-fluid px-5">
                 <div className="row g-4">
                     <SearchSidebar title="Search & Filter" onSubmit={handleSubmit} viewMode={viewMode} setViewMode={setViewMode}>

@@ -1,12 +1,12 @@
 import AdminLayout from '../../../Layouts/AdminLayout';
 import { Head, Link } from '@inertiajs/react';
-
-Show.layout = page => <AdminLayout title="View Cause">{page}</AdminLayout>;
+import { mediaUrl } from '../../../Components/Shared/ImageUploadField';
+import StatusBadge from '../../../Components/Shared/StatusBadge';
 
 export default function Show({ cause, initiatives }) {
     return (
-        <>
-            <Head title="View Cause - Admin" />
+        <AdminLayout title="Cause Details" breadcrumbs={[{ label: 'Dashboard', href: '/admin' }, { label: 'Causes', href: '/admin/causes' }, { label: 'View' }]}>
+            <Head title="Cause Details - Admin" />
             <div className="d-flex justify-content-between mb-4">
                 <h4 className="mb-0">{cause.title}</h4>
                 <div>
@@ -21,7 +21,7 @@ export default function Show({ cause, initiatives }) {
                             <strong>Title:</strong> {cause.title}
                         </div>
                         <div className="col-md-6">
-                            <strong>Status:</strong> <span className={`badge bg-${cause.status === 'published' ? 'success' : 'warning'}`}>{cause.status}</span>
+                            <strong>Status:</strong> <StatusBadge status={cause.status} />
                         </div>
                         <div className="col-md-6">
                             <strong>Slug:</strong> {cause.slug}
@@ -32,7 +32,7 @@ export default function Show({ cause, initiatives }) {
                         {cause.icon && <div className="col-md-6"><strong>Icon:</strong> <i className={`bi bi-${cause.icon}`}></i> {cause.icon}</div>}
                         {cause.quote && <div className="col-12"><strong>Quote:</strong> <em>{cause.quote}</em></div>}
                         {cause.description && <div className="col-12"><strong>Description:</strong><p className="mt-1 mb-0">{cause.description}</p></div>}
-                        {cause.image && <div className="col-12"><strong>Image:</strong><img src={`/uploads/images/${cause.image}`} className="img-fluid mt-2 rounded" style={{maxHeight: '200px'}} alt={cause.title} /></div>}
+                        {cause.image && <div className="col-12"><strong>Image:</strong><img src={mediaUrl(cause.image)} className="img-fluid mt-2 rounded admin-media-preview" alt={cause.title} /></div>}
                     </div>
                 </div>
             </div>
@@ -48,7 +48,7 @@ export default function Show({ cause, initiatives }) {
                                     <tr key={init.id}>
                                         <td>{init.title}</td>
                                         <td>{init.category}</td>
-                                        <td><span className={`badge bg-${init.status === 'published' ? 'success' : 'warning'}`}>{init.status}</span></td>
+                                        <td><StatusBadge status={init.status} /></td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -56,6 +56,6 @@ export default function Show({ cause, initiatives }) {
                     </div>
                 </div>
             )}
-        </>
+        </AdminLayout>
     );
 }

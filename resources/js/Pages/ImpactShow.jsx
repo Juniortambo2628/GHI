@@ -1,4 +1,7 @@
 import PublicLayout from '../Layouts/PublicLayout';
+import { mediaUrl } from '../Components/Shared/ImageUploadField';
+import FallbackImage from '../Components/Shared/FallbackImage';
+import StatusBadge from '../Components/Shared/StatusBadge';
 import { Head, Link } from '@inertiajs/react';
 
 ImpactShow.layout = page => <PublicLayout>{page}</PublicLayout>;
@@ -27,7 +30,7 @@ export default function ImpactShow({ impactActivity }) {
                 <div className="row g-5">
                     <div className="col-lg-8">
                         {impactActivity.image && (
-                            <img src={`/uploads/images/${impactActivity.image}`} className="img-fluid rounded mb-4 w-100" alt={impactActivity.title} />
+                            <FallbackImage src={mediaUrl(impactActivity.image)} className="img-fluid rounded mb-4 w-100" alt={impactActivity.title} />
                         )}
                         <div className="mb-4">
                             {impactActivity.description}
@@ -47,7 +50,7 @@ export default function ImpactShow({ impactActivity }) {
                                 {impactActivity.activity_date && <li className="mb-2"><i className="bi bi-calendar me-2"></i>{new Date(impactActivity.activity_date).toLocaleDateString()}</li>}
                                 {impactActivity.location && <li className="mb-2"><i className="bi bi-geo-alt me-2"></i>{impactActivity.location}</li>}
                                 {impactActivity.metric_type && <li className="mb-2"><strong>Metric:</strong> {impactActivity.metric_type}: {impactActivity.metric_value}</li>}
-                                <li className="mb-2"><strong>Status:</strong> <span className={`badge bg-${impactActivity.status === 'published' ? 'success' : 'warning'}`}>{impactActivity.status}</span></li>
+                                <li className="mb-2"><strong>Status:</strong> <StatusBadge status={impactActivity.status} /></li>
                             </ul>
                         </div>
                         {impactActivity.event && (

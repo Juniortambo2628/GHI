@@ -1,12 +1,13 @@
 import AdminLayout from '../../../Layouts/AdminLayout';
+import sanitizeHtml from '../../../Components/Shared/sanitizeHtml';
 import { Head, Link } from '@inertiajs/react';
-
-Show.layout = page => <AdminLayout title="View Initiative">{page}</AdminLayout>;
+import { mediaUrl } from '../../../Components/Shared/ImageUploadField';
+import StatusBadge from '../../../Components/Shared/StatusBadge';
 
 export default function Show({ initiative, events }) {
     return (
-        <>
-            <Head title="View Initiative - Admin" />
+        <AdminLayout title="Initiative Details" breadcrumbs={[{ label: 'Dashboard', href: '/admin' }, { label: 'Initiatives', href: '/admin/initiatives' }, { label: 'View' }]}>
+            <Head title="Initiative Details - Admin" />
             <div className="d-flex justify-content-between mb-4">
                 <h4 className="mb-0">{initiative.title}</h4>
                 <div>
@@ -21,7 +22,7 @@ export default function Show({ initiative, events }) {
                             <strong>Title:</strong> {initiative.title}
                         </div>
                         <div className="col-md-6">
-                            <strong>Status:</strong> <span className={`badge bg-${initiative.status === 'published' ? 'success' : 'warning'}`}>{initiative.status}</span>
+                            <strong>Status:</strong> <StatusBadge status={initiative.status} />
                         </div>
                         <div className="col-md-6">
                             <strong>Category:</strong> {initiative.category}
@@ -30,8 +31,8 @@ export default function Show({ initiative, events }) {
                             <strong>Cause:</strong> {initiative.cause?.title || 'N/A'}
                         </div>
                         {initiative.description && <div className="col-12"><strong>Description:</strong><p className="mt-1 mb-0">{initiative.description}</p></div>}
-                        {initiative.content && <div className="col-12"><strong>Content:</strong><div className="mt-1" dangerouslySetInnerHTML={{ __html: initiative.content }}></div></div>}
-                        {initiative.image && <div className="col-12"><strong>Image:</strong><img src={`/uploads/images/${initiative.image}`} className="img-fluid mt-2 rounded" style={{maxHeight: '200px'}} alt={initiative.title} /></div>}
+                        {initiative.content && <div className="col-12"><strong>Content:</strong><div className="mt-1" dangerouslySetInnerHTML={{ __html: sanitizeHtml(initiative.content) }}></div></div>}
+                        {initiative.image && <div className="col-12"><strong>Image:</strong><img src={mediaUrl(initiative.image)} className="img-fluid mt-2 rounded admin-media-preview" alt={initiative.title} /></div>}
                     </div>
                 </div>
             </div>
@@ -48,7 +49,7 @@ export default function Show({ initiative, events }) {
                                         <td>{event.title}</td>
                                         <td>{new Date(event.event_date).toLocaleDateString()}</td>
                                         <td>{event.location}</td>
-                                        <td><span className={`badge bg-${event.status === 'published' ? 'success' : 'warning'}`}>{event.status}</span></td>
+                                        <td><StatusBadge status={event.status} /></td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -56,6 +57,6 @@ export default function Show({ initiative, events }) {
                     </div>
                 </div>
             )}
-        </>
+        </AdminLayout>
     );
 }

@@ -117,7 +117,7 @@ return new class extends Migration
         // Newsletter Subscribers
         Schema::create('newsletter_subscribers', function (Blueprint $table) {
             $table->id();
-            $table->string('email', 255)->unique();
+            $table->string('email', 191)->unique();
             $table->string('name', 255)->nullable();
             $table->string('status', 20)->default('active');
             $table->timestamp('subscribed_at')->nullable();
@@ -128,12 +128,12 @@ return new class extends Migration
         Schema::create('donations', function (Blueprint $table) {
             $table->id();
             $table->string('donor_name', 255)->nullable();
-            $table->string('donor_email', 255)->nullable();
+            $table->string('donor_email', 191)->nullable();
             $table->decimal('amount', 10, 2);
             $table->string('currency', 3)->default('USD');
             $table->string('donation_type', 50)->default('one-time');
-            $table->string('transaction_id', 255)->nullable();
-            $table->string('stripe_payment_intent_id', 255)->nullable();
+            $table->string('transaction_id', 191)->nullable();
+            $table->string('stripe_payment_intent_id', 191)->nullable();
             $table->string('status', 50)->default('pending');
             $table->text('notes')->nullable();
             $table->timestamps();

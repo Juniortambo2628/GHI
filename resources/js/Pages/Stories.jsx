@@ -2,6 +2,7 @@ import PublicLayout from '../Layouts/PublicLayout';
 import { Head, router } from '@inertiajs/react';
 import { useState } from 'react';
 import { categoryToObjective } from '../Constants/categoryToObjective';
+import { mediaUrl } from '../Components/Shared/ImageUploadField';
 import PageHeader from '../Components/Shared/PageHeader';
 import SearchSidebar from '../Components/Shared/SearchSidebar';
 import ResultsCount from '../Components/Shared/ResultsCount';
@@ -13,7 +14,7 @@ import Pagination from '../Components/Shared/Pagination';
 
 Stories.layout = page => <PublicLayout>{page}</PublicLayout>;
 
-export default function Stories({ stories }) {
+export default function Stories({ stories, hero }) {
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('');
     const [sortBy, setSortBy] = useState('');
@@ -25,7 +26,7 @@ export default function Stories({ stories }) {
     };
 
     const renderCard = (story, idx, mode) => {
-        const storyImage = story.image ? `/uploads/images/${story.image}` : '/Banners-and-portraits/pexels-ezeguna_graphy-sulaiman-muhammad-2153324075-34536427.jpg';
+        const storyImage = story.image ? mediaUrl(story.image) : '/Banners-and-portraits/pexels-ezeguna_graphy-sulaiman-muhammad-2153324075-34536427.jpg';
         const formattedDate = story.created_at ? new Date(story.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
         const props = {
             key: story.id,
@@ -52,7 +53,7 @@ export default function Stories({ stories }) {
                 <title>Our Stories - Global Harmony Initiative</title>
                 <meta name="description" content="Read inspiring stories from our community." />
             </Head>
-            <PageHeader title="Our Stories" breadcrumb={[{ label: 'Our Stories' }]} />
+            <PageHeader title={hero?.hero_stories_title || 'Our Stories'} subtitle={hero?.hero_stories_subtitle} image={hero?.hero_stories_image} buttonText={hero?.hero_stories_button_text} buttonUrl={hero?.hero_stories_button_url} breadcrumb={[{ label: 'Our Stories' }]} />
             <div className="container-fluid px-5">
                 <div className="row g-4">
                     <SearchSidebar title="Search & Filter" onSubmit={handleSubmit} viewMode={viewMode} setViewMode={setViewMode}>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cause;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -25,7 +26,15 @@ class CauseController extends Controller
 
         $causes = $query->orderBy('display_order')->paginate(12);
 
-        return inertia('Causes', compact('causes'));
+        $hero = SiteSetting::grouped([
+            'hero_causes_title' => 'Our Causes',
+            'hero_causes_subtitle' => '',
+            'hero_causes_image' => '',
+            'hero_causes_button_text' => '',
+            'hero_causes_button_url' => '',
+        ]);
+
+        return inertia('Causes', compact('causes', 'hero'));
     }
 
     public function show(Cause $cause)

@@ -6,17 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreEventRequest;
 use App\Http\Requests\Admin\UpdateEventRequest;
 use App\Models\Event;
+use App\Models\EventImage;
 use App\Models\Initiative;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $events = Event::with('initiative')->latest('event_date')->paginate(20);
+        $events = Event::with('initiative')->when($request->search, fn ($q, $search) => $q->where('title', 'like', "%{$search}%"))->when($request->status, fn ($q, $status) => $q->where('status', $status))->when($request->from, fn ($q, $from) => $q->whereDate('event_date', '>=', $from))->when($request->to, fn ($q, $to) => $q->whereDate('event_date', '<=', $to))->latest('event_date')->paginate(20)->withQueryString();
+        $initiatives = Initiative::published()->orderBy('title')->get();
+        $statusOptions = Event::select('status')->distinct()->orderBy('status')->pluck('status')->map(fn ($s) => ['value' => $s, 'label' => ucfirst($s)])->values()->all();
 
-        return inertia('Admin/Events/Index', compact('events'));
+        return inertia('Admin/Events/Index', ['events' => $events, 'initiatives' => $initiatives, 'statusOptions' => $statusOptions, 'filters' => $request->only('search', 'status', 'from', 'to')]);
     }
 
     public function create()
@@ -30,9 +33,7 @@ class EventController extends Controller
     {
         $validated = $request->validated();
 
-        $validated['slug'] = Str::slug($validated['title']);
-
-        Event::create($validated);
+        $event = Event::create($validated);
 
         return redirect()->route('admin.events.index')
             ->with('success', 'Event created successfully.');
@@ -40,6 +41,7 @@ class EventController extends Controller
 
     public function show(Event $event)
     {
+        $event->load('images');
         $impactActivities = $event->impactActivities()->paginate(10);
 
         return inertia('Admin/Events/Show', compact('event', 'impactActivities'));
@@ -47,6 +49,7 @@ class EventController extends Controller
 
     public function edit(Event $event)
     {
+        $event->load('images');
         $initiatives = Initiative::published()->orderBy('title')->get();
 
         return inertia('Admin/Events/Edit', compact('event', 'initiatives'));
@@ -60,6 +63,38 @@ class EventController extends Controller
 
         return redirect()->route('admin.events.index')
             ->with('success', 'Event updated successfully.');
+    }
+
+    public function syncImages(Request $request, Event $event)
+    {
+        $validated = $request->validate([
+            'images' => 'required|array',
+            'images.*.path' => 'required|string|max:255',
+            'images.*.sort_order' => 'required|integer|min:0',
+            'images.*.type' => 'nullable|string|in:image,video',
+            'images.*.id' => 'nullable|integer|exists:event_images,id',
+        ]);
+
+        $incoming = collect($validated['images']);
+        $incomingPaths = $incoming->pluck('path')->toArray();
+
+        $event->images()->whereNotIn('path', $incomingPaths)->delete();
+
+        foreach ($incoming as $index => $item) {
+            $existing = EventImage::where('event_id', $event->id)->where('path', $item['path'])->first();
+            if ($existing) {
+                $existing->update(['sort_order' => $index, 'type' => $item['type'] ?? 'image']);
+            } else {
+                EventImage::create([
+                    'event_id' => $event->id,
+                    'path' => $item['path'],
+                    'type' => $item['type'] ?? 'image',
+                    'sort_order' => $index,
+                ]);
+            }
+        }
+
+        return back()->with('success', 'Gallery images updated.');
     }
 
     public function destroy(Event $event)

@@ -19,7 +19,8 @@ class UpdateInitiativeRequest extends FormRequest
             'content' => 'nullable|string',
             'image' => 'nullable|string|max:255',
             'category' => 'required|string|max:50',
-            'cause_id' => 'nullable|exists:causes,id',
+            'cause_ids' => 'nullable|array',
+            'cause_ids.*' => 'exists:causes,id',
             'status' => 'required|in:draft,published,archived',
         ];
     }

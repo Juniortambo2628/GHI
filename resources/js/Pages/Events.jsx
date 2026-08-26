@@ -1,6 +1,7 @@
 import PublicLayout from '../Layouts/PublicLayout';
 import { Head, router } from '@inertiajs/react';
 import { useState } from 'react';
+import { mediaUrl } from '../Components/Shared/ImageUploadField';
 import PageHeader from '../Components/Shared/PageHeader';
 import SearchSidebar from '../Components/Shared/SearchSidebar';
 import ResultsCount from '../Components/Shared/ResultsCount';
@@ -12,12 +13,12 @@ import Pagination from '../Components/Shared/Pagination';
 
 Events.layout = page => <PublicLayout>{page}</PublicLayout>;
 
-export default function Events({ events }) {
+export default function Events({ events, hero }) {
     const [search, setSearch] = useState('');
     const [upcoming, setUpcoming] = useState(false);
     const [past, setPast] = useState(false);
     const [sortBy, setSortBy] = useState('');
-    const [viewMode, setViewMode] = useState('grid');
+    const [viewMode, setViewMode] = useState('timeline');
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -33,7 +34,7 @@ export default function Events({ events }) {
         const props = {
             key: event.id,
             index: idx,
-            image: event.image ? `/uploads/images/${event.image}` : null,
+            image: event.image ? mediaUrl(event.image) : null,
             imageAlt: event.title,
             badges: [
                 { text: event.initiative?.title || 'General' },
@@ -57,7 +58,7 @@ export default function Events({ events }) {
                 <title>Events & Activities - Global Harmony Initiative</title>
                 <meta name="description" content="Discover our upcoming events and activities." />
             </Head>
-            <PageHeader title="Events & Activities" breadcrumb={[{ label: 'Events & Activities' }]} />
+            <PageHeader title={hero?.hero_events_title || 'Events & Activities'} subtitle={hero?.hero_events_subtitle} image={hero?.hero_events_image} buttonText={hero?.hero_events_button_text} buttonUrl={hero?.hero_events_button_url} breadcrumb={[{ label: 'Events & Activities' }]} />
             <div className="container-fluid px-5">
                 <div className="row g-4">
                     <SearchSidebar title="Search & Filter" onSubmit={handleSubmit} viewMode={viewMode} setViewMode={setViewMode}>

@@ -6,16 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreStoryRequest;
 use App\Http\Requests\Admin\UpdateStoryRequest;
 use App\Models\Story;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 
 class StoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $stories = Story::latest()->paginate(20);
+        $stories = Story::when($request->search, fn ($q, $search) => $q->where('title', 'like', "%{$search}%"))->when($request->status, fn ($q, $status) => $q->where('status', $status))->when($request->category, fn ($q, $category) => $q->where('category', $category))->latest()->paginate(20)->withQueryString();
+        $statusOptions = Story::select('status')->distinct()->orderBy('status')->pluck('status')->map(fn ($s) => ['value' => $s, 'label' => ucfirst($s)])->values()->all();
 
-        return inertia('Admin/Stories/Index', compact('stories'));
+        return inertia('Admin/Stories/Index', ['stories' => $stories, 'statusOptions' => $statusOptions, 'filters' => $request->only('search', 'status', 'category')]);
     }
 
     public function create()
@@ -26,8 +27,6 @@ class StoryController extends Controller
     public function store(StoreStoryRequest $request)
     {
         $validated = $request->validated();
-
-        $validated['slug'] = Str::slug($validated['title']);
 
         Story::create($validated);
 

@@ -1,4 +1,8 @@
 import PublicLayout from '../Layouts/PublicLayout';
+import sanitizeHtml from '../Components/Shared/sanitizeHtml';
+import { mediaUrl } from '../Components/Shared/ImageUploadField';
+import FallbackImage from '../Components/Shared/FallbackImage';
+import StatusBadge from '../Components/Shared/StatusBadge';
 import { Head, Link } from '@inertiajs/react';
 
 EventShow.layout = page => <PublicLayout>{page}</PublicLayout>;
@@ -29,13 +33,13 @@ export default function EventShow({ event, impactActivities }) {
                 <div className="row g-5">
                     <div className="col-lg-8">
                         {event.image && (
-                            <img src={`/uploads/images/${event.image}`} className="img-fluid rounded mb-4 w-100" alt={event.title} />
+                            <FallbackImage src={mediaUrl(event.image)} className="img-fluid rounded mb-4 w-100" alt={event.title} />
                         )}
                         <div className="mb-4">
                             {event.description}
                         </div>
                         {event.content && (
-                            <div className="mb-4" dangerouslySetInnerHTML={{ __html: event.content }} />
+                            <div className="mb-4" dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.content) }} />
                         )}
                     </div>
                     <div className="col-lg-4">
@@ -46,7 +50,7 @@ export default function EventShow({ event, impactActivities }) {
                                 <li className="mb-2"><i className="bi bi-clock me-2"></i>{eventDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</li>
                                 {event.location && <li className="mb-2"><i className="bi bi-geo-alt me-2"></i>{event.location}</li>}
                                 {event.initiative && <li className="mb-2"><strong>Initiative:</strong> {event.initiative.title}</li>}
-                                <li className="mb-2"><strong>Status:</strong> <span className={`badge bg-${event.status === 'published' ? 'success' : 'warning'}`}>{event.status}</span></li>
+                                <li className="mb-2"><strong>Status:</strong> <StatusBadge status={event.status} /></li>
                             </ul>
                         </div>
                     </div>
@@ -59,7 +63,7 @@ export default function EventShow({ event, impactActivities }) {
                             {impactActivities.map((impact, idx) => (
                                 <div key={idx} className="col-md-6 col-lg-4">
                                     <div className="card h-100">
-                                        {impact.image && <img src={`/uploads/images/${impact.image}`} className="card-img-top" alt={impact.title} />}
+                                        {impact.image && <FallbackImage src={mediaUrl(impact.image)} className="card-img-top" alt={impact.title} />}
                                         <div className="card-body">
                                             <h5 className="card-title">{impact.title}</h5>
                                             <p className="text-muted"><i className="bi bi-people me-1"></i>{impact.people_affected} Lives Impacted</p>

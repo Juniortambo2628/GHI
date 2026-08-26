@@ -1,47 +1,76 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ config('app.name', 'Global Harmony Initiative') }} | {{ __('Sign in') }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/admin-auth.css') }}">
+</head>
+<body class="admin-auth-page">
+    <main class="admin-auth-shell">
+        <section class="admin-auth-panel" aria-labelledby="login-heading">
+            <a class="admin-auth-brand" href="{{ url('/') }}" aria-label="{{ config('app.name') }} home">
+                <img src="{{ asset('Logo/Square-White-BG.png') }}" alt="{{ config('app.name') }} logo">
+            </a>
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+            <div class="admin-auth-content">
+                <p class="admin-auth-kicker">{{ __('Admin portal') }}</p>
+                <h1 id="login-heading">{{ __('Welcome Back') }}</h1>
+                <p class="admin-auth-intro">{{ __('Today is a new day. It is your day. You shape it. Sign in to start managing your projects.') }}</p>
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+                @if (session('status'))
+                    <p class="admin-auth-status" role="status">{{ session('status') }}</p>
+                @endif
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+                <form class="admin-auth-form" method="POST" action="{{ route('login') }}">
+                    @csrf
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+                    <div class="admin-auth-field">
+                        <label for="email">{{ __('Email') }}</label>
+                        <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="Example@email.com" required autofocus autocomplete="username">
+                        @if ($errors->get('email'))
+                            <ul class="admin-auth-errors" role="alert">
+                                @foreach ($errors->get('email') as $message)
+                                    <li>{{ $message }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
+                    </div>
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+                    <div class="admin-auth-field">
+                        <div class="admin-auth-label-row">
+                            <label for="password">{{ __('Password') }}</label>
+                            @if (Route::has('password.request'))
+                                <a href="{{ route('password.request') }}">{{ __('Forgot Password?') }}</a>
+                            @endif
+                        </div>
+                        <input id="password" type="password" name="password" placeholder="At least 8 characters" required autocomplete="current-password">
+                        @if ($errors->get('password'))
+                            <ul class="admin-auth-errors" role="alert">
+                                @foreach ($errors->get('password') as $message)
+                                    <li>{{ $message }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
+                    </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+                    <label class="admin-auth-remember" for="remember_me">
+                        <input id="remember_me" type="checkbox" name="remember">
+                        <span>{{ __('Remember me') }}</span>
+                    </label>
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
+                    <button class="admin-auth-submit" type="submit">{{ __('Sign in') }}</button>
+                </form>
+            </div>
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+            <p class="admin-auth-footer">{{ __('© :year All rights reserved', ['year' => now()->year]) }}</p>
+        </section>
+
+        <aside class="admin-auth-image" aria-label="{{ __('Global Harmony Initiative community') }}"></aside>
+    </main>
+</body>
+</html>

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Concerns\SanitizesHtml;
 
 class Cause extends Model
 {
-    use HasFactory;
+    use HasFactory, SanitizesHtml;
 
     protected $table = 'causes';
 
@@ -26,8 +27,23 @@ class Cause extends Model
         'display_order' => 'integer',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::saving(function ($model) {
+            if (empty($model->slug) && !empty($model->title)) {
+                $model->slug = \Illuminate\Support\Str::slug($model->title);
+            }
+        });
+    }
+
     public function initiatives()
     {
-        return $this->hasMany(Initiative::class);
+        return $this->belongsToMany(Initiative::class);
+    }
+
+    public function scopePublished($query)
+    {
+        return $query->where('status', 'published');
     }
 }

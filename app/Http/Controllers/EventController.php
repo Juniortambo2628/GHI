@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -28,7 +29,15 @@ class EventController extends Controller
 
         $events = $query->with('initiative')->orderBy('event_date', 'desc')->paginate(12);
 
-        return inertia('Events', compact('events'));
+        $hero = SiteSetting::grouped([
+            'hero_events_title' => 'Events & Activities',
+            'hero_events_subtitle' => '',
+            'hero_events_image' => '',
+            'hero_events_button_text' => '',
+            'hero_events_button_url' => '',
+        ]);
+
+        return inertia('Events', compact('events', 'hero'));
     }
 
     public function show(Event $event)

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ImpactActivity;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -25,7 +26,15 @@ class ImpactController extends Controller
 
         $impactActivities = $query->latest()->paginate(12);
 
-        return inertia('Impact', compact('impactActivities'));
+        $hero = SiteSetting::grouped([
+            'hero_impact_title' => 'Our Impact',
+            'hero_impact_subtitle' => '',
+            'hero_impact_image' => '',
+            'hero_impact_button_text' => '',
+            'hero_impact_button_url' => '',
+        ]);
+
+        return inertia('Impact', compact('impactActivities', 'hero'));
     }
 
     public function show(ImpactActivity $impactActivity)

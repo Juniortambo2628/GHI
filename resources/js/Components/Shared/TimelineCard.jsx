@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import Modal from './Modal';
+import sanitizeHtml from './sanitizeHtml';
+import stripHtml from './stripHtml';
 
 export default function TimelineCard({ image, imageAlt, badges = [], title, description, meta = [], buttonText = 'View Details', onButtonClick, side = 'left' }) {
     const [showModal, setShowModal] = useState(false);
 
     const truncate = (text, len = 150) => {
         if (!text) return '';
-        return text.length > len ? text.substring(0, len) + '...' : text;
+        const plain = stripHtml(text);
+        return plain.length > len ? plain.substring(0, len) + '...' : plain;
     };
 
     const overviewContent = (
@@ -15,11 +18,11 @@ export default function TimelineCard({ image, imageAlt, badges = [], title, desc
             {badges.length > 0 && (
                 <div className="d-flex flex-wrap gap-2 mb-3">
                     {badges.map((badge, idx) => (
-                        <span key={idx} className={`glass-pill ${badge.className || ''}`}>{badge.text}</span>
+                        <span key={idx} className={`glass-pill ${badge.className || ''}`}>{stripHtml(badge.text)}</span>
                     ))}
                 </div>
             )}
-            <p className="listing-row-modal-text mb-0">{description}</p>
+            <div className="listing-row-modal-text mb-0" dangerouslySetInnerHTML={{ __html: sanitizeHtml(description || '') }}></div>
         </div>
     );
 
@@ -30,7 +33,7 @@ export default function TimelineCard({ image, imageAlt, badges = [], title, desc
                     {meta.map((item, idx) => (
                         <div key={idx} className="d-flex align-items-center gap-3 p-3 rounded listing-row-detail-item">
                             <span className="glass-pill-sm"><i className={item.icon}></i></span>
-                            <span className="listing-row-detail-text">{item.text}</span>
+                            <span className="listing-row-detail-text">{stripHtml(item.text)}</span>
                         </div>
                     ))}
                 </div>
@@ -40,10 +43,9 @@ export default function TimelineCard({ image, imageAlt, badges = [], title, desc
         </div>
     );
 
-    const tabs = [
-        { label: 'Overview', content: overviewContent },
-        { label: 'Details', content: detailsContent }
-    ];
+    const tabs = meta.length > 0
+        ? [{ label: 'Overview', content: overviewContent }, { label: 'Details', content: detailsContent }]
+        : [{ label: 'Overview', content: overviewContent }];
 
     return (
         <div className={`timeline-item timeline-${side}`}>
@@ -57,7 +59,7 @@ export default function TimelineCard({ image, imageAlt, badges = [], title, desc
                 <div className="timeline-card-body">
                 <div className="timeline-card-badges">
                     {badges.map((badge, idx) => (
-                        <span key={idx} className={`glass-pill ${badge.className || ''}`}>{badge.text}</span>
+                        <span key={idx} className={`glass-pill ${badge.className || ''}`}>{stripHtml(badge.text)}</span>
                     ))}
                 </div>
                     <h5 className="timeline-card-title">{title}</h5>
@@ -65,7 +67,7 @@ export default function TimelineCard({ image, imageAlt, badges = [], title, desc
                         {meta.map((item, idx) => (
                             <small key={idx} className="d-inline-flex align-items-center me-3">
                                 <span className="glass-pill-sm me-1"><i className={item.icon}></i></span>
-                                <span className="card-meta-text">{item.text}</span>
+                                <span className="card-meta-text">{stripHtml(item.text)}</span>
                             </small>
                         ))}
                     </div>

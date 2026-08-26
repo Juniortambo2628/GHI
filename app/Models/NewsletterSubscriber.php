@@ -21,9 +21,4 @@ class NewsletterSubscriber extends Model
     protected $casts = [
         'subscribed_at' => 'datetime',
     ];
-
-    public function scopeActive($query)
-    {
-        return $query->where('status', 'active');
-    }
 }

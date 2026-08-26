@@ -26,14 +26,4 @@ class Donation extends Model
     protected $casts = [
         'amount' => 'decimal:2',
     ];
-
-    public function scopeCompleted($query)
-    {
-        return $query->where('status', 'completed');
-    }
-
-    public function scopeRecent($query, int $limit = 10)
-    {
-        return $query->orderByDesc('created_at')->limit($limit);
-    }
 }

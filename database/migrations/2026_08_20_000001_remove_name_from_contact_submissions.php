@@ -8,15 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('contact_submissions', function (Blueprint $table) {
-            $table->dropColumn('name');
-        });
+        if (Schema::hasColumn('contact_submissions', 'name')) {
+            Schema::table('contact_submissions', function (Blueprint $table) {
+                $table->dropColumn('name');
+            });
+        }
     }
 
     public function down(): void
     {
-        Schema::table('contact_submissions', function (Blueprint $table) {
-            $table->string('name', 255)->nullable()->after('lastname');
-        });
+        if (!Schema::hasColumn('contact_submissions', 'name')) {
+            Schema::table('contact_submissions', function (Blueprint $table) {
+                $table->string('name', 255)->nullable()->after('lastname');
+            });
+        }
     }
 };

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Concerns\SanitizesHtml;
 
 class Story extends Model
 {
-    use HasFactory;
+    use HasFactory, SanitizesHtml;
 
     protected $table = 'stories';
 
@@ -18,9 +19,21 @@ class Story extends Model
         'author',
         'featured_image',
         'image',
+        'likes',
+        'comments',
         'category',
         'status',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::saving(function ($model) {
+            if (empty($model->slug) && !empty($model->title)) {
+                $model->slug = \Illuminate\Support\Str::slug($model->title);
+            }
+        });
+    }
 
     public function scopePublished($query)
     {

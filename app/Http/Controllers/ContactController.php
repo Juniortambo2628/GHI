@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ContactSubmission;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -11,7 +12,15 @@ class ContactController extends Controller
 {
     public function index()
     {
-        return inertia('Contact');
+        $hero = SiteSetting::grouped([
+            'hero_contact_title' => 'Contact Us',
+            'hero_contact_subtitle' => '',
+            'hero_contact_image' => '',
+            'hero_contact_button_text' => '',
+            'hero_contact_button_url' => '',
+        ]);
+
+        return inertia('Contact', compact('hero'));
     }
 
     public function store(Request $request)

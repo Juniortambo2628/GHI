@@ -1,43 +1,128 @@
-import AdminLayout from '../../../Layouts/AdminLayout';
-import { Head, Link, router } from '@inertiajs/react';
+import AdminResourceIndex from '../../../Components/Shared/AdminResourceIndex';
+import AdminCrudModalForm from '../../../Components/Shared/AdminCrudModalForm';
+import StatusBadge from '../../../Components/Shared/StatusBadge';
+import { useForm, router } from '@inertiajs/react';
+import ImageUploadField from '../../../Components/Shared/ImageUploadField';
+import RichTextField from '../../../Components/Shared/RichTextField';
+import GalleryUpload from '../../../Components/Shared/GalleryUpload';
+import { mediaUrl } from '../../../Components/Shared/ImageUploadField';
+import sanitizeHtml from '../../../Components/Shared/sanitizeHtml';
+import { useState, useCallback } from 'react';
 
-Index.layout = page => <AdminLayout title="Events">{page}</AdminLayout>;
+const stripHtml = (html) => html ? html.replace(/<[^>]+>/g, '') : '';
 
-export default function Index({ events }) {
-    const handleDelete = (id) => {
-        if (confirm('Delete this event?')) {
-            router.delete(`/admin/events/${id}`);
-        }
+const viewFields = [
+    { label: 'Image', key: 'image', isImage: true, getSrc: item => mediaUrl(item.image), col: 'col-12', render: () => null },
+    { label: 'Title', key: 'title' },
+    { label: 'Status', render: item => <StatusBadge status={item.status} /> },
+    { label: 'Date', render: item => item.event_date ? new Date(item.event_date).toLocaleString() : 'N/A' },
+    { label: 'Location', key: 'location' },
+    { label: 'Initiative', render: item => item.initiative?.title || 'N/A' },
+    { label: 'Description', col: 'col-12', render: item => item.description ? <p className="mt-1 mb-0">{stripHtml(item.description)}</p> : 'N/A' },
+    { label: 'Content', col: 'col-12', render: item => item.content ? <div className="mt-1" dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.content) }}></div> : 'N/A' },
+];
+
+function EventForm({ mode, item, onClose, onSuccess, initiatives }) {
+    const isEdit = mode === 'edit';
+    const [galleryImages, setGalleryImages] = useState(
+        isEdit && item?.images ? item.images.map(img => ({ id: img.id, path: img.path, sort_order: img.sort_order })) : []
+    );
+
+    const { data, setData, post, put, processing, errors } = useForm({
+        title: item?.title || '', description: item?.description || '', content: item?.content || '',
+        event_date: item?.event_date ? item.event_date.split('T')[0] : '', location: item?.location || '',
+        initiative_id: item?.initiative_id || '', image: item?.image || '', status: item?.status || 'draft',
+    });
+
+    const syncGallery = (eventId, images) => {
+        router.post(`/admin/events/${eventId}/images`, {
+            images: images.map((img, idx) => ({ id: img.id || null, path: img.path, sort_order: idx })),
+        }, { preserveState: true });
     };
 
+    const submit = useCallback((e) => {
+        e.preventDefault();
+        const opts = {
+            onSuccess: () => {
+                if (isEdit && item?.id) syncGallery(item.id, galleryImages);
+                onSuccess();
+            },
+        };
+        if (isEdit) {
+            put(`/admin/events/${item.id}`, opts);
+        } else {
+            post('/admin/events', {
+                ...opts,
+                onSuccess: (page) => {
+                    const eventId = page.props.event?.id;
+                    if (eventId && galleryImages.length > 0) syncGallery(eventId, galleryImages);
+                    onSuccess();
+                },
+            });
+        }
+    }, [post, put, isEdit, item, galleryImages, onSuccess]);
+
     return (
-        <>
-            <Head title="Events - Admin" />
-            <div className="d-flex justify-content-between mb-4">
-                <div></div>
-                <Link href="/admin/events/create" className="btn btn-primary"><i className="bi bi-plus-circle me-2"></i>Add Event</Link>
+        <AdminCrudModalForm entity="Event" mode={mode} data={data} setData={setData} processing={processing} errors={errors} onSubmit={submit} onCancel={onClose}>
+            <div className="col-12">
+                <RichTextField label="Description" value={data.description} onChange={value => setData('description', value)} />
             </div>
-            <div className="content-card">
-                <div className="card-body p-0">
-                    <table className="table table-hover mb-0">
-                        <thead><tr><th>Title</th><th>Date</th><th>Location</th><th>Status</th><th>Actions</th></tr></thead>
-                        <tbody>
-                            {events?.data?.map(event => (
-                                <tr key={event.id}>
-                                    <td>{event.title}</td>
-                                    <td>{event.event_date}</td>
-                                    <td>{event.location}</td>
-                                    <td><span className={`badge bg-${event.status === 'published' ? 'success' : 'warning'}`}>{event.status}</span></td>
-                                    <td>
-                                        <Link href={`/admin/events/${event.id}/edit`} className="btn btn-sm btn-outline-primary me-1"><i className="bi bi-pencil"></i></Link>
-                                        <button onClick={() => handleDelete(event.id)} className="btn btn-sm btn-outline-danger"><i className="bi bi-trash"></i></button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+            <div className="col-12">
+                <RichTextField label="Content" value={data.content} onChange={value => setData('content', value)} />
             </div>
-        </>
+            <div className="col-md-4">
+                <label className="form-label">Event Date</label>
+                <input type="date" className="form-control" value={data.event_date} onChange={e => setData('event_date', e.target.value)} />
+            </div>
+            <div className="col-md-4">
+                <label className="form-label">Location</label>
+                <input type="text" className="form-control" value={data.location} onChange={e => setData('location', e.target.value)} />
+            </div>
+            <div className="col-md-4">
+                <label className="form-label">Initiative</label>
+                <select className="form-select" value={data.initiative_id} onChange={e => setData('initiative_id', e.target.value)}>
+                    <option value="">-- Select Initiative --</option>
+                    {initiatives?.map(initiative => <option key={initiative.id} value={initiative.id}>{initiative.title}</option>)}
+                </select>
+            </div>
+            <div className="col-md-6">
+                <ImageUploadField name="image" value={data.image} onChange={value => setData('image', value)} />
+            </div>
+            <div className="col-12">
+                <label className="form-label fw-semibold">Activity Gallery Images</label>
+                <p className="text-muted small mb-2">Upload images from this event.</p>
+                <GalleryUpload eventId={isEdit ? item?.id : null} images={galleryImages} onImagesChange={setGalleryImages} />
+            </div>
+        </AdminCrudModalForm>
+    );
+}
+
+export default function Index({ events, filters, initiatives, statusOptions }) {
+    return (
+        <AdminResourceIndex
+            title="Events"
+            description="Manage upcoming and completed events."
+            resource="/admin/events"
+            data={events}
+            filters={filters}
+            statusOptions={statusOptions}
+            filterTypes={['search', 'status', 'dates']}
+            createLabel="Add Event"
+            columns={[
+                { header: 'Title', key: 'title' },
+                { header: 'Date', key: 'event_date' },
+                { header: 'Location', key: 'location' },
+                { header: 'Status', render: item => <StatusBadge status={item.status} /> },
+            ]}
+            modalCrud
+            entityName="Event"
+            viewFields={viewFields}
+            renderCreateContent={({ onClose, onSuccess }) => (
+                <EventForm mode="create" onClose={onClose} onSuccess={onSuccess} initiatives={initiatives} />
+            )}
+            renderEditContent={({ item, onClose, onSuccess }) => (
+                <EventForm mode="edit" item={item} onClose={onClose} onSuccess={onSuccess} initiatives={initiatives} />
+            )}
+        />
     );
 }

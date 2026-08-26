@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Concerns\SanitizesHtml;
 
 class Initiative extends Model
 {
-    use HasFactory;
+    use HasFactory, SanitizesHtml;
 
     protected $table = 'initiatives';
 
@@ -18,17 +19,24 @@ class Initiative extends Model
         'content',
         'image',
         'category',
-        'cause_id',
         'status',
     ];
 
-    protected $casts = [
-        'cause_id' => 'integer',
-    ];
+    protected $casts = [];
 
-    public function cause()
+    protected static function boot()
     {
-        return $this->belongsTo(Cause::class);
+        parent::boot();
+        static::saving(function ($model) {
+            if (empty($model->slug) && !empty($model->title)) {
+                $model->slug = \Illuminate\Support\Str::slug($model->title);
+            }
+        });
+    }
+
+    public function causes()
+    {
+        return $this->belongsToMany(Cause::class);
     }
 
     public function events()

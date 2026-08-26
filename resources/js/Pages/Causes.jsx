@@ -9,10 +9,11 @@ import ListingRow from '../Components/Shared/ListingRow';
 import TimelineCard from '../Components/Shared/TimelineCard';
 import ListingCardGrid from '../Components/Shared/ListingCardGrid';
 import Pagination from '../Components/Shared/Pagination';
+import { mediaUrl } from '../Components/Shared/ImageUploadField';
 
 Causes.layout = page => <PublicLayout>{page}</PublicLayout>;
 
-export default function Causes({ causes }) {
+export default function Causes({ causes, hero }) {
     const [search, setSearch] = useState('');
     const [sortBy, setSortBy] = useState('');
     const [viewMode, setViewMode] = useState('grid');
@@ -23,18 +24,22 @@ export default function Causes({ causes }) {
     };
 
     const renderCard = (cause, idx, mode) => {
+        const meta = [];
+        if (cause.quote) meta.push({ icon: 'bi-quote', text: cause.quote });
+        if (cause.icon) meta.push({ icon: `bi-${cause.icon}`, text: cause.title });
+
         const props = {
-            key: cause.id,
             index: idx,
-            image: cause.image ? `/uploads/images/${cause.image}` : null,
+            image: cause.image ? mediaUrl(cause.image) : null,
             imageAlt: cause.title,
-            badges: cause.quote ? [{ text: cause.quote.split(' ').slice(0, 5).join(' '), className: 'bg-primary' }] : [],
+            badges: [],
             title: cause.title,
             description: cause.description,
+            meta,
         };
-        if (mode === 'list') return <ListingRow {...props} />;
-        if (mode === 'timeline') return <TimelineCard {...props} side={idx % 2 === 0 ? 'left' : 'right'} />;
-        return <ListingCard {...props} />;
+        if (mode === 'list') return <ListingRow key={cause.id} {...props} />;
+        if (mode === 'timeline') return <TimelineCard key={cause.id} {...props} side={idx % 2 === 0 ? 'left' : 'right'} />;
+        return <ListingCard key={cause.id} {...props} />;
     };
 
     return (
@@ -43,7 +48,7 @@ export default function Causes({ causes }) {
                 <title>Our Causes - Global Harmony Initiative</title>
                 <meta name="description" content="Explore our causes and learn how we are making a difference in East Africa through education, healthcare, and community development." />
             </Head>
-            <PageHeader title="Our Causes" breadcrumb={[{ label: 'Our Causes' }]} />
+            <PageHeader title={hero?.hero_causes_title || 'Our Causes'} subtitle={hero?.hero_causes_subtitle} image={hero?.hero_causes_image} buttonText={hero?.hero_causes_button_text} buttonUrl={hero?.hero_causes_button_url} breadcrumb={[{ label: 'Our Causes' }]} />
             <div className="container-fluid px-5">
                 <div className="row">
                     <SearchSidebar title="Search & Filter" onSubmit={handleSubmit} viewMode={viewMode} setViewMode={setViewMode}>
