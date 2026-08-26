@@ -99,6 +99,9 @@ class UploadController extends Controller
 
     private function storeOptimizedImage($file, string $filename): string
     {
+        $previousLimit = ini_get('memory_limit');
+        @ini_set('memory_limit', '512M');
+
         try {
             $image = (new ImageManager(new Driver()))->read($file->getRealPath());
             $image->scaleDown(width: 1800, height: 1200);
@@ -117,6 +120,8 @@ class UploadController extends Controller
             $path = 'images/' . $filename;
             $file->storeAs('images', $filename, 'public');
             return $path;
+        } finally {
+            @ini_set('memory_limit', $previousLimit);
         }
     }
 }
