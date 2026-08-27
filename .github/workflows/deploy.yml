@@ -147,6 +147,24 @@ jobs:
           rm -rf "${DEPLOY_BASE}/public_html/api"
           ln -sfn "${CORE_LINK}/public" "${DEPLOY_BASE}/public_html/api"
 
+          echo "==> Writing public_html/.htaccess..."
+          cat > "${DEPLOY_BASE}/public_html/.htaccess" << 'HTACCESS'
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Allow .well-known for SSL certificate validation
+    RewriteCond %{REQUEST_URI} ^/\.well-known/
+    RewriteRule ^ - [L]
+
+    # Allow existing files and directories
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+
+    # Route everything else through the Laravel app
+    RewriteRule ^ api/index.php [L]
+</IfModule>
+HTACCESS
+
           echo "==> Cleaning old releases (keeping last 5)..."
           cd "${DEPLOY_BASE}/GHI-releases"
           ls -1dt */ | tail -n +6 | xargs rm -rf 2>/dev/null || true
