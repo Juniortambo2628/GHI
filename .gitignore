@@ -26,3 +26,4 @@ new-session-*.json
 .php-cs-fixer.cache
 /uploads
 /storage
+test-output.txt
