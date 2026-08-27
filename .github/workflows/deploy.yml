@@ -119,12 +119,11 @@ jobs:
 
           echo "==> Symlinking shared resources..."
           ln -sfn "${SHARED_DIR}/.env" "${RELEASE_DIR}/.env"
-          mkdir -p "${RELEASE_DIR}/storage/app/public"
-          mkdir -p "${RELEASE_DIR}/storage/logs"
           mkdir -p "${RELEASE_DIR}/storage/framework/cache"
           mkdir -p "${RELEASE_DIR}/storage/framework/sessions"
           mkdir -p "${RELEASE_DIR}/storage/framework/views"
-          ln -sfn "${SHARED_DIR}/storage/app/public" "${RELEASE_DIR}/storage/app/public"
+          rm -rf "${RELEASE_DIR}/storage/app" "${RELEASE_DIR}/storage/logs"
+          ln -sfn "${SHARED_DIR}/storage/app" "${RELEASE_DIR}/storage/app"
           ln -sfn "${SHARED_DIR}/storage/logs" "${RELEASE_DIR}/storage/logs"
 
           echo "==> Installing composer dependencies..."
