@@ -143,6 +143,10 @@ jobs:
           echo "==> Swapping to new release..."
           ln -sfn "${RELEASE_DIR}" "${CORE_LINK}"
 
+          echo "==> Ensuring public_html/api symlink..."
+          rm -rf "${DEPLOY_BASE}/public_html/api"
+          ln -sfn "${CORE_LINK}/public" "${DEPLOY_BASE}/public_html/api"
+
           echo "==> Cleaning old releases (keeping last 5)..."
           cd "${DEPLOY_BASE}/GHI-releases"
           ls -1dt */ | tail -n +6 | xargs rm -rf 2>/dev/null || true
