@@ -16,6 +16,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/up', fn () => response()->json(['status' => 'ok']))->name('up');
+
 // Dashboard alias – redirects to the admin panel
 Route::get('/dashboard', fn () => redirect()->route('admin.dashboard'))->name('dashboard');
 

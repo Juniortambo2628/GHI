@@ -1,0 +1,171 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Tests
+    uses: ./.github/workflows/test-and-fix.yml
+
+  deploy:
+    name: Deploy to Production
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: dom, curl, mbstring, zip, pdo, pdo_mysql, bcmath, gd, fileinfo
+          coverage: none
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install composer dependencies
+        run: composer install --no-dev --optimize-autoloader --prefer-dist --no-progress
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Generate release tarball
+        run: |
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          RELEASE_NAME="release-${SHORT_SHA}-${TIMESTAMP}"
+          echo "RELEASE_NAME=${RELEASE_NAME}" >> $GITHUB_ENV
+
+          tar czf "/tmp/${RELEASE_NAME}.tar.gz" \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='tests' \
+            --exclude='.github' \
+            --exclude='.env' \
+            --exclude='.env.*' \
+            --exclude='storage/app/public/*' \
+            --exclude='storage/logs/*' \
+            --exclude='storage/framework/cache/*' \
+            --exclude='storage/framework/sessions/*' \
+            --exclude='storage/framework/views/*' \
+            --exclude='archived' \
+            --exclude='*.json.bak' \
+            --exclude='new-session-*.json' \
+            .
+
+          echo "Tarball created:"
+          ls -lh "/tmp/${RELEASE_NAME}.tar.gz"
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p ${{ secrets.SSH_PORT || 22 }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Upload tarball to server
+        run: |
+          scp -P ${{ secrets.SSH_PORT || 22 }} \
+            -i ~/.ssh/deploy_key \
+            "/tmp/${RELEASE_NAME}.tar.gz" \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/
+
+      - name: Deploy on server
+        env:
+          SSH_CMD: "ssh -p ${{ secrets.SSH_PORT || 22 }} -i ~/.ssh/deploy_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}"
+          DEPLOY_BASE: ${{ secrets.DEPLOY_BASE }}
+        run: |
+          eval $SSH_CMD << 'DEPLOY_SCRIPT'
+          set -euo pipefail
+
+          RELEASE_NAME="${{ env.RELEASE_NAME }}"
+          DEPLOY_BASE="${{ secrets.DEPLOY_BASE }}"
+          RELEASE_DIR="${DEPLOY_BASE}/GHI-releases/${RELEASE_NAME}"
+          CORE_LINK="${DEPLOY_BASE}/GHI-core"
+          SHARED_DIR="${DEPLOY_BASE}/GHI-shared"
+
+          echo "==> Creating release directory..."
+          mkdir -p "${RELEASE_DIR}"
+          mkdir -p "${DEPLOY_BASE}/GHI-releases"
+
+          echo "==> Extracting release..."
+          tar xzf "/tmp/${RELEASE_NAME}.tar.gz" -C "${RELEASE_DIR}"
+
+          echo "==> Symlinking shared resources..."
+          ln -sfn "${SHARED_DIR}/.env" "${RELEASE_DIR}/.env"
+          mkdir -p "${RELEASE_DIR}/storage/app/public"
+          mkdir -p "${RELEASE_DIR}/storage/logs"
+          mkdir -p "${RELEASE_DIR}/storage/framework/cache"
+          mkdir -p "${RELEASE_DIR}/storage/framework/sessions"
+          mkdir -p "${RELEASE_DIR}/storage/framework/views"
+          ln -sfn "${SHARED_DIR}/storage/app/public" "${RELEASE_DIR}/storage/app/public"
+          ln -sfn "${SHARED_DIR}/storage/logs" "${RELEASE_DIR}/storage/logs"
+
+          echo "==> Installing composer dependencies..."
+          cd "${RELEASE_DIR}"
+          composer install --no-dev --optimize-autoloader --prefer-dist --no-progress --no-interaction
+
+          echo "==> Running artisan commands..."
+          php artisan migrate --force
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
+
+          echo "==> Setting permissions..."
+          chmod -R 775 "${RELEASE_DIR}/storage" 2>/dev/null || true
+          chmod -R 775 "${RELEASE_DIR}/bootstrap/cache" 2>/dev/null || true
+
+          echo "==> Swapping to new release..."
+          ln -sfn "${RELEASE_DIR}" "${CORE_LINK}"
+
+          echo "==> Cleaning old releases (keeping last 5)..."
+          cd "${DEPLOY_BASE}/GHI-releases"
+          ls -1dt */ | tail -n +6 | xargs rm -rf 2>/dev/null || true
+
+          echo "==> Deploy complete!"
+          DEPLOY_SCRIPT
+
+      - name: Cleanup SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
+
+      - name: Health check
+        run: |
+          echo "Waiting for deployment to stabilize..."
+          sleep 10
+
+          HTTP_STATUS=$(curl -sf -o /dev/null -w "%{http_code}" \
+            "https://globalharmonyinitiative.com/up" || echo "000")
+
+          if [ "$HTTP_STATUS" = "200" ]; then
+            echo "Health check passed (HTTP ${HTTP_STATUS})"
+          else
+            echo "::error::Health check failed (HTTP ${HTTP_STATUS})"
+            exit 1
+          fi

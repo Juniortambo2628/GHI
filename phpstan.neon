@@ -4,12 +4,12 @@ includes:
 parameters:
   level: 6
   paths:
-    - src
-    - admin
+    - app
   excludePaths:
     - vendor
     - node_modules
-    - dist
+    - storage
+    - bootstrap/cache
   ignoreErrors:
     - '#Method .* has no return type specified#'
     - '#Parameter .* has no type specified#'

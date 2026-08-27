@@ -18,7 +18,6 @@ yarn-error.log
 /.vscode
 package-lock.json
 node_modules
-/storage
 *.json.bak
 new-session-*.json
 /archived
@@ -26,3 +25,4 @@ new-session-*.json
 .rector-cache/
 .php-cs-fixer.cache
 /uploads
+/storage
