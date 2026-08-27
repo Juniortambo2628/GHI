@@ -144,6 +144,7 @@ jobs:
           echo "==> Swapping to new release..."
           rm -rf "${CORE_LINK}"
           ln -sfn "${RELEASE_DIR}" "${CORE_LINK}"
+          ls -la "${CORE_LINK}/public/index.php" || { echo "FATAL: GHI-core symlink failed"; exit 1; }
 
           echo "==> Ensuring public_html/api symlink..."
           rm -rf "${DEPLOY_BASE}/public_html/api"
@@ -151,14 +152,18 @@ jobs:
 
           echo "==> Writing public_html/.htaccess..."
           printf '%s\n' \
-            '<IfModule mod_rewrite.c>' \
-            '    RewriteEngine On' \
-            '    RewriteCond %{REQUEST_URI} ^/\.well-known/' \
-            '    RewriteRule ^ - [L]' \
-            '    RewriteCond %{REQUEST_FILENAME} !-d' \
-            '    RewriteCond %{REQUEST_FILENAME} !-f' \
-            '    RewriteRule ^ api/index.php [L]' \
-            '</IfModule>' > "${DEPLOY_BASE}/public_html/.htaccess"
+            'RewriteEngine On' \
+            'RewriteCond %{REQUEST_URI} ^/\.well-known/' \
+            'RewriteRule ^ - [L]' \
+            'RewriteCond %{REQUEST_FILENAME} !-d' \
+            'RewriteCond %{REQUEST_FILENAME} !-f' \
+            'RewriteRule ^ api/index.php [L]' > "${DEPLOY_BASE}/public_html/.htaccess"
+
+          echo "==> Writing public_html/index.php front controller..."
+          printf '%s\n' \
+            '<?php' \
+            '' \
+            'require __DIR__.\"/api/index.php\";' > "${DEPLOY_BASE}/public_html/index.php"
 
           echo "==> Cleaning old releases (keeping last 5)..."
           cd "${DEPLOY_BASE}/GHI-releases"
