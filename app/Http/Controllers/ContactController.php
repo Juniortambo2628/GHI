@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreContactRequest;
 use App\Models\ContactSubmission;
 use App\Models\SiteSetting;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class ContactController extends Controller
@@ -23,27 +22,8 @@ class ContactController extends Controller
         return inertia('Contact', compact('hero'));
     }
 
-    public function store(Request $request)
+    public function store(StoreContactRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'firstname' => 'required|string|min:2|max:255',
-            'lastname' => 'required|string|min:2|max:255',
-            'email' => 'required|email|max:255',
-            'subject' => 'required|string|min:5|max:255',
-            'message' => 'required|string|min:10|max:5000',
-        ]);
-
-        if ($validator->fails()) {
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation failed',
-                    'errors' => $validator->errors(),
-                ], 422);
-            }
-            return back()->withErrors($validator)->withInput();
-        }
-
         ContactSubmission::create([
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,

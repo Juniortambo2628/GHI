@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\HasStatusOptions;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreInitiativeRequest;
 use App\Http\Requests\Admin\UpdateInitiativeRequest;
@@ -12,11 +13,12 @@ use Illuminate\Http\Request;
 
 class InitiativeController extends Controller
 {
+    use HasStatusOptions;
     public function index(Request $request)
     {
         $initiatives = Initiative::with('causes')->when($request->search, fn ($q, $search) => $q->where('title', 'like', "%{$search}%"))->when($request->status, fn ($q, $status) => $q->where('status', $status))->when($request->category, fn ($q, $category) => $q->where('category', $category))->latest()->paginate(20)->withQueryString();
         $causes = Cause::orderBy('title')->get();
-        $statusOptions = Initiative::select('status')->distinct()->orderBy('status')->pluck('status')->map(fn ($s) => ['value' => $s, 'label' => ucfirst($s)])->values()->all();
+        $statusOptions = $this->getStatusOptions(Initiative::class);
         $categoryOptions = Initiative::select('category')->distinct()->whereNotNull('category')->orderBy('category')->pluck('category')->map(fn ($c) => ['value' => $c, 'label' => ucfirst($c)])->values()->all();
 
         return inertia('Admin/Initiatives/Index', ['initiatives' => $initiatives, 'causes' => $causes, 'statusOptions' => $statusOptions, 'categoryOptions' => $categoryOptions, 'filters' => $request->only('search', 'status', 'category')]);

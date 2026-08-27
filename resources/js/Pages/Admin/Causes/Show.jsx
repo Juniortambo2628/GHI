@@ -1,6 +1,6 @@
 import AdminLayout from '../../../Layouts/AdminLayout';
 import { Head, Link } from '@inertiajs/react';
-import { mediaUrl } from '../../../Components/Shared/ImageUploadField';
+import mediaUrl from '../../../Components/Shared/mediaUrl';
 import StatusBadge from '../../../Components/Shared/StatusBadge';
 
 export default function Show({ cause, initiatives }) {

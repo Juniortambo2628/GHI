@@ -22,6 +22,11 @@ class UpdateEventRequest extends FormRequest
             'location' => 'nullable|string|max:255',
             'initiative_id' => 'nullable|exists:initiatives,id',
             'status' => 'required|in:draft,published,archived',
+            'images' => 'nullable|array',
+            'images.*.path' => 'required|string|max:255',
+            'images.*.sort_order' => 'required|integer|min:0',
+            'images.*.type' => 'nullable|string|in:image,video',
+            'images.*.id' => 'nullable',
         ];
     }
 }

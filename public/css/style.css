@@ -16,7 +16,13 @@
   --hero-stories-bg: url('../Banners-and-portraits/pexels-ezeguna_graphy-sulaiman-muhammad-2153324075-34536427.jpg');
 }
 
-/* Animation Initial States - Prevent FOUC */
+html {
+    scrollbar-gutter: stable;
+    overflow-y: scroll !important;
+}
+body, .fixed-top, .fixed-bottom, .sticky-top, .navbar {
+    padding-right: 0 !important;
+}
 [data-animate-on-scroll] {
   opacity: 0;
   will-change: transform, opacity;
@@ -3403,6 +3409,16 @@ h6 {
 
 .card-title-link:hover {
   color: #fff !important;
+}
+
+.gallery-title-link {
+  text-decoration: none !important;
+  color: #fff !important;
+  transition: color 0.2s ease;
+}
+
+.gallery-title-link:hover {
+  color: var(--ghi-secondary) !important;
 }
 
 /* ============================================

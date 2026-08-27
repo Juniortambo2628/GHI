@@ -11,7 +11,9 @@ class InitiativeController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Initiative::published();
+        $query = Initiative::published()->withCount(['events as event_count' => function ($q) {
+            $q->where('status', 'published');
+        }]);
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {

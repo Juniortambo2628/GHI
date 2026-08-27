@@ -26,4 +26,11 @@ class NewsletterSubscriberController extends Controller
 
         return back()->with('success', 'Subscriber status updated.');
     }
+
+    public function destroy(NewsletterSubscriber $subscriber): RedirectResponse
+    {
+        $subscriber->delete();
+
+        return back()->with('success', 'Subscriber deleted.');
+    }
 }

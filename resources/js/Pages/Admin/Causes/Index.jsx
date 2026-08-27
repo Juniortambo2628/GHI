@@ -5,9 +5,8 @@ import { useForm } from '@inertiajs/react';
 import ImageUploadField from '../../../Components/Shared/ImageUploadField';
 import RichTextField from '../../../Components/Shared/RichTextField';
 import IconPicker from '../../../Components/Shared/IconPicker';
-import { mediaUrl } from '../../../Components/Shared/ImageUploadField';
-
-const stripHtml = (html) => html ? html.replace(/<[^>]+>/g, '') : '';
+import mediaUrl from '../../../Components/Shared/mediaUrl';
+import stripHtml from '../../../Components/Shared/stripHtml';
 
 const viewFields = [
     { label: 'Image', key: 'image', isImage: true, getSrc: item => mediaUrl(item.image), col: 'col-12', render: () => null },

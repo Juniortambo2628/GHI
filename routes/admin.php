@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\ImpactController;
 use App\Http\Controllers\Admin\StoryController;
 use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\GetInvolvedSubmissionController;
 use App\Http\Controllers\Admin\ContactSubmissionController;
 use App\Http\Controllers\Admin\NewsletterSubscriberController;
 use App\Http\Controllers\Admin\SettingsController;
@@ -40,12 +41,19 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin']
     Route::resource('stories', StoryController::class)->parameters(['stories' => 'story:id']);
 
     Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics');
+    // Get Involved Submissions
+    Route::get('get-involved', [GetInvolvedSubmissionController::class, 'index'])->name('get-involved.index');
+    Route::get('get-involved/{id}', [GetInvolvedSubmissionController::class, 'show'])->name('get-involved.show');
+    Route::put('get-involved/{id}', [GetInvolvedSubmissionController::class, 'update'])->name('get-involved.update');
+    Route::delete('get-involved/{id}', [GetInvolvedSubmissionController::class, 'destroy'])->name('get-involved.destroy');
+
     Route::get('contacts', [ContactSubmissionController::class, 'index'])->name('contacts.index');
     Route::get('contacts/{contactSubmission}', [ContactSubmissionController::class, 'show'])->name('contacts.show');
     Route::put('contacts/{contactSubmission}', [ContactSubmissionController::class, 'update'])->name('contacts.update');
     Route::delete('contacts/{contactSubmission}', [ContactSubmissionController::class, 'destroy'])->name('contacts.destroy');
     Route::get('subscribers', [NewsletterSubscriberController::class, 'index'])->name('subscribers.index');
     Route::put('subscribers/{subscriber}', [NewsletterSubscriberController::class, 'update'])->name('subscribers.update');
+    Route::delete('subscribers/{subscriber}', [NewsletterSubscriberController::class, 'destroy'])->name('subscribers.destroy');
     Route::get('media', [MediaLibraryController::class, 'index'])->name('media.index');
     Route::get('media/download/{path}', [MediaLibraryController::class, 'download'])->where('path', '.*')->name('media.download');
     Route::delete('media', [MediaLibraryController::class, 'destroy'])->name('media.destroy');

@@ -2,8 +2,9 @@ import { useState } from 'react';
 import Modal from './Modal';
 import sanitizeHtml from './sanitizeHtml';
 import stripHtml from './stripHtml';
+import mediaUrl from './mediaUrl';
 
-export default function ListingCard({ image, imageAlt, badges = [], title, description, meta = [], buttonText = 'View Details', onButtonClick, detailContent, index = 0 }) {
+export default function ListingCard({ image, imageAlt, badges = [], title, description, meta = [], images = [], buttonText = 'View Details', onButtonClick, detailContent, index = 0 }) {
     const [showModal, setShowModal] = useState(false);
 
     const truncate = (text, len = 100) => {
@@ -18,7 +19,7 @@ export default function ListingCard({ image, imageAlt, badges = [], title, descr
             {badges.length > 0 && (
                 <div className="d-flex flex-wrap gap-2 mb-3">
                     {badges.map((badge, idx) => (
-                        <span key={idx} className={`glass-pill ${badge.className || ''}`}>{stripHtml(badge.text)}</span>
+                        <span key={idx} className={`glass-pill ${badge.className || 'text-primary'}`}>{stripHtml(badge.text)}</span>
                     ))}
                 </div>
             )}
@@ -43,23 +44,43 @@ export default function ListingCard({ image, imageAlt, badges = [], title, descr
         </div>
     );
 
-    const tabs = meta.length > 0
-        ? [{ label: 'Overview', content: overviewContent }, { label: 'Details', content: detailsContent }]
-        : [{ label: 'Overview', content: overviewContent }];
+    const tabs = [];
+    tabs.push({ label: 'Overview', content: overviewContent });
+    if (meta.length > 0) {
+        tabs.push({ label: 'Details', content: detailsContent });
+    }
+    if (images && images.length > 0) {
+        const galleryContent = (
+            <div className="gallery-grid">
+                {images.sort((a, b) => a.sort_order - b.sort_order).map((img, idx) => (
+                    <div key={img.id} className="gallery-item-card position-relative" style={{ aspectRatio: '4/3', overflow: 'hidden', borderRadius: '8px', marginBottom: '1rem' }}>
+                        {img.type === 'video' ? (
+                            <video src={mediaUrl(img.path)} className="w-100 h-100 object-fit-cover" muted loop playsInline preload="metadata" />
+                        ) : (
+                            <img src={mediaUrl(img.path)} className="w-100 h-100 object-fit-cover" alt={`Gallery ${idx + 1}`} />
+                        )}
+                        {img.type === 'video' && <div className="position-absolute top-50 start-50 translate-middle text-white"><i className="bi bi-play-circle fs-1"></i></div>}
+                    </div>
+                ))}
+            </div>
+        );
+        tabs.push({ label: 'Gallery', content: galleryContent });
+    }
+    if (detailContent) {
+        tabs.push({ label: 'In-Depth', content: <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(detailContent) }}></div> });
+    }
 
     return (
         <div className={`col-md-6 col-lg-4 listing-item mb-4`}>
             <div className="card h-100">
-                {image && (
-                    <div className="card-img-wrapper">
-                        <img src={image} className="card-img-top" alt={imageAlt} loading="lazy" width="400" height="300" />
-                    </div>
-                )}
+                <div className="card-img-wrapper" style={!image ? { display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8f9fa' } : {}}>
+                    <img src={image || '/Logo/Square-White-BG.png'} className="card-img-top" alt={imageAlt || 'Placeholder Logo'} loading="lazy" width="400" height="300" style={!image ? { objectFit: 'contain', height: '100%', padding: '2rem' } : {}} />
+                </div>
                 <div className="card-body d-flex flex-column">
                     {badges.length > 0 && (
                         <div className="card-badges">
                             {badges.map((badge, idx) => (
-                                <span key={idx} className={`glass-pill ${badge.className || ''}`}>{stripHtml(badge.text)}</span>
+                                <span key={idx} className={`glass-pill ${badge.className || 'text-primary'}`}>{stripHtml(badge.text)}</span>
                             ))}
                         </div>
                     )}

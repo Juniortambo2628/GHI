@@ -10,6 +10,7 @@ import EventListItem from '../Components/Shared/EventListItem';
 import VolunteerImage from '../Components/Shared/VolunteerImage';
 import mediaUrl from '../Components/Shared/mediaUrl';
 import FallbackImage from '../Components/Shared/FallbackImage';
+import stripHtml from '../Components/Shared/stripHtml';
 
 Home.layout = page => <PublicLayout>{page}</PublicLayout>;
 
@@ -245,10 +246,8 @@ export default function Home({ initiatives, events, stories, recentActivities, g
                                             <span className="glass-pill glass-pill-on-light mb-2">{initiative.objective || 'Community Development'}</span>
                                                 </div>
                                                 <Link className="h5 mb-3 card-title-link" href={`/initiatives?initiative=${initiative.slug || ''}`}>{initiative.title}</Link>
-                                                <p className="mb-3">{(initiative.description || '').substring(0, 100)}{(initiative.description || '').length > 100 ? '...' : ''}</p>
+                                                <p className="mb-3">{stripHtml(initiative.description || '').substring(0, 100)}{stripHtml(initiative.description || '').length > 100 ? '...' : ''}</p>
                                                 <div className="mt-auto">
-                                                    <progress className="initiative-progress-track progress-color-primary mb-2" value={progressPercent} max="100" aria-valuenow={progressPercent} aria-valuemin="0" aria-valuemax="100"></progress>
-                                                    <small className="text-muted">{progressPercent}% Complete</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -367,8 +366,8 @@ export default function Home({ initiatives, events, stories, recentActivities, g
                                     </div>
                                     <div className="gallery-content">
                                         <div className="gallery-inner pb-5">
-                                            <Link href="/initiatives" className="h4 card-title-link">{img.initiative || ''}</Link>
-                                            <p className="mb-1">{img.event_title || ''}</p>
+                                            <Link href="/initiatives" className="h4 gallery-title-link">{img.initiative || ''}</Link>
+                                            <p className="mb-1 text-white">{img.event_title || ''}</p>
                                             <small className="text-white-50"><i className="bi bi-geo-alt me-1"></i>{img.location || ''}</small>
                                         </div>
                                     </div>
@@ -386,8 +385,8 @@ export default function Home({ initiatives, events, stories, recentActivities, g
                                     </div>
                                     <div className="gallery-content">
                                         <div className="gallery-inner pb-5">
-                                            <Link href="/initiatives" className="h4 card-title-link">{activity.initiative || ''}</Link>
-                                            <Link href="/initiatives" className="card-title-link"><p className="mb-1">{activity.objective || ''}</p></Link>
+                                            <Link href="/initiatives" className="h4 gallery-title-link">{activity.initiative || ''}</Link>
+                                            <Link href="/initiatives" className="gallery-title-link"><p className="mb-1 text-white">{activity.objective || ''}</p></Link>
                                             <small className="text-white-50"><i className="bi bi-geo-alt me-1"></i>{activity.location || ''}</small>
                                         </div>
                                     </div>

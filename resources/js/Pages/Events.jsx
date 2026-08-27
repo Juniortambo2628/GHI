@@ -1,15 +1,12 @@
 import PublicLayout from '../Layouts/PublicLayout';
 import { Head, router } from '@inertiajs/react';
 import { useState } from 'react';
-import { mediaUrl } from '../Components/Shared/ImageUploadField';
+import mediaUrl from '../Components/Shared/mediaUrl';
 import PageHeader from '../Components/Shared/PageHeader';
-import SearchSidebar from '../Components/Shared/SearchSidebar';
-import ResultsCount from '../Components/Shared/ResultsCount';
 import ListingCard from '../Components/Shared/ListingCard';
 import ListingRow from '../Components/Shared/ListingRow';
 import TimelineCard from '../Components/Shared/TimelineCard';
-import ListingCardGrid from '../Components/Shared/ListingCardGrid';
-import Pagination from '../Components/Shared/Pagination';
+import ListingPageLayout from '../Components/Shared/ListingPageLayout';
 
 Events.layout = page => <PublicLayout>{page}</PublicLayout>;
 
@@ -18,11 +15,12 @@ export default function Events({ events, hero }) {
     const [upcoming, setUpcoming] = useState(false);
     const [past, setPast] = useState(false);
     const [sortBy, setSortBy] = useState('');
+    const [location, setLocation] = useState('');
     const [viewMode, setViewMode] = useState('timeline');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const params = { search, sort: sortBy };
+        const params = { search, location, sort: sortBy };
         if (upcoming) params.upcoming = 1;
         if (past) params.past = 1;
         router.get('/events', params, { preserveState: true });
@@ -42,9 +40,13 @@ export default function Events({ events, hero }) {
             title: event.title,
             description: event.description,
             meta: [
-                { icon: 'bi bi-calendar', text: eventDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) },
-                { icon: 'bi bi-geo-alt', text: event.location }
+                { icon: 'bi bi-calendar', text: `Date: ${eventDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}` },
+                { icon: 'bi bi-geo-alt', text: `Location: ${event.location || 'N/A'}` },
+                { icon: 'bi bi-diagram-3', text: `Initiative: ${event.initiative?.title || 'General'}` },
+                { icon: 'bi bi-info-circle', text: `Status: ${event.status || 'Published'}` }
             ],
+            images: event.images,
+            detailContent: event.content,
         };
         if (mode === 'list') return <ListingRow key={event.id} {...props} />;
         if (mode === 'timeline') return <TimelineCard key={event.id} {...props} side={idx % 2 === 0 ? 'left' : 'right'} />;
@@ -58,10 +60,16 @@ export default function Events({ events, hero }) {
                 <meta name="description" content="Discover our upcoming events and activities." />
             </Head>
             <PageHeader title={hero?.hero_events_title || 'Events & Activities'} subtitle={hero?.hero_events_subtitle} image={hero?.hero_events_image} buttonText={hero?.hero_events_button_text} buttonUrl={hero?.hero_events_button_url} breadcrumb={[{ label: 'Events & Activities' }]} />
-            <div className="container-fluid px-5">
-                <div className="row g-4">
-                    <SearchSidebar title="Search & Filter" onSubmit={handleSubmit} viewMode={viewMode} setViewMode={setViewMode}>
+            <ListingPageLayout
+                data={events}
+                emptyMessage="No events found."
+                viewMode={viewMode}
+                setViewMode={setViewMode}
+                onSubmit={handleSubmit}
+                filters={
+                    <>
                         <input type="text" name="search" className="form-control mb-3" placeholder="Search events..." value={search} onChange={e => setSearch(e.target.value)} />
+                        <input type="text" name="location" className="form-control mb-3" placeholder="Filter by location..." value={location} onChange={e => setLocation(e.target.value)} />
                         <div className="form-check mb-2">
                             <input className="form-check-input" type="checkbox" id="upcoming" checked={upcoming} onChange={e => setUpcoming(e.target.checked)} />
                             <label className="form-check-label" htmlFor="upcoming">Upcoming Only</label>
@@ -77,16 +85,10 @@ export default function Events({ events, hero }) {
                             <option value="alpha">A – Z</option>
                         </select>
                         <button type="submit" className="btn btn-primary w-100">Search</button>
-                    </SearchSidebar>
-                    <div className="col-lg-9">
-                        <ResultsCount data={events} />
-                        <ListingCardGrid data={events} emptyMessage="No events found." viewMode={viewMode}>
-                            {renderCard}
-                        </ListingCardGrid>
-                        <Pagination data={events} />
-                    </div>
-                </div>
-            </div>
+                    </>
+                }
+                renderCard={renderCard}
+            />
         </>
     );
 }

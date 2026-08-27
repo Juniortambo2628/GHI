@@ -27,8 +27,6 @@ function getCroppedImg(imageSrc, pixelCrop) {
     });
 }
 
-export { mediaUrl };
-
 export default function ImageUploadField({ name, value, onChange, label = 'Image', required = false }) {
     const containerRef = useRef(null);
     const pond = useRef(null);

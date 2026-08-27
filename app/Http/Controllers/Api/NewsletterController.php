@@ -3,28 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreNewsletterRequest;
 use App\Models\NewsletterSubscriber;
-use Illuminate\Http\Request;
 
 class NewsletterController extends Controller
 {
-    public function store(Request $request)
+    public function store(StoreNewsletterRequest $request)
     {
-        $validator = \Validator::make($request->all(), [
-            'email' => 'required|email|max:255',
-        ]);
-
-        if ($validator->fails()) {
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation failed',
-                    'errors' => $validator->errors(),
-                ], 422);
-            }
-            return back()->withErrors($validator);
-        }
-
         $subscriber = NewsletterSubscriber::updateOrCreate(
             ['email' => $request->email],
             [

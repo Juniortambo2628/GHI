@@ -5,11 +5,10 @@ import { useForm, router } from '@inertiajs/react';
 import ImageUploadField from '../../../Components/Shared/ImageUploadField';
 import RichTextField from '../../../Components/Shared/RichTextField';
 import GalleryUpload from '../../../Components/Shared/GalleryUpload';
-import { mediaUrl } from '../../../Components/Shared/ImageUploadField';
+import mediaUrl from '../../../Components/Shared/mediaUrl';
 import sanitizeHtml from '../../../Components/Shared/sanitizeHtml';
-import { useState, useCallback } from 'react';
-
-const stripHtml = (html) => html ? html.replace(/<[^>]+>/g, '') : '';
+import stripHtml from '../../../Components/Shared/stripHtml';
+import { useState, useCallback, useRef, useEffect } from 'react';
 
 const viewFields = [
     { label: 'Image', key: 'image', isImage: true, getSrc: item => mediaUrl(item.image), col: 'col-12', render: () => null },
@@ -24,43 +23,26 @@ const viewFields = [
 
 function EventForm({ mode, item, onClose, onSuccess, initiatives }) {
     const isEdit = mode === 'edit';
-    const [galleryImages, setGalleryImages] = useState(
-        isEdit && item?.images ? item.images.map(img => ({ id: img.id, path: img.path, sort_order: img.sort_order })) : []
-    );
 
     const { data, setData, post, put, processing, errors } = useForm({
         title: item?.title || '', description: item?.description || '', content: item?.content || '',
         event_date: item?.event_date ? item.event_date.split('T')[0] : '', location: item?.location || '',
         initiative_id: item?.initiative_id || '', image: item?.image || '', status: item?.status || 'draft',
+        images: isEdit && item?.images ? item.images.map(img => ({ id: img.id, path: img.path, sort_order: img.sort_order, type: img.type || 'image' })) : []
     });
-
-    const syncGallery = (eventId, images) => {
-        router.post(`/admin/events/${eventId}/images`, {
-            images: images.map((img, idx) => ({ id: img.id || null, path: img.path, sort_order: idx })),
-        }, { preserveState: true });
-    };
 
     const submit = useCallback((e) => {
         e.preventDefault();
-        const opts = {
-            onSuccess: () => {
-                if (isEdit && item?.id) syncGallery(item.id, galleryImages);
-                onSuccess();
-            },
-        };
         if (isEdit) {
-            put(`/admin/events/${item.id}`, opts);
+            put(`/admin/events/${item.id}`, {
+                onSuccess: () => onSuccess(),
+            });
         } else {
             post('/admin/events', {
-                ...opts,
-                onSuccess: (page) => {
-                    const eventId = page.props.event?.id;
-                    if (eventId && galleryImages.length > 0) syncGallery(eventId, galleryImages);
-                    onSuccess();
-                },
+                onSuccess: () => onSuccess(),
             });
         }
-    }, [post, put, isEdit, item, galleryImages, onSuccess]);
+    }, [post, put, isEdit, item, onSuccess]);
 
     return (
         <AdminCrudModalForm entity="Event" mode={mode} data={data} setData={setData} processing={processing} errors={errors} onSubmit={submit} onCancel={onClose}>
@@ -91,7 +73,7 @@ function EventForm({ mode, item, onClose, onSuccess, initiatives }) {
             <div className="col-12">
                 <label className="form-label fw-semibold">Activity Gallery Images</label>
                 <p className="text-muted small mb-2">Upload images from this event.</p>
-                <GalleryUpload eventId={isEdit ? item?.id : null} images={galleryImages} onImagesChange={setGalleryImages} />
+                <GalleryUpload eventId={isEdit ? item?.id : null} images={data.images} onImagesChange={imgs => setData('images', imgs)} />
             </div>
         </AdminCrudModalForm>
     );
@@ -110,7 +92,7 @@ export default function Index({ events, filters, initiatives, statusOptions }) {
             createLabel="Add Event"
             columns={[
                 { header: 'Title', key: 'title' },
-                { header: 'Date', key: 'event_date' },
+                { header: 'Date', render: item => item.event_date ? new Date(item.event_date).toLocaleDateString() : 'N/A' },
                 { header: 'Location', key: 'location' },
                 { header: 'Status', render: item => <StatusBadge status={item.status} /> },
             ]}

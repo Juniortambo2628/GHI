@@ -12,36 +12,18 @@ use App\Http\Controllers\GetInvolvedController;
 use App\Http\Controllers\Api\NewsletterController;
 use App\Http\Controllers\Api\VolunteerController;
 use App\Http\Controllers\Api\UploadController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 
 // Dashboard alias – redirects to the admin panel
 Route::get('/dashboard', fn () => redirect()->route('admin.dashboard'))->name('dashboard');
 
 // Profile routes
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', fn () => inertia('Profile', ['user' => auth()->user()]))->name('profile.edit');
-    Route::patch('/profile', function (\App\Http\Requests\ProfileUpdateRequest $request) {
-        $user = $request->user();
-        $user->fill($request->validated());
-        if ($request->user()->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
-        $user->save();
-        return redirect('/profile');
-    });
-    Route::delete('/profile', function (\Illuminate\Http\Request $request) {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
-        $user = $request->user();
-        Auth::guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        $user->delete();
-        return redirect('/');
-    });
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update']);
+    Route::delete('/profile', [ProfileController::class, 'destroy']);
 });
 
 // Home

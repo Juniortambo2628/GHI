@@ -4,10 +4,9 @@ import StatusBadge from '../../../Components/Shared/StatusBadge';
 import { useForm } from '@inertiajs/react';
 import ImageUploadField from '../../../Components/Shared/ImageUploadField';
 import RichTextField from '../../../Components/Shared/RichTextField';
-import { mediaUrl } from '../../../Components/Shared/ImageUploadField';
+import mediaUrl from '../../../Components/Shared/mediaUrl';
 import sanitizeHtml from '../../../Components/Shared/sanitizeHtml';
-
-const stripHtml = (html) => html ? html.replace(/<[^>]+>/g, '') : '';
+import stripHtml from '../../../Components/Shared/stripHtml';
 
 const viewFields = [
     { label: 'Image', key: 'image', isImage: true, getSrc: item => mediaUrl(item.image), col: 'col-12', render: () => null },

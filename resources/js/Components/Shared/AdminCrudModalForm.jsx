@@ -1,6 +1,25 @@
+import { useContext, useEffect } from 'react';
+import { ModalFooterContext } from './AdminCrudModal';
+
 export default function AdminCrudModalForm({ entity, mode, data, setData, processing, errors, onSubmit, onCancel, children }) {
     const isEdit = mode === 'edit';
     const submitLabel = isEdit ? `Update ${entity}` : `Create ${entity}`;
+
+    const setFooterContent = useContext(ModalFooterContext);
+
+    useEffect(() => {
+        if (setFooterContent) {
+            setFooterContent(
+                <>
+                    <button type="button" className="btn btn-outline-secondary" onClick={onCancel} data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" form="crud-form" className="btn btn-primary" disabled={processing}>
+                        {processing ? 'Saving...' : submitLabel}
+                    </button>
+                </>
+            );
+            return () => setFooterContent(null);
+        }
+    }, [setFooterContent, onCancel, processing, submitLabel]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -8,7 +27,7 @@ export default function AdminCrudModalForm({ entity, mode, data, setData, proces
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} id="crud-form">
             <div className="content-card">
                 <div className="card-body">
                     <div className="row g-3">
@@ -26,15 +45,6 @@ export default function AdminCrudModalForm({ entity, mode, data, setData, proces
                             </select>
                         </div>
                         {children}
-                        <div className="col-12">
-                            <hr className="my-2" />
-                            <div className="d-flex justify-content-end gap-2">
-                                <button type="button" className="btn btn-outline-secondary" onClick={onCancel} data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" className="btn btn-primary" disabled={processing}>
-                                    {processing ? 'Saving...' : submitLabel}
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

@@ -21,13 +21,20 @@ class EventController extends Controller
             });
         }
 
-        if ($request->input('upcoming')) {
-            $query->upcoming();
-        } elseif ($request->input('past')) {
-            $query->past();
+        if ($location = $request->input('location')) {
+            $query->where('location', 'like', "%{$location}%");
         }
 
-        $events = $query->with('initiative')->orderBy('event_date', 'desc')->paginate(12);
+        if ($request->input('upcoming')) {
+            $query->upcoming()->orderBy('event_date', 'asc');
+        } elseif ($request->input('past')) {
+            $query->past()->orderBy('event_date', 'desc');
+        } else {
+            // "Most current events first" - sort by event_date desc by default
+            $query->orderBy('event_date', 'desc');
+        }
+
+        $events = $query->with(['initiative', 'images'])->paginate(12);
 
         $hero = SiteSetting::grouped([
             'hero_events_title' => 'Events & Activities',
@@ -42,6 +49,7 @@ class EventController extends Controller
 
     public function show(Event $event)
     {
+        $event->load('images');
         $impactActivities = $event->impactActivities()->published()->get();
 
         return inertia('EventShow', compact('event', 'impactActivities'));

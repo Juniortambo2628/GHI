@@ -5,5 +5,3 @@ export const categoryToObjective = {
     empowerment: 'Community Empowerment',
     partnerships: 'Global Partnerships & Awareness',
 };
-
-export const objectiveCategories = Object.entries(categoryToObjective).map(([value, label]) => ({ value, label }));

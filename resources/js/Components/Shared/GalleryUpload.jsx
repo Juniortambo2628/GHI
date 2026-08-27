@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { usePage } from '@inertiajs/react';
+import mediaUrl from './mediaUrl';
 
 function formatSize(bytes) {
     if (bytes < 1024) return bytes + ' B';
@@ -16,6 +17,16 @@ function GalleryItem({ item, onRemove, onRetry, onMove, index, total }) {
                 <img src={item.preview} alt="" />
             )}
             {item.type === 'video' && <div className="gallery-item-video-badge"><i className="bi bi-play-circle"></i></div>}
+            {item.status === 'done' && (
+                <div style={{ position: 'absolute', top: '8px', right: '8px', zIndex: 10, background: 'rgba(255, 255, 255, 0.9)', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
+                    <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '16px', lineHeight: 1 }}></i>
+                </div>
+            )}
+            {item.status === 'error' && (
+                <div style={{ position: 'absolute', top: '8px', right: '8px', zIndex: 10, background: 'rgba(255, 255, 255, 0.9)', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
+                    <i className="bi bi-x-circle-fill text-danger" style={{ fontSize: '16px', lineHeight: 1 }}></i>
+                </div>
+            )}
             {item.status === 'uploading' && (
                 <div className="gallery-progress-bar">
                     <div className="gallery-progress-fill" style={{ width: item.progress + '%' }}></div>
@@ -61,7 +72,7 @@ export default function GalleryUpload({ eventId, images = [], onImagesChange }) 
     const [items, setItems] = useState(() =>
         images.map(img => ({
             id: img.id || 'existing-' + img.path,
-            preview: img.path.startsWith('http') ? img.path : '/' + img.path,
+            preview: img.path.startsWith('http') ? img.path : mediaUrl(img.path),
             status: 'done',
             path: img.path,
             type: img.type || 'image',

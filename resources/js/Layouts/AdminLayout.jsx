@@ -22,6 +22,7 @@ export default function AdminLayout({ children, title, description, breadcrumbs,
         ...Object.keys(RESOURCE_ICONS)
             .filter(k => k !== 'media')
             .map(k => ({ icon: RESOURCE_ICONS[k], label: RESOURCE_LABELS[k], url: RESOURCE_URLS[k] })),
+        { icon: 'bi-people', label: 'Get Involved', url: '/admin/get-involved' },
         { icon: 'bi-shield-lock', label: 'Security', url: '/admin/security' },
     ];
 

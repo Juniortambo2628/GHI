@@ -2,15 +2,12 @@ import PublicLayout from '../Layouts/PublicLayout';
 import { Head, router } from '@inertiajs/react';
 import { useState } from 'react';
 import { categoryToObjective } from '../Constants/categoryToObjective';
-import { mediaUrl } from '../Components/Shared/ImageUploadField';
+import mediaUrl from '../Components/Shared/mediaUrl';
 import PageHeader from '../Components/Shared/PageHeader';
-import SearchSidebar from '../Components/Shared/SearchSidebar';
-import ResultsCount from '../Components/Shared/ResultsCount';
 import ListingCard from '../Components/Shared/ListingCard';
 import ListingRow from '../Components/Shared/ListingRow';
 import TimelineCard from '../Components/Shared/TimelineCard';
-import ListingCardGrid from '../Components/Shared/ListingCardGrid';
-import Pagination from '../Components/Shared/Pagination';
+import ListingPageLayout from '../Components/Shared/ListingPageLayout';
 
 Impact.layout = page => <PublicLayout>{page}</PublicLayout>;
 
@@ -38,8 +35,11 @@ export default function Impact({ impactActivities, hero }) {
             description: impact.description,
             meta: [
                 { icon: 'bi bi-people', text: `${(impact.people_affected || 0).toLocaleString()} Lives Impacted` },
-                { icon: 'bi bi-calendar', text: formattedDate }
+                { icon: 'bi bi-calendar', text: `Activity Date: ${impact.activity_date ? new Date(impact.activity_date).toLocaleDateString() : formattedDate}` },
+                { icon: 'bi bi-geo-alt', text: `Location: ${impact.location || 'N/A'}` },
+                { icon: 'bi bi-info-circle', text: `Status: ${impact.status || 'Published'}` },
             ],
+            detailContent: impact.outcome_summary,
         };
         if (mode === 'list') return <ListingRow key={impact.id} {...props} />;
         if (mode === 'timeline') return <TimelineCard key={impact.id} {...props} side={idx % 2 === 0 ? 'left' : 'right'} />;
@@ -53,9 +53,14 @@ export default function Impact({ impactActivities, hero }) {
                 <meta name="description" content="See the impact of our work in East Africa." />
             </Head>
             <PageHeader title={hero?.hero_impact_title || 'Our Impact'} subtitle={hero?.hero_impact_subtitle} image={hero?.hero_impact_image} buttonText={hero?.hero_impact_button_text} buttonUrl={hero?.hero_impact_button_url} breadcrumb={[{ label: 'Our Impact' }]} />
-            <div className="container-fluid px-5">
-                <div className="row g-4">
-                    <SearchSidebar onSubmit={handleSubmit} viewMode={viewMode} setViewMode={setViewMode}>
+            <ListingPageLayout
+                data={impactActivities}
+                emptyMessage="No impact stories found."
+                viewMode={viewMode}
+                setViewMode={setViewMode}
+                onSubmit={handleSubmit}
+                filters={
+                    <>
                         <input type="text" name="search" className="form-control mb-3" placeholder="Search impact..." value={search} onChange={e => setSearch(e.target.value)} />
                         <select name="sort" className="form-select mb-3" value={sortBy} onChange={e => setSortBy(e.target.value)}>
                             <option value="">Sort by</option>
@@ -65,16 +70,10 @@ export default function Impact({ impactActivities, hero }) {
                             <option value="impact">Most Impact</option>
                         </select>
                         <button type="submit" className="btn btn-primary w-100">Search</button>
-                    </SearchSidebar>
-                    <div className="col-lg-9">
-                        <ResultsCount data={impactActivities} />
-                        <ListingCardGrid data={impactActivities} emptyMessage="No impact stories found." viewMode={viewMode}>
-                            {renderCard}
-                        </ListingCardGrid>
-                        <Pagination data={impactActivities} />
-                    </div>
-                </div>
-            </div>
+                    </>
+                }
+                renderCard={renderCard}
+            />
         </>
     );
 }

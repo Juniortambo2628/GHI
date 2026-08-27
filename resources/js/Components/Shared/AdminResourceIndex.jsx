@@ -7,6 +7,7 @@ import AdminViewToggle from './AdminViewToggle';
 import AdminCrudModal from './AdminCrudModal';
 import AdminCrudModalView from './AdminCrudModalView';
 import Pagination from './Pagination';
+import mediaUrl from './mediaUrl';
 
 const DEFAULT_STATUS_OPTIONS = [
     { value: 'draft', label: 'Draft' },
@@ -145,6 +146,30 @@ export default function AdminResourceIndex({
                     />
                 ),
             });
+            if (modalState.item?.images && modalState.item.images.length > 0) {
+                tabs.push({
+                    key: 'gallery',
+                    label: 'Gallery',
+                    icon: 'images',
+                    content: (
+                        <div className="gallery-grid mt-3">
+                            <div className="row">
+                                {modalState.item.images.sort((a, b) => a.sort_order - b.sort_order).map((img, idx) => (
+                                    <div key={img.id} className="col-6 col-md-4 mb-3">
+                                        <div className="gallery-item-card position-relative" style={{ aspectRatio: '4/3', overflow: 'hidden', borderRadius: '8px' }}>
+                                            {img.type === 'video' ? (
+                                                <video src={mediaUrl(img.path)} className="w-100 h-100 object-fit-cover" muted loop playsInline controls />
+                                            ) : (
+                                                <img src={mediaUrl(img.path)} className="w-100 h-100 object-fit-cover" alt={`Gallery ${idx + 1}`} />
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )
+                });
+            }
         }
         if (modalState.mode === 'edit') {
             tabs.push({

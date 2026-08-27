@@ -1,11 +1,13 @@
 import { Link } from '@inertiajs/react';
+import mediaUrl from './mediaUrl';
+import FallbackImage from './FallbackImage';
 
 export default function EventListItem({ event }) {
     const eventDate = new Date(event.date || event.event_date);
     const day = String(eventDate.getDate()).padStart(2, '0');
     const month = eventDate.toLocaleString('en-US', { month: 'long' });
     const time = eventDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-    const eventImage = event.image ? `/uploads/images/${event.image}` : '/Banners-and-portraits/pexels-rdne-6646883.jpg';
+    const eventImage = event.image ? mediaUrl(event.image) : '/Banners-and-portraits/pexels-rdne-6646883.jpg';
 
     return (
         <div className="event-list-item">
@@ -14,11 +16,11 @@ export default function EventListItem({ event }) {
                 <div className="event-month">{month}</div>
             </div>
             <div className="event-image-container">
-                <img src={eventImage} alt={event.title} className="event-image" loading="lazy" width="300" height="200" />
+                <FallbackImage src={eventImage} alt={event.title} className="event-image" loading="lazy" width="300" height="200" />
             </div>
             <div className="event-details">
                 <h4 className="event-title"><Link href="/events">{event.title}</Link></h4>
-                <p className="event-subtitle">{event.initiative || 'General'}</p>
+                <p className="event-subtitle">{event.initiative?.title || event.initiative || 'General'}</p>
                 <div className="event-meta">
                     <span className="glass-pill-sm"><i className="bi bi-geo-alt"></i></span>
                     <span className="event-location ms-1">{event.location || ''}</span>

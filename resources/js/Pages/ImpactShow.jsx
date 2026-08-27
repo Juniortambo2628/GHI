@@ -1,7 +1,8 @@
 import PublicLayout from '../Layouts/PublicLayout';
-import { mediaUrl } from '../Components/Shared/ImageUploadField';
+import mediaUrl from '../Components/Shared/mediaUrl';
 import FallbackImage from '../Components/Shared/FallbackImage';
 import StatusBadge from '../Components/Shared/StatusBadge';
+import ShowPageLayout from '../Components/Shared/ShowPageLayout';
 import { Head, Link } from '@inertiajs/react';
 
 ImpactShow.layout = page => <PublicLayout>{page}</PublicLayout>;
@@ -13,36 +14,9 @@ export default function ImpactShow({ impactActivity }) {
                 <title>{impactActivity.title} - Global Harmony Initiative</title>
             </Head>
 
-            <div className="container-fluid page-header hero-impact mb-5">
-                <div className="container py-5">
-                    <nav aria-label="breadcrumb animated slideInDown mb-4">
-                        <ol className="breadcrumb">
-                            <li className="breadcrumb-item"><Link href="/">Home</Link></li>
-                            <li className="breadcrumb-item"><Link href="/impact">Impact</Link></li>
-                            <li className="breadcrumb-item active" aria-current="page">{impactActivity.title}</li>
-                        </ol>
-                    </nav>
-                    <h1 className="display-3 text-white mb-3 animated slideInDown">{impactActivity.title}</h1>
-                </div>
-            </div>
-
-            <div className="container py-5">
-                <div className="row g-5">
-                    <div className="col-lg-8">
-                        {impactActivity.image && (
-                            <FallbackImage src={mediaUrl(impactActivity.image)} className="img-fluid rounded mb-4 w-100" alt={impactActivity.title} />
-                        )}
-                        <div className="mb-4">
-                            {impactActivity.description}
-                        </div>
-                        {impactActivity.outcome_summary && (
-                            <div className="mb-4">
-                                <h4>Outcome Summary</h4>
-                                <p>{impactActivity.outcome_summary}</p>
-                            </div>
-                        )}
-                    </div>
-                    <div className="col-lg-4">
+            <ShowPageLayout title={impactActivity.title} section="impact" sectionLabel="Impact" sectionUrl="/impact"
+                sidebar={
+                    <>
                         <div className="bg-light p-4 rounded mb-4">
                             <h5 className="mb-3">Impact Details</h5>
                             <ul className="list-unstyled">
@@ -59,9 +33,21 @@ export default function ImpactShow({ impactActivity }) {
                                 <Link href={`/events/${impactActivity.event.slug || impactActivity.event.id}`}>{impactActivity.event.title}</Link>
                             </div>
                         )}
-                    </div>
+                    </>
+                }>
+                {impactActivity.image && (
+                    <FallbackImage src={mediaUrl(impactActivity.image)} className="img-fluid rounded mb-4 w-100" alt={impactActivity.title} />
+                )}
+                <div className="mb-4">
+                    {impactActivity.description}
                 </div>
-            </div>
+                {impactActivity.outcome_summary && (
+                    <div className="mb-4">
+                        <h4>Outcome Summary</h4>
+                        <p>{impactActivity.outcome_summary}</p>
+                    </div>
+                )}
+            </ShowPageLayout>
         </>
     );
 }
