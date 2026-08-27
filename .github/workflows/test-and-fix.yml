@@ -62,6 +62,17 @@ jobs:
           mkdir -p bootstrap/cache storage/framework/{cache,sessions,views} storage/logs storage/app/public
           chmod -R 775 bootstrap/cache storage
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Build frontend
+        run: |
+          npm ci
+          npm run build
+
       - name: Run Laravel Pint
         run: ./vendor/bin/pint
 
