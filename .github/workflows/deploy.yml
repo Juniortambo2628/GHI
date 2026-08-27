@@ -131,6 +131,7 @@ jobs:
           composer install --no-dev --optimize-autoloader --prefer-dist --no-progress --no-interaction --ignore-platform-reqs
 
           echo "==> Running artisan commands..."
+          php artisan key:generate
           php artisan migrate --force
           php artisan config:cache
           php artisan route:cache
@@ -141,6 +142,7 @@ jobs:
           chmod -R 775 "${RELEASE_DIR}/bootstrap/cache" 2>/dev/null || true
 
           echo "==> Swapping to new release..."
+          rm -rf "${CORE_LINK}"
           ln -sfn "${RELEASE_DIR}" "${CORE_LINK}"
 
           echo "==> Ensuring public_html/api symlink..."
