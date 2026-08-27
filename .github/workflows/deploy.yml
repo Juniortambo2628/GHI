@@ -176,7 +176,7 @@ jobs:
 
           for i in 1 2 3 4 5; do
             HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-              "https://globalharmonyinitiative.com/api/up" || true)
+              "https://globalharmonyinitiative.com/up" || true)
 
             if [ "$HTTP_STATUS" = "200" ]; then
               echo "Health check passed (HTTP ${HTTP_STATUS})"
