@@ -129,7 +129,7 @@ jobs:
 
           echo "==> Installing composer dependencies..."
           cd "${RELEASE_DIR}"
-          composer install --no-dev --optimize-autoloader --prefer-dist --no-progress --no-interaction
+          composer install --no-dev --optimize-autoloader --prefer-dist --no-progress --no-interaction --ignore-platform-reqs
 
           echo "==> Running artisan commands..."
           php artisan migrate --force
