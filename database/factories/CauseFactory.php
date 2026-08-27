@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Cause;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class CauseFactory extends Factory
 {
@@ -12,9 +13,10 @@ class CauseFactory extends Factory
     public function definition(): array
     {
         $title = fake()->unique()->sentence(3);
+
         return [
             'title' => $title,
-            'slug' => \Illuminate\Support\Str::slug($title),
+            'slug' => Str::slug($title),
             'description' => fake()->paragraph(),
             'quote' => fake()->sentence(),
             'icon' => fake()->randomElement(['globe2', 'book', 'heart', 'people', 'lightbulb']),

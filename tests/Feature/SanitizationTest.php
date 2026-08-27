@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Cause;
-use App\Models\Initiative;
 use App\Models\Concerns\SanitizesHtml;
+use App\Models\Initiative;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

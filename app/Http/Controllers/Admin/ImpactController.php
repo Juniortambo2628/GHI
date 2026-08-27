@@ -6,14 +6,14 @@ use App\Http\Controllers\Admin\Concerns\HasStatusOptions;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreImpactRequest;
 use App\Http\Requests\Admin\UpdateImpactRequest;
-use App\Models\ImpactActivity;
 use App\Models\Event;
-use Inertia\Inertia;
+use App\Models\ImpactActivity;
 use Illuminate\Http\Request;
 
 class ImpactController extends Controller
 {
     use HasStatusOptions;
+
     public function index(Request $request)
     {
         $impacts = ImpactActivity::with('event')->when($request->search, fn ($q, $search) => $q->where('title', 'like', "%{$search}%"))->when($request->status, fn ($q, $status) => $q->where('status', $status))->when($request->from, fn ($q, $from) => $q->whereDate('activity_date', '>=', $from))->when($request->to, fn ($q, $to) => $q->whereDate('activity_date', '<=', $to))->latest()->paginate(20)->withQueryString();

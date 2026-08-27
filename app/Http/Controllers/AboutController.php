@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\SiteSetting;
-use Inertia\Inertia;
 
 class AboutController extends Controller
 {

@@ -16,10 +16,10 @@ class TrackPageView
 
         if ($request->isMethod('GET') && $response->isSuccessful() && ! $request->is('admin*') && ! $request->is('api/*') && ! $request->is('up')) {
             PageView::create([
-                'path' => '/' . ltrim($request->path(), '/'),
+                'path' => '/'.ltrim($request->path(), '/'),
                 'route_name' => $request->route()?->getName(),
                 'referrer' => Str::limit((string) $request->headers->get('referer'), 500, ''),
-                'visitor_hash' => hash('sha256', $request->ip() . '|' . now()->toDateString()),
+                'visitor_hash' => hash('sha256', $request->ip().'|'.now()->toDateString()),
                 'occurred_at' => now(),
             ]);
         }

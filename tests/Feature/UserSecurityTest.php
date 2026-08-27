@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Passkey;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class UserSecurityTest extends TestCase
@@ -245,7 +246,7 @@ class UserSecurityTest extends TestCase
         ])->assertOk();
 
         $admin->refresh();
-        $this->assertTrue(\Illuminate\Support\Facades\Hash::check('newsecurepass123', $admin->password));
+        $this->assertTrue(Hash::check('newsecurepass123', $admin->password));
     }
 
     public function test_change_password_rejects_short_password(): void

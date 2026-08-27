@@ -2,15 +2,15 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\SiteSetting;
 use App\Models\Cause;
-use App\Models\Initiative;
+use App\Models\ContactSubmission;
 use App\Models\Event;
 use App\Models\ImpactActivity;
-use App\Models\ContactSubmission;
+use App\Models\Initiative;
 use App\Models\NewsletterSubscriber;
-use App\Models\Story;
 use App\Models\PageView;
+use App\Models\SiteSetting;
+use App\Models\Story;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -73,9 +73,10 @@ class HandleInertiaRequests extends Middleware
                 'footer_text' => 'Bridging Global Compassion with Local Action.',
             ]),
             'admin_stats' => function () use ($request) {
-                if (!$request->user()?->is_admin) {
+                if (! $request->user()?->is_admin) {
                     return null;
                 }
+
                 return [
                     'causes' => Cause::count(),
                     'initiatives' => Initiative::count(),

@@ -12,7 +12,7 @@ class PageViewFactory extends Factory
     public function definition(): array
     {
         return [
-            'path' => '/' . fake()->slug(),
+            'path' => '/'.fake()->slug(),
             'route_name' => fake()->randomElement(['home', 'causes.index', 'initiatives.index', 'events.index', 'stories.index']),
             'referrer' => fake()->optional()->url(),
             'visitor_hash' => fake()->sha256(),

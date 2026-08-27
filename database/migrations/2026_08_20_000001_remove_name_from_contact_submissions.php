@@ -17,7 +17,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        if (!Schema::hasColumn('contact_submissions', 'name')) {
+        if (! Schema::hasColumn('contact_submissions', 'name')) {
             Schema::table('contact_submissions', function (Blueprint $table) {
                 $table->string('name', 255)->nullable()->after('lastname');
             });

@@ -9,12 +9,12 @@ use App\Http\Requests\Admin\UpdateEventRequest;
 use App\Models\Event;
 use App\Models\EventImage;
 use App\Models\Initiative;
-use Inertia\Inertia;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
     use HasStatusOptions;
+
     public function index(Request $request)
     {
         $events = Event::with(['initiative', 'images'])->when($request->search, fn ($q, $search) => $q->where('title', 'like', "%{$search}%"))->when($request->status, fn ($q, $status) => $q->where('status', $status))->when($request->from, fn ($q, $from) => $q->whereDate('event_date', '>=', $from))->when($request->to, fn ($q, $to) => $q->whereDate('event_date', '<=', $to))->latest('event_date')->paginate(20)->withQueryString();

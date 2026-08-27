@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreContactRequest;
 use App\Models\ContactSubmission;
 use App\Models\SiteSetting;
-use Inertia\Inertia;
 
 class ContactController extends Controller
 {

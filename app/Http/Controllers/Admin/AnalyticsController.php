@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\ContactSubmission;
-use App\Models\PageView;
-use App\Models\NewsletterSubscriber;
 use App\Models\Cause;
+use App\Models\ContactSubmission;
 use App\Models\Event;
-use App\Models\Initiative;
 use App\Models\ImpactActivity;
+use App\Models\Initiative;
+use App\Models\NewsletterSubscriber;
+use App\Models\PageView;
 use App\Models\Story;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -121,6 +121,7 @@ class AnalyticsController extends Controller
         $hourExpr = DB::getDriverName() === 'sqlite'
             ? "CAST(strftime('%H', occurred_at) AS INTEGER)"
             : 'HOUR(occurred_at)';
+
         return [
             'title' => 'Traffic Report',
             'daily' => PageView::whereBetween('occurred_at', [$from, $to])

@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\ImpactActivity;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class ImpactActivityFactory extends Factory
 {
@@ -12,9 +13,10 @@ class ImpactActivityFactory extends Factory
     public function definition(): array
     {
         $title = fake()->unique()->sentence(3);
+
         return [
             'title' => $title,
-            'slug' => \Illuminate\Support\Str::slug($title),
+            'slug' => Str::slug($title),
             'description' => fake()->paragraph(),
             'event_id' => null,
             'people_affected' => fake()->numberBetween(10, 5000),

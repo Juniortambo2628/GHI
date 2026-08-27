@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Story;
 use App\Models\SiteSetting;
+use App\Models\Story;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class StoryController extends Controller
 {
@@ -16,7 +15,7 @@ class StoryController extends Controller
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('content', 'like', "%{$search}%");
+                    ->orWhere('content', 'like', "%{$search}%");
             });
         }
 

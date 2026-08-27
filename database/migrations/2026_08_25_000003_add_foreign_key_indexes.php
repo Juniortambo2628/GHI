@@ -9,19 +9,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('initiatives', function (Blueprint $table) {
-            if (!Schema::hasIndex('initiatives', ['cause_id'])) {
+            if (! Schema::hasIndex('initiatives', ['cause_id'])) {
                 $table->index('cause_id');
             }
         });
 
         Schema::table('events', function (Blueprint $table) {
-            if (!Schema::hasIndex('events', ['initiative_id'])) {
+            if (! Schema::hasIndex('events', ['initiative_id'])) {
                 $table->index('initiative_id');
             }
         });
 
         Schema::table('impact_activities', function (Blueprint $table) {
-            if (!Schema::hasIndex('impact_activities', ['event_id'])) {
+            if (! Schema::hasIndex('impact_activities', ['event_id'])) {
                 $table->index('event_id');
             }
         });

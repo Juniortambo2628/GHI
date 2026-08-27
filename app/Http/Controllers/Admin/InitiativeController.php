@@ -6,14 +6,14 @@ use App\Http\Controllers\Admin\Concerns\HasStatusOptions;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreInitiativeRequest;
 use App\Http\Requests\Admin\UpdateInitiativeRequest;
-use App\Models\Initiative;
 use App\Models\Cause;
-use Inertia\Inertia;
+use App\Models\Initiative;
 use Illuminate\Http\Request;
 
 class InitiativeController extends Controller
 {
     use HasStatusOptions;
+
     public function index(Request $request)
     {
         $initiatives = Initiative::with('causes')->when($request->search, fn ($q, $search) => $q->where('title', 'like', "%{$search}%"))->when($request->status, fn ($q, $status) => $q->where('status', $status))->when($request->category, fn ($q, $category) => $q->where('category', $category))->latest()->paginate(20)->withQueryString();

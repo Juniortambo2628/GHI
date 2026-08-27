@@ -1,7 +1,7 @@
 <?php
 
-use App\Providers\AppServiceProvider;
 use App\Providers\AdminNotificationServiceProvider;
+use App\Providers\AppServiceProvider;
 
 return [
     AppServiceProvider::class,

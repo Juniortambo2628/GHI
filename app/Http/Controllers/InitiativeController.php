@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Initiative;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class InitiativeController extends Controller
 {
@@ -18,7 +17,7 @@ class InitiativeController extends Controller
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                    ->orWhere('description', 'like', "%{$search}%");
             });
         }
 

@@ -16,7 +16,7 @@ class MediaLibraryController extends Controller
     {
         $disk = Storage::disk('public');
         $files = collect($disk->allFiles())
-            ->filter(fn ($path) => ! $request->type || str_starts_with($path, $request->type . '/'))
+            ->filter(fn ($path) => ! $request->type || str_starts_with($path, $request->type.'/'))
             ->filter(fn ($path) => ! $request->search || str_contains(strtolower($path), strtolower($request->search)))
             ->sortDesc()
             ->map(fn ($path) => [
@@ -38,8 +38,8 @@ class MediaLibraryController extends Controller
                 'current_page' => $page,
                 'last_page' => max(1, (int) ceil($files->count() / $perPage)),
                 'path' => '/admin/media',
-                'prev_page_url' => $page > 1 ? '/admin/media?page=' . ($page - 1) : null,
-                'next_page_url' => $page < ceil($files->count() / $perPage) ? '/admin/media?page=' . ($page + 1) : null,
+                'prev_page_url' => $page > 1 ? '/admin/media?page='.($page - 1) : null,
+                'next_page_url' => $page < ceil($files->count() / $perPage) ? '/admin/media?page='.($page + 1) : null,
             ],
             'filters' => $request->only('type', 'search'),
         ]);
@@ -86,7 +86,7 @@ class MediaLibraryController extends Controller
         abort_unless(! str_contains($path, '..') && $disk->exists($path), 404);
 
         $dir = dirname($path);
-        $newPath = $dir === '.' ? $newName : $dir . '/' . $newName;
+        $newPath = $dir === '.' ? $newName : $dir.'/'.$newName;
 
         if ($newPath !== $path && $disk->exists($newPath)) {
             return back()->withErrors(['new_name' => 'A file with that name already exists.']);

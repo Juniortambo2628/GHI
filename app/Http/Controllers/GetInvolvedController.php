@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreGetInvolvedRequest;
+use App\Models\GetInvolvedSubmission;
 use App\Models\Initiative;
 use App\Models\SiteSetting;
-use Inertia\Inertia;
 
 class GetInvolvedController extends Controller
 {
@@ -21,9 +22,9 @@ class GetInvolvedController extends Controller
         return inertia('GetInvolved', compact('initiatives', 'hero'));
     }
 
-    public function store(\App\Http\Requests\StoreGetInvolvedRequest $request)
+    public function store(StoreGetInvolvedRequest $request)
     {
-        \App\Models\GetInvolvedSubmission::create($request->validated());
+        GetInvolvedSubmission::create($request->validated());
 
         return redirect()->route('get-involved')
             ->with('success', 'Thank you for your interest! We will get back to you soon.');

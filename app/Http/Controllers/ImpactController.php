@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\ImpactActivity;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class ImpactController extends Controller
 {
@@ -16,7 +15,7 @@ class ImpactController extends Controller
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                    ->orWhere('description', 'like', "%{$search}%");
             });
         }
 

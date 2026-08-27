@@ -16,7 +16,7 @@ class VolunteerController extends Controller
             'lastname' => $parts[1] ?? '',
             'email' => $request->email,
             'phone' => $request->phone,
-            'subject' => 'Volunteer Interest: ' . ($request->interest ?? 'General'),
+            'subject' => 'Volunteer Interest: '.($request->interest ?? 'General'),
             'message' => $request->message ?? '',
             'status' => 'new',
         ]);

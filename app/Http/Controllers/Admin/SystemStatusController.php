@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\File;
 
 class SystemStatusController extends Controller
 {
@@ -71,11 +68,11 @@ class SystemStatusController extends Controller
 
         // PHP extensions
         $requiredExtensions = ['openssl', 'pdo', 'mbstring', 'curl', 'gd', 'xml', 'zip'];
-        $missing = array_filter($requiredExtensions, fn($ext) => !extension_loaded($ext));
+        $missing = array_filter($requiredExtensions, fn ($ext) => ! extension_loaded($ext));
         $checks[] = [
             'name' => 'PHP Extensions',
             'status' => empty($missing) ? 'healthy' : 'critical',
-            'message' => empty($missing) ? 'All required extensions installed' : 'Missing: ' . implode(', ', $missing),
+            'message' => empty($missing) ? 'All required extensions installed' : 'Missing: '.implode(', ', $missing),
         ];
 
         return $checks;
@@ -84,7 +81,7 @@ class SystemStatusController extends Controller
     private function getRecentLogs()
     {
         $logPath = storage_path('logs/laravel.log');
-        if (!file_exists($logPath)) {
+        if (! file_exists($logPath)) {
             return [];
         }
 
@@ -94,7 +91,9 @@ class SystemStatusController extends Controller
         $count = 0;
 
         foreach ($lines as $line) {
-            if (empty(trim($line)) || $count >= 50) break;
+            if (empty(trim($line)) || $count >= 50) {
+                break;
+            }
             if (str_starts_with($line, '[') || str_starts_with($line, '#')) {
                 $logs[] = $line;
                 $count++;

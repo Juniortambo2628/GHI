@@ -2,19 +2,18 @@
 
 namespace Tests\Feature;
 
+use App\Models\AdminNotification;
 use App\Models\Cause;
-use App\Models\Initiative;
+use App\Models\ContactSubmission;
 use App\Models\Event;
 use App\Models\ImpactActivity;
-use App\Models\Story;
-use App\Models\ContactSubmission;
+use App\Models\Initiative;
 use App\Models\NewsletterSubscriber;
 use App\Models\PageView;
-use App\Models\User;
 use App\Models\SiteSetting;
-use App\Models\AdminNotification;
+use App\Models\Story;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class ModuleConnectivityTest extends TestCase

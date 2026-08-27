@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\ContactSubmission;
-use App\Models\NewsletterSubscriber;
 use App\Models\Cause;
-use App\Models\Initiative;
+use App\Models\ContactSubmission;
 use App\Models\Event;
 use App\Models\ImpactActivity;
+use App\Models\Initiative;
+use App\Models\NewsletterSubscriber;
 use App\Models\Story;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -37,13 +37,23 @@ class ExportController extends Controller
         abort_unless(isset($definitions[$resource]), 404);
         [$model, $label, $headers, $map] = $definitions[$resource];
         $query = $model::query()->when($request->search, fn ($q, $search) => $q->where('title', 'like', "%{$search}%"))->when($request->status, fn ($q, $status) => $q->where('status', $status));
-        if ($request->category && in_array($resource, ['initiatives', 'stories'], true)) $query->where('category', $request->category);
-        if ($request->from && $resource === 'events') $query->whereDate('event_date', '>=', $request->from);
-        if ($request->to && $resource === 'events') $query->whereDate('event_date', '<=', $request->to);
-        if ($request->from && $resource === 'impact') $query->whereDate('activity_date', '>=', $request->from);
-        if ($request->to && $resource === 'impact') $query->whereDate('activity_date', '<=', $request->to);
+        if ($request->category && in_array($resource, ['initiatives', 'stories'], true)) {
+            $query->where('category', $request->category);
+        }
+        if ($request->from && $resource === 'events') {
+            $query->whereDate('event_date', '>=', $request->from);
+        }
+        if ($request->to && $resource === 'events') {
+            $query->whereDate('event_date', '<=', $request->to);
+        }
+        if ($request->from && $resource === 'impact') {
+            $query->whereDate('activity_date', '>=', $request->from);
+        }
+        if ($request->to && $resource === 'impact') {
+            $query->whereDate('activity_date', '<=', $request->to);
+        }
 
-        return $this->csv(strtolower($label) . '.csv', $headers, $query->latest()->cursor(), $map);
+        return $this->csv(strtolower($label).'.csv', $headers, $query->latest()->cursor(), $map);
     }
 
     private function csv(string $filename, array $headers, iterable $rows, callable $map): StreamedResponse

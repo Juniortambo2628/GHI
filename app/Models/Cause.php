@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Concerns\SanitizesHtml;
 use App\Models\Concerns\HasSlug;
 use App\Models\Concerns\HasStatus;
+use App\Models\Concerns\SanitizesHtml;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Cause extends Model
 {
-    use HasFactory, SanitizesHtml, HasSlug, HasStatus;
+    use HasFactory, HasSlug, HasStatus, SanitizesHtml;
 
     protected $table = 'causes';
 

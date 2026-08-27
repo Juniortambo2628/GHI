@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Event;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class EventFactory extends Factory
 {
@@ -12,9 +13,10 @@ class EventFactory extends Factory
     public function definition(): array
     {
         $title = fake()->unique()->sentence(3);
+
         return [
             'title' => $title,
-            'slug' => \Illuminate\Support\Str::slug($title),
+            'slug' => Str::slug($title),
             'description' => fake()->paragraph(),
             'content' => fake()->paragraphs(2, true),
             'image' => '',

@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Event;
 use App\Models\ImpactActivity;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -132,8 +131,8 @@ class AdminImpactCrudTest extends TestCase
         ImpactActivity::factory()->create(['activity_date' => now()->subWeek()]);
         ImpactActivity::factory()->create(['activity_date' => now()->subMonths(2)]);
         $admin = $this->admin();
-        $this->actingAs($admin)->get('/admin/impact?from=' . now()->subMonth()->format('Y-m-d'))->assertOk();
-        $this->actingAs($admin)->get('/admin/impact?to=' . now()->subDays(3)->format('Y-m-d'))->assertOk();
+        $this->actingAs($admin)->get('/admin/impact?from='.now()->subMonth()->format('Y-m-d'))->assertOk();
+        $this->actingAs($admin)->get('/admin/impact?to='.now()->subDays(3)->format('Y-m-d'))->assertOk();
     }
 
     public function test_non_admin_cannot_create(): void

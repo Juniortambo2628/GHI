@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Event;
-use App\Models\Initiative;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -134,8 +133,8 @@ class AdminEventCrudTest extends TestCase
         Event::factory()->create(['event_date' => now()->addWeek()]);
         Event::factory()->create(['event_date' => now()->addMonths(2)]);
         $admin = $this->admin();
-        $this->actingAs($admin)->get('/admin/events?from=' . now()->addDays(3)->format('Y-m-d'))->assertOk();
-        $this->actingAs($admin)->get('/admin/events?to=' . now()->addMonth()->format('Y-m-d'))->assertOk();
+        $this->actingAs($admin)->get('/admin/events?from='.now()->addDays(3)->format('Y-m-d'))->assertOk();
+        $this->actingAs($admin)->get('/admin/events?to='.now()->addMonth()->format('Y-m-d'))->assertOk();
     }
 
     public function test_non_admin_cannot_create(): void

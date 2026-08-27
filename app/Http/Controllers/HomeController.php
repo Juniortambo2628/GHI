@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Initiative;
-use App\Models\Event;
-use App\Models\Story;
-use App\Models\ImpactActivity;
 use App\Models\Cause;
-use Inertia\Inertia;
+use App\Models\Event;
+use App\Models\ImpactActivity;
+use App\Models\Initiative;
 use App\Models\SiteSetting;
+use App\Models\Story;
 
 class HomeController extends Controller
 {
@@ -33,7 +32,8 @@ class HomeController extends Controller
         $enrichedInitiatives = $initiatives->map(function ($initiative) use ($eventCounts) {
             $obj = $initiative->toArray();
             $obj['event_count'] = $eventCounts[$initiative->id] ?? 0;
-            $obj['objective'] = config('site.category_to_objective.' . $initiative->category, 'Community Development');
+            $obj['objective'] = config('site.category_to_objective.'.$initiative->category, 'Community Development');
+
             return $obj;
         });
 
@@ -43,24 +43,26 @@ class HomeController extends Controller
             $obj = $event->toArray();
             $obj['initiative'] = $allInitiatives[$event->initiative_id] ?? 'General';
             $obj['date'] = $event->event_date;
+
             return $obj;
         });
 
         // Build gallery: collect all images from recent published events
         $galleryImages = collect();
-        $enrichedActivities = $recentEvents->map(function ($event) use ($allInitiatives, $galleryImages) {
+        $enrichedActivities = $recentEvents->map(function ($event) use ($allInitiatives) {
             $obj = $event->toArray();
             $obj['initiative'] = $allInitiatives[$event->initiative_id] ?? 'N/A';
             $initiative = Initiative::find($event->initiative_id);
-            $obj['objective'] = $initiative ? config('site.category_to_objective.' . $initiative->category, 'Community Development') : 'Community Development';
+            $obj['objective'] = $initiative ? config('site.category_to_objective.'.$initiative->category, 'Community Development') : 'Community Development';
             $obj['location'] = $event->location;
-            $obj['gallery_images'] = $event->images()->orderBy('sort_order')->get()->map(fn($img) => ['id' => $img->id, 'path' => $img->path]);
+            $obj['gallery_images'] = $event->images()->orderBy('sort_order')->get()->map(fn ($img) => ['id' => $img->id, 'path' => $img->path]);
+
             return $obj;
         });
 
         // Flatten all event gallery images for the gallery section
         $allGalleryImages = $recentEvents->flatMap(function ($event) {
-            return $event->images()->orderBy('sort_order')->get()->map(fn($img) => [
+            return $event->images()->orderBy('sort_order')->get()->map(fn ($img) => [
                 'id' => $img->id,
                 'path' => $img->path,
                 'event_title' => $event->title,
@@ -73,8 +75,9 @@ class HomeController extends Controller
         // Enrich stories
         $enrichedStories = $stories->map(function ($story) {
             $obj = $story->toArray();
-            $obj['objective'] = config('site.category_to_objective.' . $story->category, 'Community Development');
-            $obj['slug'] = $story->slug ?? 'story-' . $story->id;
+            $obj['objective'] = config('site.category_to_objective.'.$story->category, 'Community Development');
+            $obj['slug'] = $story->slug ?? 'story-'.$story->id;
+
             return $obj;
         });
 
@@ -111,6 +114,4 @@ class HomeController extends Controller
             'settings' => $cmsSettings,
         ]);
     }
-
-
 }

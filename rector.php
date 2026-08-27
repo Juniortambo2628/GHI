@@ -8,15 +8,15 @@ use Rector\Set\ValueObject\SetList;
 
 return RectorConfig::configure()
     ->withPaths([
-        __DIR__ . '/src',
-        __DIR__ . '/includes',
-        __DIR__ . '/admin',
+        __DIR__.'/src',
+        __DIR__.'/includes',
+        __DIR__.'/admin',
     ])
     ->withSkip([
-        __DIR__ . '/vendor',
-        __DIR__ . '/node_modules',
-        __DIR__ . '/dist',
-        __DIR__ . '/config',
+        __DIR__.'/vendor',
+        __DIR__.'/node_modules',
+        __DIR__.'/dist',
+        __DIR__.'/config',
     ])
     // PHP 8.2 features
     ->withPhpSets(php82: true)
@@ -35,4 +35,4 @@ return RectorConfig::configure()
     // Parallel processing for faster analysis
     ->withParallel()
     // Cache directory
-    ->withCache(__DIR__ . '/.rector-cache');
+    ->withCache(__DIR__.'/.rector-cache');

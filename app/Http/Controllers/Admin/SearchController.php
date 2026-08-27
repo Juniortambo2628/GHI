@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SearchRequest;
 use App\Models\Cause;
-use App\Models\Initiative;
-use App\Models\Event;
-use App\Models\Story;
-use App\Models\ImpactActivity;
 use App\Models\ContactSubmission;
+use App\Models\Event;
+use App\Models\ImpactActivity;
+use App\Models\Initiative;
 use App\Models\NewsletterSubscriber;
+use App\Models\Story;
 use Illuminate\Http\JsonResponse;
 
 class SearchController extends Controller

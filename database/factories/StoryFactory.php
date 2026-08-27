@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Story;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class StoryFactory extends Factory
 {
@@ -12,9 +13,10 @@ class StoryFactory extends Factory
     public function definition(): array
     {
         $title = fake()->unique()->sentence(3);
+
         return [
             'title' => $title,
-            'slug' => \Illuminate\Support\Str::slug($title),
+            'slug' => Str::slug($title),
             'content' => fake()->paragraphs(3, true),
             'author' => fake()->name(),
             'featured_image' => '',

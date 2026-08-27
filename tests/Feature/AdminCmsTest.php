@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\PageView;
 use App\Models\SiteSetting;
 use App\Models\User;
-use App\Models\PageView;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;

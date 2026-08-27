@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\ContactSubmission;
 use App\Models\AdminNotification;
+use App\Models\ContactSubmission;
 use App\Models\User;
 
 class ContactSubmissionObserver

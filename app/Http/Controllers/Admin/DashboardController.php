@@ -3,17 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AdminNotification;
 use App\Models\Cause;
-use App\Models\Initiative;
+use App\Models\ContactSubmission;
 use App\Models\Event;
 use App\Models\ImpactActivity;
-use App\Models\ContactSubmission;
+use App\Models\Initiative;
 use App\Models\NewsletterSubscriber;
 use App\Models\PageView;
 use App\Models\Story;
-use App\Models\AdminNotification;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class DashboardController extends Controller
 {

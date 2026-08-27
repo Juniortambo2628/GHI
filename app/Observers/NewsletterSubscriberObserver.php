@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\NewsletterSubscriber;
 use App\Models\AdminNotification;
+use App\Models\NewsletterSubscriber;
 use App\Models\User;
 
 class NewsletterSubscriberObserver

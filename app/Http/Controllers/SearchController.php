@@ -31,7 +31,7 @@ class SearchController extends Controller
                     'type' => $source['type'],
                     'title' => $item->title,
                     'description' => $item->description ?? $item->content,
-                    'url' => '/' . strtolower($source['type']) . 's/' . $item->slug,
+                    'url' => '/'.strtolower($source['type']).'s/'.$item->slug,
                 ]));
             }
         }

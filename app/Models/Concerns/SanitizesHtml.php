@@ -36,6 +36,7 @@ trait SanitizesHtml
             if (preg_match('/href\s*=\s*["\']?\s*(javascript|vbscript|data)\s*:/i', $tag)) {
                 return '';
             }
+
             return $tag;
         }, $value);
 

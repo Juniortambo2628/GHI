@@ -7,12 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreStoryRequest;
 use App\Http\Requests\Admin\UpdateStoryRequest;
 use App\Models\Story;
-use Inertia\Inertia;
 use Illuminate\Http\Request;
 
 class StoryController extends Controller
 {
     use HasStatusOptions;
+
     public function index(Request $request)
     {
         $stories = Story::when($request->search, fn ($q, $search) => $q->where('title', 'like', "%{$search}%"))->when($request->status, fn ($q, $status) => $q->where('status', $status))->when($request->category, fn ($q, $category) => $q->where('category', $category))->latest()->paginate(20)->withQueryString();

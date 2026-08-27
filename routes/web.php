@@ -1,19 +1,19 @@
 <?php
 
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AboutController;
-use App\Http\Controllers\CauseController;
-use App\Http\Controllers\InitiativeController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\ImpactController;
-use App\Http\Controllers\StoryController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\GetInvolvedController;
 use App\Http\Controllers\Api\NewsletterController;
-use App\Http\Controllers\Api\VolunteerController;
 use App\Http\Controllers\Api\UploadController;
+use App\Http\Controllers\Api\VolunteerController;
+use App\Http\Controllers\CauseController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\GetInvolvedController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ImpactController;
+use App\Http\Controllers\InitiativeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\StoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/up', fn () => response()->json(['status' => 'ok']))->name('up');

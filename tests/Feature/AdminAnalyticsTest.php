@@ -73,7 +73,7 @@ class AdminAnalyticsTest extends TestCase
         ]);
 
         $this->actingAs($this->admin())
-            ->get('/admin/analytics?from=' . now()->subDays(5)->format('Y-m-d'))
+            ->get('/admin/analytics?from='.now()->subDays(5)->format('Y-m-d'))
             ->assertOk();
     }
 
@@ -85,7 +85,7 @@ class AdminAnalyticsTest extends TestCase
         ]);
 
         $this->actingAs($this->admin())
-            ->get('/admin/analytics?to=' . now()->subDays(5)->format('Y-m-d'))
+            ->get('/admin/analytics?to='.now()->subDays(5)->format('Y-m-d'))
             ->assertOk();
     }
 
@@ -98,7 +98,7 @@ class AdminAnalyticsTest extends TestCase
         ]);
 
         $this->actingAs($this->admin())
-            ->get('/admin/analytics?from=' . now()->subDays(8)->format('Y-m-d') . '&to=' . now()->subDays(3)->format('Y-m-d'))
+            ->get('/admin/analytics?from='.now()->subDays(8)->format('Y-m-d').'&to='.now()->subDays(3)->format('Y-m-d'))
             ->assertOk();
     }
 
@@ -164,7 +164,7 @@ class AdminAnalyticsTest extends TestCase
     {
         Event::factory()->create(['event_date' => now()->subWeek()]);
         $this->actingAs($this->admin())
-            ->get('/admin/exports/events?from=' . now()->subMonth()->format('Y-m-d') . '&to=' . now()->format('Y-m-d'))
+            ->get('/admin/exports/events?from='.now()->subMonth()->format('Y-m-d').'&to='.now()->format('Y-m-d'))
             ->assertOk();
     }
 
