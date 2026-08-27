@@ -130,16 +130,25 @@ jobs:
           cd "${RELEASE_DIR}"
           composer install --no-dev --optimize-autoloader --prefer-dist --no-progress --no-interaction --ignore-platform-reqs
 
+          echo "==> Setting permissions (shared hosting: 777 for writable dirs)..."
+          chmod -R 777 "${RELEASE_DIR}/storage" 2>/dev/null || true
+          chmod -R 777 "${RELEASE_DIR}/bootstrap/cache" 2>/dev/null || true
+
           echo "==> Running artisan commands..."
-          php artisan key:generate
+          if grep -q '^APP_KEY=$' .env 2>/dev/null || ! grep -q '^APP_KEY=' .env 2>/dev/null; then
+            echo "APP_KEY is empty or missing — generating..."
+            php artisan key:generate
+          else
+            echo "APP_KEY already set — skipping generation."
+          fi
+          php artisan config:clear
+          php artisan cache:clear
+          php artisan route:clear
+          php artisan view:clear
           php artisan migrate --force
           php artisan config:cache
           php artisan route:cache
           php artisan view:cache
-
-          echo "==> Setting permissions..."
-          chmod -R 775 "${RELEASE_DIR}/storage" 2>/dev/null || true
-          chmod -R 775 "${RELEASE_DIR}/bootstrap/cache" 2>/dev/null || true
 
           echo "==> Swapping to new release..."
           rm -rf "${CORE_LINK}"
@@ -152,18 +161,24 @@ jobs:
 
           echo "==> Writing public_html/.htaccess..."
           printf '%s\n' \
+            'Options +FollowSymLinks -Indexes' \
             'RewriteEngine On' \
+            'RewriteBase /' \
             'RewriteCond %{REQUEST_URI} ^/\.well-known/' \
             'RewriteRule ^ - [L]' \
             'RewriteCond %{REQUEST_FILENAME} !-d' \
             'RewriteCond %{REQUEST_FILENAME} !-f' \
+            'RewriteCond %{REQUEST_URI} !^/api/' \
             'RewriteRule ^ api/index.php [L]' > "${DEPLOY_BASE}/public_html/.htaccess"
 
           echo "==> Writing public_html/index.php front controller..."
-          printf '%s\n' \
-            '<?php' \
-            '' \
-            'require __DIR__.\"/api/index.php\";' > "${DEPLOY_BASE}/public_html/index.php"
+          cat > "${DEPLOY_BASE}/public_html/index.php" << 'FRONTCONTROLLER'
+          <?php
+
+          define('LARAVEL_START', microtime(true));
+
+          require __DIR__.'/api/index.php';
+          FRONTCONTROLLER
 
           echo "==> Cleaning old releases (keeping last 5)..."
           cd "${DEPLOY_BASE}/GHI-releases"
