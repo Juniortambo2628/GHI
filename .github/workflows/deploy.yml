@@ -83,9 +83,6 @@ jobs:
             --exclude='public/storage' \
             .
 
-          echo "Tarball contents:"
-          tar tzf "/tmp/${RELEASE_NAME}.tar.gz" | head -30
-          echo "..."
           echo "Total files: $(tar tzf "/tmp/${RELEASE_NAME}.tar.gz" | wc -l)"
           echo "Tarball size: $(ls -lh /tmp/${RELEASE_NAME}.tar.gz | awk '{print $5}')"
 
@@ -104,94 +101,81 @@ jobs:
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/
 
       - name: Deploy on server
-        env:
-          SSH_CMD: "ssh -p ${{ secrets.SSH_PORT || 22 }} -i ~/.ssh/deploy_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}"
         run: |
-          eval $SSH_CMD << 'SERVER_DEPLOY'
+          ssh -p ${{ secrets.SSH_PORT || 22 }} \
+            -i ~/.ssh/deploy_key \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+            "bash -s" << 'SERVER_DEPLOY'
           set -euo pipefail
 
-          DEPLOY_BASE="/home/$USER"
-          GHI_CORE="${DEPLOY_BASE}/GHI-core"
-          SHARED="${DEPLOY_BASE}/GHI-shared"
+          HOME_DIR="$(eval echo ~)"
+          GHI_CORE="${HOME_DIR}/GHI-core"
+          SHARED="${HOME_DIR}/GHI-shared"
+          WEBROOT="${HOME_DIR}/public_html"
           RELEASE="${{ env.RELEASE_NAME }}"
-          WEBROOT="${DEPLOY_BASE}/public_html"
-          TMP="/tmp/ghi-extract-$$"
+          TMP="/tmp/ghi-extract"
 
           echo "============================================"
-          echo "  GHI Deployment — ${RELEASE}"
+          echo "  GHI Deployment"
+          echo "  Release: ${RELEASE}"
+          echo "  Target:  ${GHI_CORE}"
           echo "============================================"
 
-          # ── Phase 1: Extract new code ──────────────────────────────
+          # ── Phase 1: Extract ──────────────────────────────────────
           echo ""
           echo "Phase 1: Extracting release..."
+          rm -rf "${TMP}"
           mkdir -p "${TMP}"
           tar xzf "/tmp/${RELEASE}.tar.gz" -C "${TMP}"
-
           echo "  Extracted $(find "${TMP}" -type f | wc -l) files"
 
           # ── Phase 2: Backup persistent data ────────────────────────
           echo ""
           echo "Phase 2: Backing up persistent data..."
 
-          BACKUP_ENV=""
-          BACKUP_STORAGE=""
+          BACKUP_DIR="/tmp/ghi-backup"
+          rm -rf "${BACKUP_DIR}"
+          mkdir -p "${BACKUP_DIR}"
 
           if [ -f "${GHI_CORE}/.env" ]; then
-            BACKUP_ENV=$(mktemp)
-            cp "${GHI_CORE}/.env" "${BACKUP_ENV}"
-            echo "  Backed up .env ($(wc -c < "${BACKUP_ENV}") bytes)"
+            cp "${GHI_CORE}/.env" "${BACKUP_DIR}/.env"
+            echo "  Backed up .env"
           fi
 
           if [ -d "${GHI_CORE}/storage/app/public" ] && [ "$(ls -A "${GHI_CORE}/storage/app/public" 2>/dev/null)" ]; then
-            BACKUP_STORAGE=$(mktemp -d)
-            cp -r "${GHI_CORE}/storage/app/public" "${BACKUP_STORAGE}/"
-            echo "  Backed up uploaded files ($(du -sh "${BACKUP_STORAGE}/app/public" | cut -f1))"
+            mkdir -p "${BACKUP_DIR}/storage/app/public"
+            cp -r "${GHI_CORE}/storage/app/public/"* "${BACKUP_DIR}/storage/app/public/" 2>/dev/null || true
+            echo "  Backed up uploaded files"
           fi
 
           if [ -d "${GHI_CORE}/storage/logs" ] && [ "$(ls -A "${GHI_CORE}/storage/logs" 2>/dev/null)" ]; then
-            [ -z "${BACKUP_STORAGE}" ] && BACKUP_STORAGE=$(mktemp -d)
-            mkdir -p "${BACKUP_STORAGE}/logs"
-            cp -r "${GHI_CORE}/storage/logs/"* "${BACKUP_STORAGE}/logs/" 2>/dev/null || true
+            mkdir -p "${BACKUP_DIR}/storage/logs"
+            cp -r "${GHI_CORE}/storage/logs/"* "${BACKUP_DIR}/storage/logs/" 2>/dev/null || true
             echo "  Backed up logs"
           fi
 
-          # ── Phase 3: Clean old code ────────────────────────────────
+          # ── Phase 3: Replace GHI-core ──────────────────────────────
           echo ""
-          echo "Phase 3: Cleaning old deployment..."
+          echo "Phase 3: Replacing application directory..."
 
           if [ -d "${GHI_CORE}" ]; then
-            # Remove everything except .env and storage
-            find "${GHI_CORE}" -mindepth 1 -maxdepth 1 \
-              ! -name '.env' \
-              ! -name 'storage' \
-              -exec rm -rf {} + 2>/dev/null || true
-          else
-            mkdir -p "${GHI_CORE}"
+            rm -rf "${GHI_CORE}"
           fi
+          mv "${TMP}" "${GHI_CORE}"
+          echo "  Moved new code to ${GHI_CORE}"
 
-          # ── Phase 4: Deploy new code ───────────────────────────────
+          # ── Phase 4: Restore persistent data ───────────────────────
           echo ""
-          echo "Phase 4: Deploying new code..."
+          echo "Phase 4: Restoring persistent data..."
 
-          # Move extracted files into GHI-core
-          cp -r "${TMP}/." "${GHI_CORE}/"
-          rm -rf "${TMP}"
-
-          echo "  Deployed $(find "${GHI_CORE}" -type f | wc -l) files"
-
-          # ── Phase 5: Restore persistent data ───────────────────────
-          echo ""
-          echo "Phase 5: Restoring persistent data..."
-
-          if [ -n "${BACKUP_ENV}" ] && [ -f "${BACKUP_ENV}" ]; then
-            cp "${BACKUP_ENV}" "${GHI_CORE}/.env"
-            rm -f "${BACKUP_ENV}"
+          if [ -f "${BACKUP_DIR}/.env" ]; then
+            cp "${BACKUP_DIR}/.env" "${GHI_CORE}/.env"
             echo "  Restored .env"
           fi
 
           if [ ! -f "${GHI_CORE}/.env" ]; then
             echo ""
-            echo "FATAL: No .env file found at ${GHI_CORE}/.env"
+            echo "FATAL: No .env file at ${GHI_CORE}/.env"
             echo "Create it before deploying."
             exit 1
           fi
@@ -206,29 +190,29 @@ jobs:
           mkdir -p "${GHI_CORE}/bootstrap/cache"
 
           # Restore uploaded files
-          if [ -n "${BACKUP_STORAGE}" ] && [ -d "${BACKUP_STORAGE}/app/public" ]; then
-            cp -r "${BACKUP_STORAGE}/app/public/"* "${GHI_CORE}/storage/app/public/" 2>/dev/null || true
+          if [ -d "${BACKUP_DIR}/storage/app/public" ]; then
+            cp -r "${BACKUP_DIR}/storage/app/public/"* "${GHI_CORE}/storage/app/public/" 2>/dev/null || true
             echo "  Restored uploaded files"
           fi
 
           # Restore logs
-          if [ -n "${BACKUP_STORAGE}" ] && [ -d "${BACKUP_STORAGE}/logs" ]; then
-            cp -r "${BACKUP_STORAGE}/logs/"* "${GHI_CORE}/storage/logs/" 2>/dev/null || true
+          if [ -d "${BACKUP_DIR}/storage/logs" ]; then
+            cp -r "${BACKUP_DIR}/storage/logs/"* "${GHI_CORE}/storage/logs/" 2>/dev/null || true
             echo "  Restored logs"
           fi
 
-          [ -n "${BACKUP_STORAGE}" ] && rm -rf "${BACKUP_STORAGE}"
+          rm -rf "${BACKUP_DIR}"
 
-          # ── Phase 6: Permissions ───────────────────────────────────
+          # ── Phase 5: Permissions ───────────────────────────────────
           echo ""
-          echo "Phase 6: Setting permissions..."
+          echo "Phase 5: Setting permissions..."
           chmod -R 777 "${GHI_CORE}/storage" 2>/dev/null || true
           chmod -R 777 "${GHI_CORE}/bootstrap/cache" 2>/dev/null || true
           echo "  storage/ and bootstrap/cache set to 777"
 
-          # ── Phase 7: Composer install ──────────────────────────────
+          # ── Phase 6: Composer install ──────────────────────────────
           echo ""
-          echo "Phase 7: Installing composer dependencies..."
+          echo "Phase 6: Installing composer dependencies..."
           cd "${GHI_CORE}"
           composer install \
             --no-dev \
@@ -239,17 +223,17 @@ jobs:
             --ignore-platform-reqs
           echo "  Composer install complete"
 
-          # ── Phase 8: Application setup ─────────────────────────────
+          # ── Phase 7: Application setup ─────────────────────────────
           echo ""
-          echo "Phase 8: Running application setup..."
+          echo "Phase 7: Running application setup..."
 
           cd "${GHI_CORE}"
 
-          # APP_KEY — only generate if missing or empty
+          # APP_KEY — only generate if missing
           if grep -qP 'APP_KEY=base64:[A-Za-z0-9+/=]{32,}' "${GHI_CORE}/.env" 2>/dev/null; then
-            echo "  APP_KEY already set — skipping generation"
+            echo "  APP_KEY exists — skipping"
           else
-            echo "  APP_KEY missing — generating..."
+            echo "  Generating APP_KEY..."
             php artisan key:generate --force
           fi
 
@@ -258,7 +242,7 @@ jobs:
           ln -sfn "${GHI_CORE}/storage/app/public" "${GHI_CORE}/public/storage"
           echo "  Storage symlink created"
 
-          # Clear stale caches (safe to fail on fresh deploys)
+          # Clear stale caches
           echo "  Clearing caches..."
           php artisan config:clear 2>/dev/null || true
           php artisan route:clear 2>/dev/null || true
@@ -275,19 +259,19 @@ jobs:
           echo "  Running migrations..."
           php artisan migrate --force
 
-          # Seed database (idempotent — safe to run repeatedly)
+          # Seed database (idempotent)
           echo "  Seeding database..."
           php artisan db:seed --force
 
           echo "  Application setup complete"
 
-          # ── Phase 9: Web root setup ────────────────────────────────
+          # ── Phase 8: Web root setup ────────────────────────────────
           echo ""
-          echo "Phase 9: Configuring web root..."
+          echo "Phase 8: Configuring web root..."
 
           mkdir -p "${WEBROOT}"
 
-          # Create api/ symlink → GHI-core/public (serves static assets + Laravel)
+          # Create api/ symlink → GHI-core/public
           rm -rf "${WEBROOT}/api"
           ln -sfn "${GHI_CORE}/public" "${WEBROOT}/api"
 
@@ -315,7 +299,7 @@ jobs:
             '# Route everything else through Laravel' \
             'RewriteRule ^ api/index.php [L,QSA]' > "${WEBROOT}/.htaccess"
 
-          # Write entry point — bootstraps Laravel from GHI-core
+          # Write entry point
           printf '%s\n' \
             '<?php' \
             '' \
@@ -323,25 +307,19 @@ jobs:
 
           echo "  Web root configured"
 
-          # ── Phase 10: Cleanup ──────────────────────────────────────
+          # ── Phase 9: Cleanup ───────────────────────────────────────
           echo ""
-          echo "Phase 10: Cleaning up..."
-
-          # Remove old tarball
+          echo "Phase 9: Cleaning up..."
           rm -f "/tmp/${RELEASE}.tar.gz"
-
-          # Clean old temp extract dirs (safety)
-          find /tmp -maxdepth 1 -name 'ghi-extract-*' -mmin +30 -exec rm -rf {} + 2>/dev/null || true
-
+          find /tmp -maxdepth 1 -name 'ghi-*' -mmin +30 -exec rm -rf {} + 2>/dev/null || true
           echo "  Cleanup complete"
 
-          # ── Phase 11: Verification ─────────────────────────────────
+          # ── Phase 10: Verification ─────────────────────────────────
           echo ""
-          echo "Phase 11: Verifying deployment..."
+          echo "Phase 10: Verifying deployment..."
 
           ERRORS=0
 
-          # Check critical files exist
           for f in "public/index.php" "bootstrap/app.php" "config/app.php" "routes/web.php" "routes/admin.php" ".env"; do
             if [ ! -f "${GHI_CORE}/${f}" ]; then
               echo "  MISSING: ${GHI_CORE}/${f}"
@@ -349,19 +327,16 @@ jobs:
             fi
           done
 
-          # Check vendor/ exists (composer install succeeded)
           if [ ! -d "${GHI_CORE}/vendor" ] || [ ! -f "${GHI_CORE}/vendor/autoload.php" ]; then
-            echo "  MISSING: vendor/autoload.php — composer install may have failed"
+            echo "  MISSING: vendor/autoload.php"
             ERRORS=$((ERRORS + 1))
           fi
 
-          # Check public/build/ exists (Vite build succeeded)
           if [ ! -d "${GHI_CORE}/public/build" ]; then
-            echo "  MISSING: public/build/ — frontend build may have failed"
+            echo "  MISSING: public/build/"
             ERRORS=$((ERRORS + 1))
           fi
 
-          # Check symlinks
           if [ ! -L "${GHI_CORE}/public/storage" ]; then
             echo "  MISSING: public/storage symlink"
             ERRORS=$((ERRORS + 1))
@@ -382,7 +357,6 @@ jobs:
             ERRORS=$((ERRORS + 1))
           fi
 
-          # Check .env has APP_KEY
           if ! grep -qP 'APP_KEY=base64:[A-Za-z0-9+/=]{32,}' "${GHI_CORE}/.env" 2>/dev/null; then
             echo "  WARNING: APP_KEY not found in .env"
             ERRORS=$((ERRORS + 1))
@@ -390,7 +364,7 @@ jobs:
 
           if [ ${ERRORS} -gt 0 ]; then
             echo ""
-            echo "VERIFICATION FAILED: ${ERRORS} issue(s) found"
+            echo "VERIFICATION FAILED: ${ERRORS} issue(s)"
             exit 1
           fi
 
@@ -400,6 +374,8 @@ jobs:
           echo "  Deployment complete!"
           echo "============================================"
           SERVER_DEPLOY
+        env:
+          RELEASE_NAME: ${{ env.RELEASE_NAME }}
 
       - name: Cleanup SSH key
         if: always()
