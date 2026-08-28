@@ -135,12 +135,7 @@ jobs:
           chmod -R 777 "${RELEASE_DIR}/bootstrap/cache" 2>/dev/null || true
 
           echo "==> Running artisan commands..."
-          if grep -q '^APP_KEY=$' .env 2>/dev/null || ! grep -q '^APP_KEY=' .env 2>/dev/null; then
-            echo "APP_KEY is empty or missing — generating..."
-            php artisan key:generate
-          else
-            echo "APP_KEY already set — skipping generation."
-          fi
+          php artisan key:generate --force
 
           echo "==> Migrating database..."
           php artisan migrate --force
