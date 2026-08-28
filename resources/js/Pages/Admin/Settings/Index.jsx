@@ -89,9 +89,9 @@ function PageHeroEditor({ page, data, setData }) {
 }
 
 export default function Index({ settings }) {
-    const heroSlides = JSON.parse(settings.homepage_hero || '[]');
-    const sectionVis = JSON.parse(settings.homepage_sections || '{}');
-    const savedOrder = JSON.parse(settings.homepage_section_order || '[]');
+    const heroSlides = (() => { try { return JSON.parse(settings.homepage_hero || '[]'); } catch { return []; } })();
+    const sectionVis = (() => { try { return JSON.parse(settings.homepage_sections || '{}'); } catch { return {}; } })();
+    const savedOrder = (() => { try { return JSON.parse(settings.homepage_section_order || '[]'); } catch { return []; } })();
     const sectionOrder = savedOrder.length === defaultOrder.length ? savedOrder : defaultOrder;
 
     const { data, setData, put, processing } = useForm({
