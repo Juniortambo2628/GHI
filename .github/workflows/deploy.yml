@@ -159,8 +159,16 @@ jobs:
             'Options +FollowSymLinks -Indexes' \
             'RewriteEngine On' \
             'RewriteBase /' \
+            '' \
+            '# Allow well-known paths' \
             'RewriteCond %{REQUEST_URI} ^/\.well-known/' \
             'RewriteRule ^ - [L]' \
+            '' \
+            '# Serve static files from api/ (symlink to GHI-core/public)' \
+            'RewriteCond %{DOCUMENT_ROOT}/api/%{REQUEST_URI} -f' \
+            'RewriteRule ^ api/%{REQUEST_URI} [L]' \
+            '' \
+            '# Route everything else through Laravel' \
             'RewriteCond %{REQUEST_FILENAME} !-d' \
             'RewriteCond %{REQUEST_FILENAME} !-f' \
             'RewriteCond %{REQUEST_URI} !^/api/' \
