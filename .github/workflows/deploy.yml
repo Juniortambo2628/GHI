@@ -174,10 +174,17 @@ jobs:
           fi
 
           if [ ! -f "${GHI_CORE}/.env" ]; then
-            echo ""
-            echo "FATAL: No .env file at ${GHI_CORE}/.env"
-            echo "Create it before deploying."
-            exit 1
+            if [ -f "${GHI_CORE}/.env.example" ]; then
+              cp "${GHI_CORE}/.env.example" "${GHI_CORE}/.env"
+              php artisan key:generate --force
+              echo "  Created .env from .env.example with new APP_KEY"
+              echo "  IMPORTANT: Update .env with production credentials!"
+            else
+              echo ""
+              echo "FATAL: No .env file at ${GHI_CORE}/.env"
+              echo "Create it before deploying."
+              exit 1
+            fi
           fi
 
           # Ensure storage directories exist
