@@ -175,10 +175,13 @@ jobs:
             'RewriteCond %{DOCUMENT_ROOT}/api/%{REQUEST_URI} -f' \
             'RewriteRule ^ api/%{REQUEST_URI} [L]' \
             '' \
+            '# Serve existing files and directories directly' \
+            'RewriteCond %{REQUEST_FILENAME} -d' \
+            'RewriteRule ^ - [L]' \
+            'RewriteCond %{REQUEST_FILENAME} -f' \
+            'RewriteRule ^ - [L]' \
+            '' \
             '# Route everything else through Laravel' \
-            'RewriteCond %{REQUEST_FILENAME} !-d' \
-            'RewriteCond %{REQUEST_FILENAME} !-f' \
-            'RewriteCond %{REQUEST_URI} !^/api/' \
             'RewriteRule ^ api/index.php [L]' > "${DEPLOY_BASE}/public_html/.htaccess"
 
           echo "==> Writing public_html/index.php front controller..."

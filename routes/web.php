@@ -63,7 +63,7 @@ Route::get('/coming-soon-get-involved', fn () => redirect()->route('get-involved
 Route::post('/api/newsletter', [NewsletterController::class, 'store'])->name('api.newsletter');
 Route::post('/api/volunteer-interest', [VolunteerController::class, 'store'])->name('api.volunteer');
 
-Route::middleware('auth', 'verified')->group(function () {
+Route::middleware('auth')->group(function () {
     Route::post('/api/upload', [UploadController::class, 'store'])->name('api.upload');
     Route::post('/api/upload/image', [UploadController::class, 'image'])->name('api.upload.image');
     Route::post('/api/upload/document', [UploadController::class, 'document'])->name('api.upload.document');
