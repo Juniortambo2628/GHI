@@ -262,10 +262,9 @@ jobs:
             'RewriteRule ^ api/index.php [L,QSA]' > "${WEBROOT}/.htaccess"
 
           # Write entry point
-          printf '%s\n' \
-            '<?php' \
-            '' \
-            'require dirname(__DIR__) . \'/GHI-core/public/index.php\';' > "${WEBROOT}/index.php"
+          echo '<?php' > "${WEBROOT}/index.php"
+          echo '' >> "${WEBROOT}/index.php"
+          echo "require dirname(__DIR__) . '/GHI-core/public/index.php';" >> "${WEBROOT}/index.php"
 
           echo "  Web root configured"
 
