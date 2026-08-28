@@ -1,29 +1,43 @@
+# Dependencies
 /node_modules
+/vendor
+
+# Build output
 /public/build
 /public/hot
+
+# Storage symlink (managed on server)
 /public/storage
-/storage/*.key
-/vendor
+
+# Environment files (never commit secrets)
 .env
 .env.backup
 .env.production
-.phpunit.result.cache
-Homestead.json
-Homestead.yaml
-auth.json
-npm-debug.log
-yarn-error.log
+.env.local
+.env.staging
+
+# Storage key files
+/storage/*.key
+
+# IDE / Editor
 /.fleet
 /.idea
 /.vscode
-package-lock.json
-node_modules
-*.json.bak
-new-session-*.json
-/archived
+
+# Testing / Static Analysis
+.phpunit.result.cache
 .phpstan/
 .rector-cache/
 .php-cs-fixer.cache
+
+# Logs
+*.log
+
+# Uploaded files (managed on server)
 /uploads
-/storage
+
+# Archived / misc
+archived/
+*.json.bak
+new-session-*.json
 test-output.txt
