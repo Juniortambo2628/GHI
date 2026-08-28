@@ -141,11 +141,11 @@ jobs:
           else
             echo "APP_KEY already set — skipping generation."
           fi
-          php artisan config:clear
-          php artisan cache:clear
-          php artisan route:clear
-          php artisan view:clear
+
+          echo "==> Migrating database..."
           php artisan migrate --force
+
+          echo "==> Warming caches (fresh deploy — skip clear)..."
           php artisan config:cache
           php artisan route:cache
           php artisan view:cache
