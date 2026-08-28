@@ -140,6 +140,9 @@ jobs:
           echo "==> Migrating database..."
           php artisan migrate --force
 
+          echo "==> Seeding database..."
+          php artisan db:seed --force
+
           echo "==> Warming caches (fresh deploy — skip clear)..."
           php artisan config:cache
           php artisan route:cache
