@@ -110,7 +110,6 @@ jobs:
 
           HOME_DIR="$(eval echo ~)"
           GHI_CORE="${HOME_DIR}/GHI-core"
-          SHARED="${HOME_DIR}/GHI-shared"
           WEBROOT="${HOME_DIR}/public_html"
           RELEASE="${{ env.RELEASE_NAME }}"
           TMP="/tmp/ghi-extract"
@@ -129,63 +128,36 @@ jobs:
           tar xzf "/tmp/${RELEASE}.tar.gz" -C "${TMP}"
           echo "  Extracted $(find "${TMP}" -type f | wc -l) files"
 
-          # ── Phase 2: Backup persistent data ────────────────────────
+          # ── Phase 2: Update application code ──────────────────────
           echo ""
-          echo "Phase 2: Backing up persistent data..."
+          echo "Phase 2: Updating application code..."
 
-          BACKUP_DIR="/tmp/ghi-backup"
-          rm -rf "${BACKUP_DIR}"
-          mkdir -p "${BACKUP_DIR}"
+          if [ ! -d "${GHI_CORE}" ]; then
+            # First deploy — move directly
+            mv "${TMP}" "${GHI_CORE}"
+            echo "  Initial deployment to ${GHI_CORE}"
+          else
+            # Subsequent deploy — remove old code (preserve .env, storage/)
+            cd "${GHI_CORE}"
+            find . -mindepth 1 -maxdepth 1 \
+              ! -name '.env' \
+              ! -name 'storage' \
+              -exec rm -rf {} + 2>/dev/null || true
 
-          if [ -f "${GHI_CORE}/.env" ]; then
-            cp "${GHI_CORE}/.env" "${BACKUP_DIR}/.env"
-            echo "  Backed up .env"
+            # Move new code in
+            cp -a "${TMP}/." "${GHI_CORE}/"
+            rm -rf "${TMP}"
+            echo "  Updated code in ${GHI_CORE}"
           fi
 
-          if [ -d "${GHI_CORE}/storage/app/public" ] && [ "$(ls -A "${GHI_CORE}/storage/app/public" 2>/dev/null)" ]; then
-            mkdir -p "${BACKUP_DIR}/storage/app/public"
-            cp -r "${GHI_CORE}/storage/app/public/"* "${BACKUP_DIR}/storage/app/public/" 2>/dev/null || true
-            echo "  Backed up uploaded files"
-          fi
-
-          if [ -d "${GHI_CORE}/storage/logs" ] && [ "$(ls -A "${GHI_CORE}/storage/logs" 2>/dev/null)" ]; then
-            mkdir -p "${BACKUP_DIR}/storage/logs"
-            cp -r "${GHI_CORE}/storage/logs/"* "${BACKUP_DIR}/storage/logs/" 2>/dev/null || true
-            echo "  Backed up logs"
-          fi
-
-          # ── Phase 3: Replace GHI-core ──────────────────────────────
-          echo ""
-          echo "Phase 3: Replacing application directory..."
-
-          if [ -d "${GHI_CORE}" ]; then
-            rm -rf "${GHI_CORE}"
-          fi
-          mv "${TMP}" "${GHI_CORE}"
-          echo "  Moved new code to ${GHI_CORE}"
-
-          # ── Phase 4: Restore persistent data ───────────────────────
-          echo ""
-          echo "Phase 4: Restoring persistent data..."
-
-          if [ -f "${BACKUP_DIR}/.env" ]; then
-            cp "${BACKUP_DIR}/.env" "${GHI_CORE}/.env"
-            echo "  Restored .env"
-          fi
-
+          # Verify .env exists (user manages this manually)
           if [ ! -f "${GHI_CORE}/.env" ]; then
-            if [ -f "${GHI_CORE}/.env.example" ]; then
-              cp "${GHI_CORE}/.env.example" "${GHI_CORE}/.env"
-              php artisan key:generate --force
-              echo "  Created .env from .env.example with new APP_KEY"
-              echo "  IMPORTANT: Update .env with production credentials!"
-            else
-              echo ""
-              echo "FATAL: No .env file at ${GHI_CORE}/.env"
-              echo "Create it before deploying."
-              exit 1
-            fi
+            echo ""
+            echo "FATAL: No .env file at ${GHI_CORE}/.env"
+            echo "Create it before deploying."
+            exit 1
           fi
+          echo "  .env verified"
 
           # Ensure storage directories exist
           mkdir -p "${GHI_CORE}/storage/app/public"
@@ -196,30 +168,16 @@ jobs:
           mkdir -p "${GHI_CORE}/storage/logs"
           mkdir -p "${GHI_CORE}/bootstrap/cache"
 
-          # Restore uploaded files
-          if [ -d "${BACKUP_DIR}/storage/app/public" ]; then
-            cp -r "${BACKUP_DIR}/storage/app/public/"* "${GHI_CORE}/storage/app/public/" 2>/dev/null || true
-            echo "  Restored uploaded files"
-          fi
-
-          # Restore logs
-          if [ -d "${BACKUP_DIR}/storage/logs" ]; then
-            cp -r "${BACKUP_DIR}/storage/logs/"* "${GHI_CORE}/storage/logs/" 2>/dev/null || true
-            echo "  Restored logs"
-          fi
-
-          rm -rf "${BACKUP_DIR}"
-
-          # ── Phase 5: Permissions ───────────────────────────────────
+          # ── Phase 3: Permissions ───────────────────────────────────
           echo ""
-          echo "Phase 5: Setting permissions..."
+          echo "Phase 3: Setting permissions..."
           chmod -R 777 "${GHI_CORE}/storage" 2>/dev/null || true
           chmod -R 777 "${GHI_CORE}/bootstrap/cache" 2>/dev/null || true
           echo "  storage/ and bootstrap/cache set to 777"
 
-          # ── Phase 6: Composer install ──────────────────────────────
+          # ── Phase 4: Composer install ──────────────────────────────
           echo ""
-          echo "Phase 6: Installing composer dependencies..."
+          echo "Phase 4: Installing composer dependencies..."
           cd "${GHI_CORE}"
           composer install \
             --no-dev \
@@ -230,9 +188,9 @@ jobs:
             --ignore-platform-reqs
           echo "  Composer install complete"
 
-          # ── Phase 7: Application setup ─────────────────────────────
+          # ── Phase 5: Application setup ─────────────────────────────
           echo ""
-          echo "Phase 7: Running application setup..."
+          echo "Phase 5: Running application setup..."
 
           cd "${GHI_CORE}"
 
@@ -249,15 +207,12 @@ jobs:
           ln -sfn "${GHI_CORE}/storage/app/public" "${GHI_CORE}/public/storage"
           echo "  Storage symlink created"
 
-          # Clear stale caches
-          echo "  Clearing caches..."
+          # Clear stale caches, then warm fresh
+          echo "  Refreshing caches..."
           php artisan config:clear 2>/dev/null || true
           php artisan route:clear 2>/dev/null || true
           php artisan view:clear 2>/dev/null || true
           php artisan cache:clear 2>/dev/null || true
-
-          # Warm fresh caches
-          echo "  Warming caches..."
           php artisan config:cache
           php artisan route:cache
           php artisan view:cache
@@ -272,9 +227,9 @@ jobs:
 
           echo "  Application setup complete"
 
-          # ── Phase 8: Web root setup ────────────────────────────────
+          # ── Phase 6: Web root setup ────────────────────────────────
           echo ""
-          echo "Phase 8: Configuring web root..."
+          echo "Phase 6: Configuring web root..."
 
           mkdir -p "${WEBROOT}"
 
@@ -314,16 +269,16 @@ jobs:
 
           echo "  Web root configured"
 
-          # ── Phase 9: Cleanup ───────────────────────────────────────
+          # ── Phase 7: Cleanup ───────────────────────────────────────
           echo ""
-          echo "Phase 9: Cleaning up..."
+          echo "Phase 7: Cleaning up..."
           rm -f "/tmp/${RELEASE}.tar.gz"
           find /tmp -maxdepth 1 -name 'ghi-*' -mmin +30 -exec rm -rf {} + 2>/dev/null || true
           echo "  Cleanup complete"
 
-          # ── Phase 10: Verification ─────────────────────────────────
+          # ── Phase 8: Verification ──────────────────────────────────
           echo ""
-          echo "Phase 10: Verifying deployment..."
+          echo "Phase 8: Verifying deployment..."
 
           ERRORS=0
 
@@ -381,8 +336,6 @@ jobs:
           echo "  Deployment complete!"
           echo "============================================"
           SERVER_DEPLOY
-        env:
-          RELEASE_NAME: ${{ env.RELEASE_NAME }}
 
       - name: Cleanup SSH key
         if: always()
