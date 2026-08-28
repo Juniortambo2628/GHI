@@ -185,13 +185,10 @@ jobs:
             'RewriteRule ^ api/index.php [L]' > "${DEPLOY_BASE}/public_html/.htaccess"
 
           echo "==> Writing public_html/index.php front controller..."
-          cat > "${DEPLOY_BASE}/public_html/index.php" << 'FRONTCONTROLLER'
-          <?php
-
-          define('LARAVEL_START', microtime(true));
-
-          require __DIR__.'/api/index.php';
-          FRONTCONTROLLER
+          printf '%s\n' \
+            '<?php' \
+            '' \
+            'require __DIR__."/api/index.php";' > "${DEPLOY_BASE}/public_html/index.php"
 
           echo "==> Cleaning old releases (keeping last 5)..."
           cd "${DEPLOY_BASE}/GHI-releases"
