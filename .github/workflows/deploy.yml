@@ -141,7 +141,8 @@ jobs:
           php artisan migrate --force
 
           echo "==> Creating storage symlink..."
-          php artisan storage:link --force
+          rm -rf "${RELEASE_DIR}/public/storage"
+          ln -sfn "${RELEASE_DIR}/storage/app/public" "${RELEASE_DIR}/public/storage"
 
           echo "==> Seeding database..."
           php artisan db:seed --force
