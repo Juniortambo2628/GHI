@@ -121,7 +121,7 @@ export default function GalleryUpload({ eventId, images = [], onImagesChange }) 
                 });
                 xhr.addEventListener('error', () => reject(new Error('Network error')));
                 xhr.addEventListener('abort', () => reject(new Error('Cancelled')));
-                xhr.open('POST', '/api/upload/media');
+                xhr.open('POST', '/upload/media');
                 xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken || document.querySelector('meta[name="csrf-token"]')?.content || '');
                 xhr.setRequestHeader('Accept', 'application/json');
                 xhr.send(formData);

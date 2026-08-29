@@ -64,10 +64,10 @@ Route::post('/api/newsletter', [NewsletterController::class, 'store'])->name('ap
 Route::post('/api/volunteer-interest', [VolunteerController::class, 'store'])->name('api.volunteer');
 
 Route::middleware('auth')->group(function () {
-    Route::post('/api/upload', [UploadController::class, 'store'])->name('api.upload');
-    Route::post('/api/upload/image', [UploadController::class, 'image'])->name('api.upload.image');
-    Route::post('/api/upload/document', [UploadController::class, 'document'])->name('api.upload.document');
-    Route::post('/api/upload/media', [UploadController::class, 'media'])->name('api.upload.media');
+    Route::post('/upload', [UploadController::class, 'store'])->name('upload.store');
+    Route::post('/upload/image', [UploadController::class, 'image'])->name('upload.image');
+    Route::post('/upload/document', [UploadController::class, 'document'])->name('upload.document');
+    Route::post('/upload/media', [UploadController::class, 'media'])->name('upload.media');
 });
 
 // Admin routes
