@@ -1,14 +1,14 @@
 import { createContext, useContext, useState, useCallback, useRef } from 'react';
-import { usePage } from '@inertiajs/react';
 
 const UploadContext = createContext(null);
 
 let batchCounter = 0;
 
 export function UploadProvider({ children }) {
-    const { csrf_token: csrfToken } = usePage().props;
     const [batches, setBatches] = useState([]);
     const processingRef = useRef({});
+
+    const getCsrfToken = () => document.querySelector('meta[name="csrf-token"]')?.content || '';
 
     const updateBatch = useCallback((batchId, updates) => {
         setBatches(prev => prev.map(b => b.id === batchId ? { ...b, ...updates } : b));
@@ -55,11 +55,11 @@ export function UploadProvider({ children }) {
             xhr.addEventListener('error', () => reject(new Error('Network error')));
             xhr.addEventListener('abort', () => reject(new Error('Cancelled')));
             xhr.open('POST', '/upload/media');
-            xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken || document.querySelector('meta[name="csrf-token"]')?.content || '');
+            xhr.setRequestHeader('X-CSRF-TOKEN', getCsrfToken());
             xhr.setRequestHeader('Accept', 'application/json');
             xhr.send(formData);
         });
-    }, [csrfToken, updateItem]);
+    }, [updateItem]);
 
     const processQueue = useCallback(async (batchId) => {
         if (processingRef.current[batchId]) return;
