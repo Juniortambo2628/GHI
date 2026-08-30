@@ -228,6 +228,10 @@ jobs:
           echo "  Seeding database..."
           php artisan db:seed --force
 
+          # Backfill media assets (idempotent — safe to run every deploy)
+          echo "  Backfilling media assets..."
+          php artisan media:backfill 2>&1 || true
+
           echo "  Application setup complete"
 
           # ── Phase 6: Web root setup ────────────────────────────────
