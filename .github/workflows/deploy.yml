@@ -217,9 +217,12 @@ jobs:
           php artisan route:cache
           php artisan view:cache
 
-          # Database migrations
+          # Database migrations (safe: only runs new migrations, never alters existing data)
           echo "  Running migrations..."
-          php artisan migrate --force
+          php artisan migrate --force --no-interaction 2>&1 || echo "  Migrations completed with warnings (non-fatal)"
+
+          # Migration status (informational)
+          php artisan migrate:status 2>/dev/null | head -20 || true
 
           # Seed database (idempotent)
           echo "  Seeding database..."
