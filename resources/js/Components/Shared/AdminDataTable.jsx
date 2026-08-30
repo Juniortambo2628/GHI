@@ -51,14 +51,14 @@ export default function AdminDataTable({ columns, data, baseUrl, deleteHandler, 
                                 ))}
                                 {showActions && <td>
                                     {view && (useModal && onView ? (
-                                        <button type="button" className="btn btn-sm btn-outline-secondary me-1" aria-label="View" onClick={() => onView(item)}><i className="bi bi-eye"></i></button>
+                                        <button type="button" className="btn btn-sm btn-action-view me-1" aria-label="View" onClick={() => onView(item)}><i className="bi bi-eye"></i></button>
                                     ) : (
-                                        <Link href={`${baseUrl}/${item.id}`} className="btn btn-sm btn-outline-secondary me-1" aria-label="View"><i className="bi bi-eye"></i></Link>
+                                        <Link href={`${baseUrl}/${item.id}`} className="btn btn-sm btn-action-view me-1" aria-label="View"><i className="bi bi-eye"></i></Link>
                                     ))}
                                     {!viewOnly && (useModal && onEdit ? (
-                                        <button type="button" className="btn btn-sm btn-outline-primary me-1" aria-label="Edit" onClick={() => onEdit(item)}><i className="bi bi-pencil"></i></button>
+                                        <button type="button" className="btn btn-sm btn-action-edit me-1" aria-label="Edit" onClick={() => onEdit(item)}><i className="bi bi-pencil"></i></button>
                                     ) : (
-                                        <Link href={`${baseUrl}/${item.id}/edit`} className="btn btn-sm btn-outline-primary me-1" aria-label="Edit"><i className="bi bi-pencil"></i></Link>
+                                        <Link href={`${baseUrl}/${item.id}/edit`} className="btn btn-sm btn-action-edit me-1" aria-label="Edit"><i className="bi bi-pencil"></i></Link>
                                     ))}
                                     {!viewOnly && deleteHandler && <AdminConfirm message="Delete this record?" onConfirm={() => deleteHandler(item.id)}><button className="btn btn-sm btn-outline-danger" aria-label="Delete"><i className="bi bi-trash"></i></button></AdminConfirm>}
                                 </td>}

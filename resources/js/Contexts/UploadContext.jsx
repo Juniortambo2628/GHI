@@ -172,6 +172,9 @@ export function UploadProvider({ children }) {
                 return { ...b, queue: b.queue.slice(1) };
             }));
 
+            // Add a small delay between uploads to prevent rate limiting / WAF blocks (403/429)
+            await new Promise(res => setTimeout(res, 300));
+
             try {
                 const path = await uploadFile(batchId, item);
                 updateItem(batchId, itemId, { status: 'done', path, progress: 100 });

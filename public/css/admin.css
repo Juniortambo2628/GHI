@@ -439,6 +439,33 @@
     border-color: #9a1e14;
 }
 
+/* Action Buttons for DataTables */
+.btn-action-view {
+    background: #f1f5f9;
+    color: #475569;
+    border-color: #cbd5e1;
+}
+
+.btn-action-view:hover:not(:disabled) {
+    background: #e2e8f0;
+    color: #0f172a;
+    border-color: #94a3b8;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.btn-action-edit {
+    background: #eff6ff;
+    color: #3b82f6;
+    border-color: #bfdbfe;
+}
+
+.btn-action-edit:hover:not(:disabled) {
+    background: #dbeafe;
+    color: #1d4ed8;
+    border-color: #93c5fd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
 .btn-sm {
     height: 2rem;
     padding: 0 0.85rem;
