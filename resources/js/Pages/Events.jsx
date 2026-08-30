@@ -47,6 +47,8 @@ export default function Events({ events, hero }) {
             ],
             images: event.images,
             detailContent: event.content,
+            link: `/events/${event.slug}`,
+            buttonText: 'View Event',
         };
         if (mode === 'list') return <ListingRow key={event.id} {...props} />;
         if (mode === 'timeline') return <TimelineCard key={event.id} {...props} side={idx % 2 === 0 ? 'left' : 'right'} />;

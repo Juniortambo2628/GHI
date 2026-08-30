@@ -1,6 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 import PublicLayout from '../Layouts/PublicLayout';
 import SectionHeader from '../Components/Shared/SectionHeader';
+import stripHtml from '../Components/Shared/stripHtml';
 
 Search.layout = page => <PublicLayout>{page}</PublicLayout>;
 
@@ -45,12 +46,15 @@ export default function Search({ term, results }) {
                         {results.map((result, idx) => (
                             <div key={`${result.type}-${idx}`} className="col-md-6 col-lg-4">
                                 <article className="card h-100 border-0 shadow-sm">
-                                    <div className="card-body">
+                                    <div className="card-body d-flex flex-column">
                                         <small className="text-uppercase text-primary fw-bold" style={{ fontSize: '0.7rem', letterSpacing: '0.08em' }}>{result.type}</small>
                                         <h5 className="card-title mt-2">
-                                            <Link href={result.url} className="text-decoration-none text-dark stretched-link">{result.title}</Link>
+                                            <Link href={result.url} className="text-decoration-none text-dark">{result.title}</Link>
                                         </h5>
-                                        <p className="card-text text-muted small">{result.description?.substring(0, 120)}{result.description?.length > 120 ? '...' : ''}</p>
+                                        <p className="card-text text-muted small">{stripHtml(result.description)?.substring(0, 120)}{stripHtml(result.description)?.length > 120 ? '...' : ''}</p>
+                                        <div className="mt-auto pt-3">
+                                            <Link href={result.url} className="btn btn-primary btn-sm">View {result.type}</Link>
+                                        </div>
                                     </div>
                                 </article>
                             </div>

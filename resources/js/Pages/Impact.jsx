@@ -40,6 +40,8 @@ export default function Impact({ impactActivities, hero }) {
                 { icon: 'bi bi-info-circle', text: `Status: ${impact.status || 'Published'}` },
             ],
             detailContent: impact.outcome_summary,
+            link: `/impact/${impact.slug}`,
+            buttonText: 'View Impact',
         };
         if (mode === 'list') return <ListingRow key={impact.id} {...props} />;
         if (mode === 'timeline') return <TimelineCard key={impact.id} {...props} side={idx % 2 === 0 ? 'left' : 'right'} />;

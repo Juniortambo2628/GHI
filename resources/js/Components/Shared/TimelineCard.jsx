@@ -5,7 +5,7 @@ import sanitizeHtml from './sanitizeHtml';
 import stripHtml from './stripHtml';
 import mediaUrl from './mediaUrl';
 
-export default function TimelineCard({ image, imageAlt, badges = [], title, description, meta = [], images = [], buttonText = 'View Details', onButtonClick, detailContent, side = 'left' }) {
+export default function TimelineCard({ image, imageAlt, badges = [], title, description, meta = [], images = [], buttonText = 'View Details', onButtonClick, link, detailContent, side = 'left' }) {
     const [showModal, setShowModal] = useState(false);
     const [lightboxIndex, setLightboxIndex] = useState(null);
     const sortedImages = [...images].sort((a, b) => a.sort_order - b.sort_order);
@@ -97,7 +97,7 @@ export default function TimelineCard({ image, imageAlt, badges = [], title, desc
                     </div>
                     <p className="timeline-card-text">{truncate(description)}</p>
                     <div className="timeline-card-actions">
-                        {onButtonClick && <button className="btn btn-primary btn-sm" onClick={onButtonClick}>{buttonText}</button>}
+                        {link ? <a href={link} className="btn btn-primary btn-sm">{buttonText}</a> : onButtonClick && <button className="btn btn-primary btn-sm" onClick={onButtonClick}>{buttonText}</button>}
                         <button className="btn btn-outline-primary btn-sm" onClick={() => setShowModal(true)} title="More Information">
                             <i className="bi bi-info-circle"></i> Details
                         </button>

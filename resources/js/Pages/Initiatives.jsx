@@ -36,6 +36,8 @@ export default function Initiatives({ initiatives, hero }) {
                 { icon: 'bi bi-info-circle', text: `Status: ${initiative.status || 'Published'}` }
             ],
             detailContent: initiative.content,
+            link: `/initiatives/${initiative.slug}`,
+            buttonText: 'View Initiative',
         };
         if (mode === 'list') return <ListingRow key={initiative.id} {...props} />;
         if (mode === 'timeline') return <TimelineCard key={initiative.id} {...props} side={idx % 2 === 0 ? 'left' : 'right'} />;

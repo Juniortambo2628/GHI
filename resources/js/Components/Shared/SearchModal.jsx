@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { router } from '@inertiajs/react';
+import stripHtml from './stripHtml';
 
 export default function SearchModal({ open, onClose }) {
     const [query, setQuery] = useState('');
@@ -73,7 +74,7 @@ export default function SearchModal({ open, onClose }) {
                             <a key={i} href={r.url} className="search-modal-result-item" onClick={onClose}>
                                 <span className="search-modal-result-type">{r.type}</span>
                                 <span className="search-modal-result-title">{r.title}</span>
-                                {r.description && <span className="search-modal-result-desc">{r.description.substring(0, 80)}...</span>}
+                                {r.description && <span className="search-modal-result-desc">{stripHtml(r.description).substring(0, 80)}...</span>}
                             </a>
                         ))}
                     </div>

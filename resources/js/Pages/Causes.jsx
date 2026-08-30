@@ -36,6 +36,8 @@ export default function Causes({ causes, hero }) {
             description: cause.description,
             meta,
             detailContent: cause.content,
+            link: `/causes/${cause.slug}`,
+            buttonText: 'View Cause',
         };
         if (mode === 'list') return <ListingRow key={cause.id} {...props} />;
         if (mode === 'timeline') return <TimelineCard key={cause.id} {...props} side={idx % 2 === 0 ? 'left' : 'right'} />;

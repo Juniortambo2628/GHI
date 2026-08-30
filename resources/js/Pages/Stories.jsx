@@ -38,6 +38,7 @@ export default function Stories({ stories, hero }) {
                 { icon: 'bi bi-info-circle', text: `Status: ${story.status || 'Published'}` },
             ],
             detailContent: story.content,
+            link: `/stories/${story.slug}`,
             buttonText: 'Read More',
         };
         if (mode === 'list') return <ListingRow key={story.id} {...props} />;

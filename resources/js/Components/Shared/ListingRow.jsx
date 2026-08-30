@@ -5,7 +5,7 @@ import sanitizeHtml from './sanitizeHtml';
 import stripHtml from './stripHtml';
 import mediaUrl from './mediaUrl';
 
-export default function ListingRow({ image, imageAlt, badges = [], title, description, meta = [], images = [], buttonText = 'View Details', onButtonClick, detailContent }) {
+export default function ListingRow({ image, imageAlt, badges = [], title, description, meta = [], images = [], buttonText = 'View Details', onButtonClick, link, detailContent }) {
     const [showModal, setShowModal] = useState(false);
     const [lightboxIndex, setLightboxIndex] = useState(null);
     const sortedImages = [...images].sort((a, b) => a.sort_order - b.sort_order);
@@ -95,7 +95,7 @@ export default function ListingRow({ image, imageAlt, badges = [], title, descri
                 </div>
                 <p className="listing-row-text">{truncate(description)}</p>
                 <div className="listing-row-actions">
-                    {onButtonClick && <button className="btn btn-primary btn-sm" onClick={onButtonClick}>{buttonText}</button>}
+                    {link ? <a href={link} className="btn btn-primary btn-sm">{buttonText}</a> : onButtonClick && <button className="btn btn-primary btn-sm" onClick={onButtonClick}>{buttonText}</button>}
                     <button className="btn btn-outline-primary btn-sm" onClick={() => setShowModal(true)} title="More Information">
                         <i className="bi bi-info-circle"></i> Details
                     </button>
