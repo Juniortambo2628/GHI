@@ -38,6 +38,8 @@ class ImpactController extends Controller
 
     public function show(ImpactActivity $impactActivity)
     {
+        $impactActivity->load('event');
+
         return inertia('ImpactShow', compact('impactActivity'));
     }
 }

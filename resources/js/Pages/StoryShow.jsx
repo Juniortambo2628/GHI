@@ -28,7 +28,7 @@ export default function StoryShow({ story }) {
         <>
             <Head title={`${story.title || 'Story'} - Global Harmony Initiative`} />
 
-            <ShowPageLayout title={story.title || 'Story'} section="stories" sectionLabel="Stories" sectionUrl="/stories"
+            <ShowPageLayout title={story.title || 'Story'} section="stories" sectionLabel="Stories" sectionUrl="/stories" image={storyImage}
                 sidebar={
                     <div className="bg-light p-4 rounded">
                         <h5 className="mb-3">Story Details</h5>

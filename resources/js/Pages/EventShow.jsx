@@ -5,30 +5,44 @@ import FallbackImage from '../Components/Shared/FallbackImage';
 import StatusBadge from '../Components/Shared/StatusBadge';
 import ShowPageLayout from '../Components/Shared/ShowPageLayout';
 import { Head, Link } from '@inertiajs/react';
+import { useState } from 'react';
+import GalleryLightbox from '../Components/Shared/GalleryLightbox';
 
 EventShow.layout = page => <PublicLayout>{page}</PublicLayout>;
 
 export default function EventShow({ event, impactActivities }) {
     const eventDate = new Date(event.event_date);
+    const [lightbox, setLightbox] = useState(null);
+    const images = event.images || [];
 
     return (
         <>
-            <Head>
-                <title>{event.title} - Global Harmony Initiative</title>
-            </Head>
+            <Head title={`${event.title} - Global Harmony Initiative`} />
 
-            <ShowPageLayout title={event.title} section="events" sectionLabel="Events" sectionUrl="/events"
+            <ShowPageLayout title={event.title} section="events" sectionLabel="Events" sectionUrl="/events" image={event.image}
                 sidebar={
-                    <div className="bg-light p-4 rounded mb-4">
-                        <h5 className="mb-3">Event Details</h5>
-                        <ul className="list-unstyled">
-                            <li className="mb-2"><i className="bi bi-calendar me-2"></i>{eventDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</li>
-                            <li className="mb-2"><i className="bi bi-clock me-2"></i>{eventDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</li>
-                            {event.location && <li className="mb-2"><i className="bi bi-geo-alt me-2"></i>{event.location}</li>}
-                            {event.initiative && <li className="mb-2"><strong>Initiative:</strong> {event.initiative.title}</li>}
-                            <li className="mb-2"><strong>Status:</strong> <StatusBadge status={event.status} /></li>
-                        </ul>
-                    </div>
+                    <>
+                        <div className="bg-light p-4 rounded mb-4">
+                            <h5 className="mb-3">Event Details</h5>
+                            <ul className="list-unstyled">
+                                <li className="mb-2"><i className="bi bi-calendar me-2"></i>{eventDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</li>
+                                <li className="mb-2"><i className="bi bi-clock me-2"></i>{eventDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</li>
+                                {event.location && <li className="mb-2"><i className="bi bi-geo-alt me-2"></i>{event.location}</li>}
+                                {event.initiative && <li className="mb-2"><strong>Initiative:</strong> {event.initiative.title}</li>}
+                                <li className="mb-2"><strong>Status:</strong> <StatusBadge status={event.status} /></li>
+                            </ul>
+                        </div>
+                        {impactActivities && impactActivities.length > 0 && (
+                            <div className="bg-light p-4 rounded">
+                                <h5 className="mb-3">Impact Summary</h5>
+                                <ul className="list-unstyled">
+                                    <li className="mb-2"><strong>Total Activities:</strong> {impactActivities.length}</li>
+                                    <li className="mb-2"><strong>Total Lives Impacted:</strong> {impactActivities.reduce((sum, a) => sum + (a.people_affected || 0), 0).toLocaleString()}</li>
+                                </ul>
+                                <Link href={`/events/${event.slug || event.id}`} className="btn btn-outline-primary btn-sm w-100">View All Impact</Link>
+                            </div>
+                        )}
+                    </>
                 }>
                 {event.image && (
                     <FallbackImage src={mediaUrl(event.image)} className="img-fluid rounded mb-4 w-100" alt={event.title} />
@@ -41,24 +55,45 @@ export default function EventShow({ event, impactActivities }) {
                 )}
             </ShowPageLayout>
 
+            {images.length > 0 && (
+                <div className="container pb-5">
+                    <h3 className="mb-4">Event Gallery</h3>
+                    <div className="row g-3">
+                        {images.map((img, idx) => (
+                            <div key={img.id || idx} className="col-6 col-md-4 col-lg-3">
+                                <div className="gallery-event-card" onClick={() => setLightbox(idx)}>
+                                    {img.type === 'video' ? (
+                                        <video src={mediaUrl(img.path)} muted loop playsInline preload="metadata" />
+                                    ) : (
+                                        <img src={mediaUrl(img.path)} alt={img.alt || event.title} />
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    {lightbox !== null && (
+                        <GalleryLightbox images={images} currentIndex={lightbox} onClose={() => setLightbox(null)} onPrev={() => setLightbox((lightbox - 1 + images.length) % images.length)} onNext={() => setLightbox((lightbox + 1) % images.length)} />
+                    )}
+                </div>
+            )}
+
             {impactActivities && impactActivities.length > 0 && (
-                <div className="container py-5">
-                    <div className="mt-5">
-                        <h3 className="mb-4">Impact Activities</h3>
-                        <div className="row g-4">
-                            {impactActivities.map((impact, idx) => (
-                                <div key={idx} className="col-md-6 col-lg-4">
-                                    <div className="card h-100">
-                                        {impact.image && <FallbackImage src={mediaUrl(impact.image)} className="card-img-top" alt={impact.title} />}
-                                        <div className="card-body">
-                                            <h5 className="card-title">{impact.title}</h5>
-                                            <p className="text-muted"><i className="bi bi-people me-1"></i>{impact.people_affected} Lives Impacted</p>
-                                            <p className="card-text">{(impact.description || '').substring(0, 100)}...</p>
-                                        </div>
+                <div className="container pb-5">
+                    <h3 className="mb-4">Impact Activities</h3>
+                    <div className="row g-4">
+                        {impactActivities.map((impact, idx) => (
+                            <div key={idx} className="col-md-6 col-lg-4">
+                                <div className="card h-100">
+                                    {impact.image && <FallbackImage src={mediaUrl(impact.image)} className="card-img-top" alt={impact.title} />}
+                                    <div className="card-body">
+                                        <h5 className="card-title">{impact.title}</h5>
+                                        <p className="text-muted"><i className="bi bi-people me-1"></i>{impact.people_affected?.toLocaleString() || 0} Lives Impacted</p>
+                                        <p className="card-text">{(impact.description || '').substring(0, 100)}...</p>
+                                        {impact.location && <p className="small text-muted mb-0"><i className="bi bi-geo-alt me-1"></i>{impact.location}</p>}
                                     </div>
                                 </div>
-                            ))}
-                        </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             )}
