@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import Modal from './Modal';
+import GalleryLightbox from './GalleryLightbox';
 import sanitizeHtml from './sanitizeHtml';
 import stripHtml from './stripHtml';
 import mediaUrl from './mediaUrl';
 
 export default function ListingCard({ image, imageAlt, badges = [], title, description, meta = [], images = [], buttonText = 'View Details', onButtonClick, detailContent, index = 0 }) {
     const [showModal, setShowModal] = useState(false);
+    const [lightboxIndex, setLightboxIndex] = useState(null);
+    const sortedImages = [...images].sort((a, b) => a.sort_order - b.sort_order);
 
     const truncate = (text, len = 100) => {
         if (!text) return '';
@@ -50,16 +53,17 @@ export default function ListingCard({ image, imageAlt, badges = [], title, descr
         tabs.push({ label: 'Details', content: detailsContent });
     }
     if (images && images.length > 0) {
+        const sorted = [...images].sort((a, b) => a.sort_order - b.sort_order);
         const galleryContent = (
-            <div className="gallery-grid">
-                {images.sort((a, b) => a.sort_order - b.sort_order).map((img, idx) => (
-                    <div key={img.id} className="gallery-item-card position-relative" style={{ aspectRatio: '4/3', overflow: 'hidden', borderRadius: '8px', marginBottom: '1rem' }}>
+            <div className="modal-gallery-grid">
+                {sorted.map((img, idx) => (
+                    <div key={img.id} className="modal-gallery-thumb" onClick={() => setLightboxIndex(idx)}>
                         {img.type === 'video' ? (
-                            <video src={mediaUrl(img.path)} className="w-100 h-100 object-fit-cover" muted loop playsInline preload="metadata" />
+                            <video src={mediaUrl(img.path)} muted loop playsInline preload="metadata" />
                         ) : (
-                            <img src={mediaUrl(img.path)} className="w-100 h-100 object-fit-cover" alt={`Gallery ${idx + 1}`} />
+                            <img src={mediaUrl(img.path)} alt={`Gallery ${idx + 1}`} />
                         )}
-                        {img.type === 'video' && <div className="position-absolute top-50 start-50 translate-middle text-white"><i className="bi bi-play-circle fs-1"></i></div>}
+                        {img.type === 'video' && <div className="modal-gallery-video-badge"><i className="bi bi-play-circle"></i></div>}
                     </div>
                 ))}
             </div>
@@ -101,7 +105,10 @@ export default function ListingCard({ image, imageAlt, badges = [], title, descr
                 </div>
             </div>
 
-            <Modal show={showModal} onClose={() => setShowModal(false)} title={title} icon="bi bi-info-circle" tabs={tabs} />
+            <Modal show={showModal} onClose={() => setShowModal(false)} title={title} icon="bi bi-info-circle" tabs={tabs} wide={true} />
+            {lightboxIndex !== null && (
+                <GalleryLightbox images={sortedImages} startIndex={lightboxIndex} onClose={() => setLightboxIndex(null)} />
+            )}
         </div>
     );
 }

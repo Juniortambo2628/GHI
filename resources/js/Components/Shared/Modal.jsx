@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 
-export default function Modal({ show, onClose, title, icon, tabs = [], children }) {
+export default function Modal({ show, onClose, title, icon, tabs = [], children, wide = false }) {
     const modalRef = useRef(null);
     const [activeTab, setActiveTab] = useState(0);
     const bsModalRef = useRef(null);
@@ -27,10 +27,11 @@ export default function Modal({ show, onClose, title, icon, tabs = [], children 
 
     const hasTabs = tabs.length > 0;
     const totalSteps = hasTabs ? tabs.length : 0;
+    const isGalleryTab = hasTabs && tabs[activeTab]?.label === 'Gallery';
 
     return (
         <div className="modal fade ghi-modal" ref={modalRef} tabIndex="-1" aria-hidden="true">
-            <div className="modal-dialog modal-dialog-centered modal-lg">
+            <div className={`modal-dialog modal-dialog-centered ${wide ? 'modal-xl' : 'modal-lg'}`}>
                 <div className="modal-content">
                     <div className="ghi-modal-layout">
                         {hasTabs && (
@@ -56,14 +57,14 @@ export default function Modal({ show, onClose, title, icon, tabs = [], children 
                                 </div>
                             </div>
                         )}
-                        <div className="ghi-modal-body">
+                        <div className={`ghi-modal-body ${isGalleryTab ? 'ghi-modal-body-scrollable' : ''}`}>
                             <div className="ghi-modal-body-header">
                                 <h4 className="ghi-modal-body-title">
                                     {hasTabs ? tabs[activeTab]?.label : title}
                                 </h4>
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div className="ghi-modal-body-content">
+                            <div className={`ghi-modal-body-content ${isGalleryTab ? 'ghi-modal-body-content-scrollable' : ''}`}>
                                 {hasTabs ? tabs[activeTab]?.content : children}
                             </div>
                             <div className="ghi-modal-body-footer">

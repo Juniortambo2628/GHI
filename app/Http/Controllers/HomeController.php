@@ -60,17 +60,24 @@ class HomeController extends Controller
             return $obj;
         });
 
-        // Flatten all event gallery images for the gallery section
-        $allGalleryImages = $recentEvents->flatMap(function ($event) {
-            return $event->images()->orderBy('sort_order')->get()->map(fn ($img) => [
+        // Build gallery: group images by event
+        $allGalleryImages = $recentEvents->map(function ($event) use ($allInitiatives) {
+            $images = $event->images()->orderBy('sort_order')->get()->map(fn ($img) => [
                 'id' => $img->id,
                 'path' => $img->path,
+                'type' => $img->type ?? 'image',
+            ]);
+
+            return [
+                'event_id' => $event->id,
                 'event_title' => $event->title,
                 'initiative' => Initiative::find($event->initiative_id)?->title ?? 'N/A',
                 'location' => $event->location,
                 'event_date' => $event->event_date,
-            ]);
-        })->take(12);
+                'images' => $images->values(),
+                'cover' => $images->first()['path'] ?? null,
+            ];
+        })->filter(fn ($item) => $item['images']->count() > 0)->values()->take(6);
 
         // Enrich stories
         $enrichedStories = $stories->map(function ($story) {
