@@ -53,7 +53,7 @@ export function UploadProvider({ children }) {
             });
             xhr.addEventListener('error', () => reject(new Error('Network error')));
             xhr.addEventListener('abort', () => reject(new Error('Cancelled')));
-            xhr.open('POST', '/upload/media');
+            xhr.open('POST', '/api/upload/media');
             xhr.setRequestHeader('X-CSRF-TOKEN', getCsrfToken());
             xhr.setRequestHeader('Accept', 'application/json');
             xhr.send(formData);
@@ -65,7 +65,7 @@ export function UploadProvider({ children }) {
         const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
         const csrf = getCsrfToken();
 
-        const initRes = await fetch('/upload/chunk/init', {
+        const initRes = await fetch('/api/upload/chunk/init', {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': csrf,
@@ -96,7 +96,7 @@ export function UploadProvider({ children }) {
             formData.append('chunk_number', i);
             formData.append('total_chunks', totalChunks);
 
-            const chunkRes = await fetch('/upload/chunk', {
+            const chunkRes = await fetch('/api/upload/chunk', {
                 method: 'POST',
                 headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' },
                 body: formData,
@@ -110,7 +110,7 @@ export function UploadProvider({ children }) {
             updateItem(batchId, item.id, { progress: pct });
         }
 
-        const completeRes = await fetch('/upload/chunk/complete', {
+        const completeRes = await fetch('/api/upload/chunk/complete', {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': csrf,

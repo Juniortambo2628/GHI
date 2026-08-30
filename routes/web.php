@@ -64,14 +64,14 @@ Route::post('/api/newsletter', [NewsletterController::class, 'store'])->name('ap
 Route::post('/api/volunteer-interest', [VolunteerController::class, 'store'])->name('api.volunteer');
 
 Route::middleware('auth')->group(function () {
-    Route::post('/upload', [UploadController::class, 'store'])->name('upload.store');
-    Route::post('/upload/image', [UploadController::class, 'image'])->name('upload.image');
-    Route::post('/upload/document', [UploadController::class, 'document'])->name('upload.document');
-    Route::post('/upload/media', [UploadController::class, 'media'])->name('upload.media');
-    Route::post('/upload/batch', [UploadController::class, 'batch'])->name('upload.batch');
-    Route::post('/upload/chunk/init', [UploadController::class, 'chunkInit'])->name('upload.chunk.init');
-    Route::post('/upload/chunk', [UploadController::class, 'chunk'])->name('upload.chunk');
-    Route::post('/upload/chunk/complete', [UploadController::class, 'chunkComplete'])->name('upload.chunk.complete');
+    Route::post('/api/upload', [UploadController::class, 'store'])->name('upload.store');
+    Route::post('/api/upload/image', [UploadController::class, 'image'])->name('upload.image');
+    Route::post('/api/upload/document', [UploadController::class, 'document'])->name('upload.document');
+    Route::post('/api/upload/media', [UploadController::class, 'media'])->name('upload.media');
+    Route::post('/api/upload/batch', [UploadController::class, 'batch'])->name('upload.batch');
+    Route::post('/api/upload/chunk/init', [UploadController::class, 'chunkInit'])->name('upload.chunk.init');
+    Route::post('/api/upload/chunk', [UploadController::class, 'chunk'])->name('upload.chunk');
+    Route::post('/api/upload/chunk/complete', [UploadController::class, 'chunkComplete'])->name('upload.chunk.complete');
 });
 
 // Admin routes

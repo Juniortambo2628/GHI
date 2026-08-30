@@ -32,7 +32,7 @@ class AdminCmsTest extends TestCase
     {
         Storage::fake('public');
         $admin = User::factory()->create(['is_admin' => true]);
-        $response = $this->actingAs($admin)->withHeader('Accept', 'application/json')->post('/upload/image', ['file' => UploadedFile::fake()->image('hero.jpg')]);
+        $response = $this->actingAs($admin)->withHeader('Accept', 'application/json')->post('/api/upload/image', ['file' => UploadedFile::fake()->image('hero.jpg')]);
 
         $response->assertOk()->assertJsonPath('success', true);
         Storage::disk('public')->assertExists($response->json('path'));

@@ -66,7 +66,7 @@ export default function ImageUploadField({ name, value, onChange, label = 'Image
             styleItemPanelMaxHeight: '200px',
             server: {
                 process: {
-                    url: '/upload/image',
+                    url: '/api/upload/image',
                     method: 'POST',
                     headers: {
                         Accept: 'application/json',
@@ -121,7 +121,7 @@ export default function ImageUploadField({ name, value, onChange, label = 'Image
             const blob = await getCroppedImg(previewUrl, cropData);
             const formData = new FormData();
             formData.append('file', blob, 'cropped.jpg');
-            const res = await fetch('/upload/image', {
+            const res = await fetch('/api/upload/image', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
