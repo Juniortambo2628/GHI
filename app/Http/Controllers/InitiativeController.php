@@ -40,7 +40,8 @@ class InitiativeController extends Controller
 
     public function show(Initiative $initiative)
     {
-        $events = $initiative->events()->upcoming()->get();
+        $initiative->load('causes');
+        $events = $initiative->events()->published()->with('impactActivities')->latest('event_date')->get();
 
         return inertia('InitiativeShow', compact('initiative', 'events'));
     }

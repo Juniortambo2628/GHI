@@ -4,6 +4,7 @@ import mediaUrl from '../Components/Shared/mediaUrl';
 import FallbackImage from '../Components/Shared/FallbackImage';
 import StatusBadge from '../Components/Shared/StatusBadge';
 import ShowPageLayout from '../Components/Shared/ShowPageLayout';
+import RelatedChain from '../Components/Shared/RelatedChain';
 import { Head, Link } from '@inertiajs/react';
 
 ImpactShow.layout = page => <PublicLayout>{page}</PublicLayout>;
@@ -23,10 +24,10 @@ export default function ImpactShow({ impactActivity }) {
                         <div className="bg-light p-4 rounded mb-4">
                             <h5 className="mb-3">Impact Details</h5>
                             <ul className="list-unstyled">
-                                <li className="mb-2"><i className="bi bi-people me-2"></i>{impactActivity.people_affected?.toLocaleString() || 0} Lives Impacted</li>
+                                <li className="mb-2"><i className="bi bi-people me-2"></i>{Math.floor(Number(impactActivity.people_affected) || 0).toLocaleString()}+ Lives Impacted</li>
                                 {activityDate && <li className="mb-2"><i className="bi bi-calendar me-2"></i>{activityDate}</li>}
                                 {impactActivity.location && <li className="mb-2"><i className="bi bi-geo-alt me-2"></i>{impactActivity.location}</li>}
-                                {impactActivity.metric_type && <li className="mb-2"><strong>Metric:</strong> {impactActivity.metric_type}: {impactActivity.metric_value}</li>}
+                                {impactActivity.metric_type && <li className="mb-2"><strong>Metric:</strong> {(impactActivity.metric_type || '').replace(/_/g, ' ')}: {Math.floor(Number(impactActivity.metric_value) || 0).toLocaleString()}+</li>}
                                 <li className="mb-2"><strong>Status:</strong> <StatusBadge status={impactActivity.status} /></li>
                             </ul>
                         </div>
@@ -39,9 +40,6 @@ export default function ImpactShow({ impactActivity }) {
                         )}
                     </>
                 }>
-                {impactActivity.image && (
-                    <FallbackImage src={mediaUrl(impactActivity.image)} className="img-fluid rounded mb-4 w-100" alt={impactActivity.title} />
-                )}
                 <div className="mb-4">
                     {impactActivity.description}
                 </div>
@@ -53,11 +51,13 @@ export default function ImpactShow({ impactActivity }) {
                 )}
                 {impactActivity.metric_type && (
                     <div className="mb-4 p-4 bg-light rounded text-center">
-                        <h2 className="text-primary mb-1">{impactActivity.metric_value}</h2>
-                        <p className="text-muted mb-0">{impactActivity.metric_type}</p>
+                        <h2 className="text-primary mb-1">{Math.floor(Number(impactActivity.metric_value) || 0).toLocaleString()}+</h2>
+                        <p className="text-muted mb-0">{(impactActivity.metric_type || '').replace(/_/g, ' ')}</p>
                     </div>
                 )}
             </ShowPageLayout>
+
+            <RelatedChain currentType="impact" impactActivity={impactActivity} />
         </>
     );
 }

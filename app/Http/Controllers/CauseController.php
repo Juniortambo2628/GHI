@@ -38,7 +38,9 @@ class CauseController extends Controller
 
     public function show(Cause $cause)
     {
-        $initiatives = $cause->initiatives()->published()->get();
+        $initiatives = $cause->initiatives()->published()->with(['events' => function ($q) {
+            $q->published()->with('impactActivities')->latest('event_date');
+        }])->get();
 
         return inertia('CauseShow', compact('cause', 'initiatives'));
     }

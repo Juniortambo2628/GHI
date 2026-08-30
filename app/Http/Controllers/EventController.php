@@ -48,7 +48,7 @@ class EventController extends Controller
 
     public function show(Event $event)
     {
-        $event->load(['images', 'initiative']);
+        $event->load(['images', 'initiative.causes']);
         $impactActivities = $event->impactActivities()->published()->get();
 
         return inertia('EventShow', compact('event', 'impactActivities'));
