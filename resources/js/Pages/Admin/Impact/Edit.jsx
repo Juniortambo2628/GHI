@@ -7,7 +7,7 @@ import useAutosave from '../../../Hooks/useAutosave';
 export default function Edit({ impact, events }) {
     const { data, setData, put, processing } = useForm({
         title: impact.title || '', description: impact.description || '', event_id: impact.event_id || '',
-        people_affected: impact.people_affected || '', activity_date: impact.activity_date || '',
+        people_affected: impact.people_affected || '', activity_date: impact.activity_date ? impact.activity_date.substring(0, 10) : '',
         location: impact.location || '', outcome_summary: impact.outcome_summary || '',
         image: impact.image || '', status: impact.status || 'draft'
     });

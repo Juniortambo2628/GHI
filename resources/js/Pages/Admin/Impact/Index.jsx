@@ -22,7 +22,7 @@ function ImpactForm({ mode, item, onClose, onSuccess, events }) {
     const isEdit = mode === 'edit';
     const { data, setData, post, put, processing, errors } = useForm({
         title: item?.title || '', description: item?.description || '', event_id: item?.event_id || '',
-        people_affected: item?.people_affected || '', activity_date: item?.activity_date || '',
+        people_affected: item?.people_affected || '', activity_date: item?.activity_date ? item.activity_date.substring(0, 10) : '',
         location: item?.location || '', outcome_summary: item?.outcome_summary || '',
         image: item?.image || '', status: item?.status || 'draft',
     });
