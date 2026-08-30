@@ -1,6 +1,6 @@
 import PublicLayout from '../Layouts/PublicLayout';
 import { Link, Head } from '@inertiajs/react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import AnimatedSection, { AnimatedCard } from '../Components/Shared/AnimatedSection';
 import SectionHeader from '../Components/Shared/SectionHeader';
@@ -11,6 +11,7 @@ import VolunteerImage from '../Components/Shared/VolunteerImage';
 import mediaUrl from '../Components/Shared/mediaUrl';
 import FallbackImage from '../Components/Shared/FallbackImage';
 import stripHtml from '../Components/Shared/stripHtml';
+import GalleryLightbox from '../Components/Shared/GalleryLightbox';
 
 Home.layout = page => <PublicLayout>{page}</PublicLayout>;
 
@@ -18,6 +19,7 @@ const defaultSectionOrder = ['hero', 'about', 'quote', 'foundation', 'objectives
 
 export default function Home({ initiatives, events, stories, recentActivities, galleryImages = [], causes = [], counters, randomQuote, objectives, coreValues, heroSlides: configuredHeroSlides, sectionVisibility, sectionOrder: configuredOrder, settings = {} }) {
     const carouselRef = useRef(null);
+    const [galleryLightbox, setGalleryLightbox] = useState(null);
     const sectionOrder = configuredOrder?.length === defaultSectionOrder.length ? configuredOrder : defaultSectionOrder;
 
     useEffect(() => {
@@ -308,14 +310,6 @@ export default function Home({ initiatives, events, stories, recentActivities, g
                                             <FallbackImage src={storyImage} className="img-fluid w-100 impact-card-img" alt={story.title} loading="lazy" width="400" height="300" />
                                             <div className="blog-info">
                                                 <span className="glass-pill"><i className="bi bi-clock me-1"></i>{storyDate}</span>
-                                                <div className="d-flex gap-2">
-                                                    <button className="btn-like text-white border-0 bg-transparent" title="Like this story">
-                                                        <span className="glass-pill"><i className="bi bi-heart me-1"></i>{story.likes || 0}</span>
-                                                    </button>
-                                                    <a href={`/stories/${story.slug || story.id}#comments`} className="text-white" title="View comments">
-                                                        <span className="glass-pill"><i className="bi bi-chat me-1"></i>{story.comments || 0}</span>
-                                                    </a>
-                                                </div>
                                             </div>
                                         </div>
                                         <div className="blog-content p-4 flex-grow-1 d-flex flex-column">
@@ -345,31 +339,33 @@ export default function Home({ initiatives, events, stories, recentActivities, g
         gallery: <div key="gallery" className="container-fluid gallery py-5">
             <div className="container py-5">
                 <SectionHeader subtitle={settings.home_gallery_subtitle || 'Our work'} title={settings.home_gallery_title || 'Recent Activities Gallery'} description={settings.home_gallery_description || 'See the impact of our programs through images from our most recent activities across East Africa.'} className="pb-5" />
-                <div className="row g-0">
-                    {galleryImages.length > 0 ? galleryImages.slice(0, 6).map((img, idx) => {
-                        const actMedia = mediaUrl(img.path);
-                        const isVideo = img.type === 'video';
+                <div className="row g-3">
+                    {galleryImages.length > 0 ? galleryImages.slice(0, 6).map((event, idx) => {
+                        const images = event.images || [];
                         return (
                             <div key={idx} className="col-12 col-md-6 col-lg-4">
-                                <div className="gallery-item">
-                                    {isVideo ? (
-                                        <video className="lazy img-fluid w-100 impact-card-img" src={actMedia} muted loop playsInline preload="metadata" />
-                                    ) : (
-                                        <FallbackImage className="lazy img-fluid w-100 impact-card-img" src={actMedia} alt={img.initiative || ''} width="800" height="600" decoding="async" />
-                                    )}
-                                    <div className="search-icon">
-                                        {isVideo ? (
-                                            <a href={actMedia} className="my-auto"><i className="bi bi-play-circle text-white"></i></a>
-                                        ) : (
-                                            <a href={actMedia} data-lightbox={`gallery-${idx}`} className="my-auto"><i className="bi bi-search text-white"></i></a>
-                                        )}
+                                <div className="gallery-event-card" onClick={() => setGalleryLightbox({ eventIndex: idx, imageIndex: 0 })}>
+                                    <div className="gallery-event-grid">
+                                        {images.slice(0, 4).map((img, i) => (
+                                            <div key={img.id || i} className={`gallery-event-thumb ${images.length === 1 ? 'gallery-event-thumb-single' : ''} ${i === 3 && images.length > 4 ? 'gallery-event-thumb-more' : ''}`}>
+                                                {img.type === 'video' ? (
+                                                    <video src={mediaUrl(img.path)} muted loop playsInline preload="metadata" />
+                                                ) : (
+                                                    <img src={mediaUrl(img.path)} alt="" />
+                                                )}
+                                                {i === 3 && images.length > 4 && (
+                                                    <div className="gallery-event-thumb-overlay">
+                                                        <span>+{images.length - 4}</span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
                                     </div>
-                                    <div className="gallery-content">
-                                        <div className="gallery-inner pb-5">
-                                            <Link href="/initiatives" className="h4 gallery-title-link">{img.initiative || ''}</Link>
-                                            <p className="mb-1 text-white">{img.event_title || ''}</p>
-                                            <small className="text-white-50"><i className="bi bi-geo-alt me-1"></i>{img.location || ''}</small>
-                                        </div>
+                                    <div className="gallery-event-info">
+                                        <h5 className="gallery-event-title">{event.event_title}</h5>
+                                        <small className="gallery-event-meta">
+                                            <i className="bi bi-geo-alt me-1"></i>{event.location}
+                                        </small>
                                     </div>
                                 </div>
                             </div>
@@ -396,6 +392,13 @@ export default function Home({ initiatives, events, stories, recentActivities, g
                     })}
                 </div>
             </div>
+            {galleryLightbox !== null && galleryImages[galleryLightbox.eventIndex] && (
+                <GalleryLightbox
+                    images={galleryImages[galleryLightbox.eventIndex].images}
+                    startIndex={galleryLightbox.imageIndex}
+                    onClose={() => setGalleryLightbox(null)}
+                />
+            )}
         </div>,
 
         volunteer: <div key="volunteer" className="container-fluid volunteer py-5 mt-5">

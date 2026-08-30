@@ -35,8 +35,6 @@ export default function Stories({ stories, hero }) {
             meta: [
                 { icon: 'bi bi-calendar', text: `Published: ${formattedDate}` },
                 { icon: 'bi bi-person', text: `Author: ${story.author || 'Staff'}` },
-                { icon: 'bi bi-chat', text: `Comments: ${story.comments || 0}` },
-                { icon: 'bi bi-heart', text: `Likes: ${story.likes || 0}` },
                 { icon: 'bi bi-info-circle', text: `Status: ${story.status || 'Published'}` },
             ],
             detailContent: story.content,
