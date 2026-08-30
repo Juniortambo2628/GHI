@@ -38,6 +38,19 @@ class StoryController extends Controller
 
     public function show(Story $story)
     {
-        return inertia('StoryShow', compact('story'));
+        return inertia('StoryShow', [
+            'story' => [
+                'id' => $story->id,
+                'title' => $story->title,
+                'slug' => $story->slug,
+                'content' => $story->content,
+                'author' => $story->author,
+                'image' => $story->image,
+                'featured_image' => $story->featured_image,
+                'category' => $story->category,
+                'status' => $story->status,
+                'created_at' => $story->created_at,
+            ],
+        ]);
     }
 }
