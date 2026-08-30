@@ -4,12 +4,20 @@ import mediaUrl from '../Components/Shared/mediaUrl';
 import FallbackImage from '../Components/Shared/FallbackImage';
 import StatusBadge from '../Components/Shared/StatusBadge';
 import ShowPageLayout from '../Components/Shared/ShowPageLayout';
-import SectionHeader from '../Components/Shared/SectionHeader';
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 
-StoryShow.layout = page => <PublicLayout>{page}</PublicLayout>;
+export default function StoryShow({ story }) {
+    if (!story) {
+        return (
+            <PublicLayout>
+                <div className="container py-5 text-center">
+                    <h1>Story not found</h1>
+                    <a href="/stories" className="btn btn-primary mt-3">Back to Stories</a>
+                </div>
+            </PublicLayout>
+        );
+    }
 
-export default function StoryShow({ story = {} }) {
     const storyDate = story.created_at
         ? new Date(story.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
         : '';
@@ -17,7 +25,7 @@ export default function StoryShow({ story = {} }) {
     const storyImage = story.image || story.featured_image;
 
     return (
-        <>
+        <PublicLayout>
             <Head>
                 <title>{story.title || 'Story'} - Global Harmony Initiative</title>
             </Head>
@@ -39,6 +47,6 @@ export default function StoryShow({ story = {} }) {
                 )}
                 <div className="mb-4 story-content" dangerouslySetInnerHTML={{ __html: sanitizeHtml(story.content || '') }} />
             </ShowPageLayout>
-        </>
+        </PublicLayout>
     );
 }
