@@ -6,15 +6,15 @@ import StatusBadge from '../Components/Shared/StatusBadge';
 import ShowPageLayout from '../Components/Shared/ShowPageLayout';
 import { Head } from '@inertiajs/react';
 
+StoryShow.layout = page => <PublicLayout>{page}</PublicLayout>;
+
 export default function StoryShow({ story }) {
     if (!story) {
         return (
-            <PublicLayout>
-                <div className="container py-5 text-center">
-                    <h1>Story not found</h1>
-                    <a href="/stories" className="btn btn-primary mt-3">Back to Stories</a>
-                </div>
-            </PublicLayout>
+            <div className="container py-5 text-center">
+                <h1>Story not found</h1>
+                <a href="/stories" className="btn btn-primary mt-3">Back to Stories</a>
+            </div>
         );
     }
 
@@ -25,10 +25,8 @@ export default function StoryShow({ story }) {
     const storyImage = story.image || story.featured_image;
 
     return (
-        <PublicLayout>
-            <Head>
-                <title>{story.title || 'Story'} - Global Harmony Initiative</title>
-            </Head>
+        <>
+            <Head title={`${story.title || 'Story'} - Global Harmony Initiative`} />
 
             <ShowPageLayout title={story.title || 'Story'} section="stories" sectionLabel="Stories" sectionUrl="/stories"
                 sidebar={
@@ -47,6 +45,6 @@ export default function StoryShow({ story }) {
                 )}
                 <div className="mb-4 story-content" dangerouslySetInnerHTML={{ __html: sanitizeHtml(story.content || '') }} />
             </ShowPageLayout>
-        </PublicLayout>
+        </>
     );
 }

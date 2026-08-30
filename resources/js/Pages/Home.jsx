@@ -319,7 +319,7 @@ export default function Home({ initiatives, events, stories, recentActivities, g
                                                 </div>
                                             </div>
                                             <Link href={`/stories/${story.slug || story.id}`} className="h4 d-inline-block mb-3 card-title-link">{story.title}</Link>
-                                            <p className="mb-3 flex-grow-1">{(story.content || '').substring(0, 120)}{(story.content || '').length > 120 ? '...' : ''}</p>
+                                            <p className="mb-3 flex-grow-1">{stripHtml(story.content || '').substring(0, 120)}{stripHtml(story.content || '').length > 120 ? '...' : ''}</p>
                                             <Link href={`/stories/${story.slug || story.id}`} className="fw-bold card-title-link">Read More <i className="bi bi-arrow-right"></i></Link>
                                         </div>
                                     </div>
