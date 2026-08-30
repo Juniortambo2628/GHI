@@ -21,6 +21,7 @@ class StoreStoryRequest extends FormRequest
             'featured_image' => 'nullable|string|max:255',
             'category' => 'nullable|string|max:50',
             'status' => 'required|in:draft,published,archived',
+            'event_id' => 'nullable|exists:events,id',
         ];
     }
 }

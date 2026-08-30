@@ -1060,6 +1060,57 @@ img {
   transition: all 0.3s ease;
 }
 
+@media (max-width: 575.98px) {
+  .event-list-item {
+    height: auto;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+  .event-date-block {
+    min-width: 50px;
+    margin-right: 0.75rem;
+  }
+  .event-day {
+    font-size: 1.75rem;
+  }
+  .event-month {
+    font-size: 0.75rem;
+  }
+  .event-image-container {
+    width: 70px;
+    height: 70px;
+    min-width: 70px;
+    margin-right: 0.75rem;
+  }
+  .event-details {
+    flex: 1;
+    min-width: 0;
+  }
+  .event-title {
+    font-size: 1rem;
+    white-space: normal;
+  }
+  .event-subtitle {
+    font-size: 0.8rem;
+    white-space: normal;
+  }
+  .event-meta {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+  }
+  .event-action {
+    margin-left: 0;
+    padding-left: 0;
+    width: 100%;
+    text-align: center;
+  }
+  .event-action .btn {
+    width: 100%;
+  }
+}
+
 .event-list-item:hover {
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
   background-color: #dae3ec;

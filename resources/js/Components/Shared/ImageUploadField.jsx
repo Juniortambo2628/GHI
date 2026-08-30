@@ -28,7 +28,7 @@ function getCroppedImg(imageSrc, pixelCrop) {
     });
 }
 
-export default function ImageUploadField({ name, value, onChange, label = 'Image', required = false }) {
+export default function ImageUploadField({ name, value, onChange, label = 'Image', required = false, heroPreview = false }) {
     const containerRef = useRef(null);
     const pond = useRef(null);
     const destroyedRef = useRef(false);
@@ -172,7 +172,7 @@ export default function ImageUploadField({ name, value, onChange, label = 'Image
                             />
                         </div>
                     ) : (
-                        <img src={previewUrl} alt={label} draggable={mode === 'drag'} style={{ cursor: mode === 'drag' ? 'grab' : 'default' }} />
+                        <img src={previewUrl} alt={label} draggable={mode === 'drag'} style={{ cursor: mode === 'drag' ? 'grab' : 'default', ...(heroPreview ? { objectFit: 'cover', width: '100%', height: '200px', objectPosition: 'center' } : {}) }} />
                     )}
                     <div className="admin-upload-preview-toolbar">
                         <button type="button" className={`admin-preview-btn ${mode === 'preview' ? 'active' : ''}`} onClick={() => setMode('preview')} title="Preview"><i className="bi bi-eye"></i></button>
@@ -188,11 +188,11 @@ export default function ImageUploadField({ name, value, onChange, label = 'Image
                             <label>Zoom</label>
                             <input type="range" min="1" max="3" step="0.1" value={zoom} onChange={(e) => setZoom(Number(e.target.value))} />
                             <label>Aspect</label>
-                            <select value={aspect || ''} onChange={(e) => setAspect(e.target.value ? Number(e.target.value) : null)}>
+                            <select value={aspect || ''} onChange={(e) => setAspect(e.target.value ? parseFloat(e.target.value) : null)}>
                                 <option value="">Free</option>
                                 <option value="1">1:1</option>
-                                <option value="4/3">4:3</option>
-                                <option value="16/9">16:9</option>
+                                <option value="1.3333">4:3</option>
+                                <option value="1.7778">16:9</option>
                             </select>
                             <button type="button" className="btn btn-sm btn-primary" onClick={applyCrop}>Apply crop</button>
                             <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setMode('preview')}>Cancel</button>

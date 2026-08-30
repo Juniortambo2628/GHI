@@ -68,6 +68,7 @@ function PageHeroEditor({ page, data, setData }) {
                             label="Hero Background Image"
                             value={data[`${prefix}_image`] || ''}
                             onChange={(val) => setData(`${prefix}_image`, val)}
+                            heroPreview
                         />
                     </div>
                     <div className="col-md-6">
@@ -303,7 +304,7 @@ export default function Index({ settings }) {
                                                 <input type="text" className="form-control" value={slide.subheading} onChange={(e) => updateSlide(index, 'subheading', e.target.value)} />
                                             </div>
                                             <div className="col-12">
-                                                <ImageUploadField name={`hero-image-${index}`} value={slide.image} onChange={(value) => updateSlide(index, 'image', value)} />
+                                                <ImageUploadField name={`hero-image-${index}`} value={slide.image} onChange={(value) => updateSlide(index, 'image', value)} heroPreview />
                                             </div>
                                             <div className="col-md-3">
                                                 <label className="form-label">Primary Button Text</label>
@@ -469,7 +470,7 @@ export default function Index({ settings }) {
                                         <input type="text" className="form-control" value={data.about_hero_subtitle || ''} onChange={(e) => setData('about_hero_subtitle', e.target.value)} />
                                     </div>
                                     <div className="col-12">
-                                        <ImageUploadField name="about_hero_image" label="Hero Background Image" value={data.about_hero_image || ''} onChange={(val) => setData('about_hero_image', val)} />
+                                        <ImageUploadField name="about_hero_image" label="Hero Background Image" value={data.about_hero_image || ''} onChange={(val) => setData('about_hero_image', val)} heroPreview />
                                     </div>
                                 </div>
                             </div>

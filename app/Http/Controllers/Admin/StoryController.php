@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreStoryRequest;
 use App\Http\Requests\Admin\UpdateStoryRequest;
 use App\Models\Story;
+use App\Models\Event;
 use Illuminate\Http\Request;
 
 class StoryController extends Controller
@@ -23,7 +24,8 @@ class StoryController extends Controller
 
     public function create()
     {
-        return inertia('Admin/Stories/Create');
+        $events = Event::orderBy('title')->get(['id', 'title', 'slug']);
+        return inertia('Admin/Stories/Create', compact('events'));
     }
 
     public function store(StoreStoryRequest $request)
@@ -43,7 +45,8 @@ class StoryController extends Controller
 
     public function edit(Story $story)
     {
-        return inertia('Admin/Stories/Edit', compact('story'));
+        $events = Event::orderBy('title')->get(['id', 'title', 'slug']);
+        return inertia('Admin/Stories/Edit', compact('story', 'events'));
     }
 
     public function update(UpdateStoryRequest $request, Story $story)

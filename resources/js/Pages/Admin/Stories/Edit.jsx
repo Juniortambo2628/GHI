@@ -4,11 +4,11 @@ import ImageUploadField from '../../../Components/Shared/ImageUploadField';
 import RichTextField from '../../../Components/Shared/RichTextField';
 import useAutosave from '../../../Hooks/useAutosave';
 
-export default function Edit({ story }) {
+export default function Edit({ story, events = [] }) {
     const { data, setData, put, processing } = useForm({
         title: story.title || '', content: story.content || '', author: story.author || '',
         category: story.category || '', image: story.image || '', featured_image: story.featured_image || '',
-        status: story.status || 'draft'
+        status: story.status || 'draft', event_id: story.event_id || ''
     });
 
     const autosave = useAutosave({ formKey: `story-edit-${story.id}`, data, enabled: true });
@@ -39,6 +39,15 @@ export default function Edit({ story }) {
             <div className="col-md-4">
                 <label className="form-label">Category</label>
                 <input type="text" className="form-control" value={data.category} onChange={e => setData('category', e.target.value)} />
+            </div>
+            <div className="col-md-4">
+                <label className="form-label">Related Event</label>
+                <select className="form-select" value={data.event_id} onChange={e => setData('event_id', e.target.value)}>
+                    <option value="">None</option>
+                    {events.map(event => (
+                        <option key={event.id} value={event.id}>{event.title}</option>
+                    ))}
+                </select>
             </div>
             <div className="col-md-4"><ImageUploadField name="image" value={data.image} onChange={value => setData('image', value)} /></div>
             <div className="col-md-6"><ImageUploadField name="featured_image" value={data.featured_image} onChange={value => setData('featured_image', value)} label="Featured Image" /></div>

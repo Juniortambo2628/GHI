@@ -25,5 +25,15 @@ class Story extends Model
         'comments',
         'category',
         'status',
+        'event_id',
     ];
+
+    protected $casts = [
+        'event_id' => 'integer',
+    ];
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class);
+    }
 }
