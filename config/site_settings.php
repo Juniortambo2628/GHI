@@ -26,8 +26,8 @@ return [
 
     // Homepage Hero
     'homepage_hero' => '[]',
-    'homepage_sections' => '{"about":true,"quote":true,"foundation":true,"objectives":true,"counters":true,"initiatives":true,"events":true,"stories":true,"gallery":true,"volunteer":true}',
-    'homepage_section_order' => '["hero","about","quote","foundation","objectives","counters","initiatives","events","stories","gallery","volunteer"]',
+    'homepage_sections' => '{"about":true,"quote":true,"foundation":true,"objectives":true,"counters":true,"initiatives":true,"events":true,"videos":true,"stories":true,"gallery":true,"volunteer":true}',
+    'homepage_section_order' => '["hero","about","quote","foundation","objectives","counters","initiatives","events","videos","stories","gallery","volunteer"]',
 
     // Page Heroes
     'hero_causes_title' => 'Our Causes',
@@ -84,6 +84,9 @@ return [
     'home_about_who_we_are_text_3' => 'Founded on the belief that every person deserves opportunity and dignity, GHI stands as a bridge between global goodwill and community-driven impact.',
     'home_about_button_text' => 'Read More',
 
+    // Homepage Quote Section
+    'home_quote_bg_image' => '',
+
     // Homepage Foundation Section
     'home_foundation_subtitle' => 'About Us',
     'home_foundation_title' => 'Our Foundation',
@@ -102,6 +105,7 @@ return [
     'home_counters_title' => 'Making a Measurable Difference',
     'home_counters_description' => "Through our collective efforts, we've made significant progress in empowering communities across East Africa. Every number represents lives touched and futures transformed.",
     'home_counters_button_text' => 'Join With Us',
+    'home_counters_bg_image' => '',
 
     // Homepage Initiatives Section
     'home_initiatives_subtitle' => 'Our Initiatives',
@@ -126,6 +130,11 @@ return [
     'home_gallery_subtitle' => 'Our work',
     'home_gallery_title' => 'Recent Activities Gallery',
     'home_gallery_description' => 'See the impact of our programs through images from our most recent activities across East Africa.',
+
+    // Homepage Videos Section
+    'home_videos_subtitle' => 'Watch & Learn',
+    'home_videos_title' => 'Featured Videos',
+    'home_videos_description' => 'Explore our work through video stories from communities across East Africa.',
 
     // Homepage Volunteer Section
     'home_volunteer_subtitle' => 'Become a Volunteer?',
