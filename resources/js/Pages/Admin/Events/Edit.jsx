@@ -85,7 +85,7 @@ export default function Edit({ event, initiatives }) {
             <div className="col-12">
                 <label className="form-label fw-semibold">Activity Gallery Images</label>
                 <p className="text-muted small mb-2">Upload images from this event. These will appear in the homepage Activity Gallery.</p>
-                <GalleryUpload eventId={event.id} images={galleryImages} onImagesChange={setGalleryImages} />
+                <GalleryUpload eventId={event.id} eventTitle={event.title} images={galleryImages} onImagesChange={setGalleryImages} />
             </div>
         </AdminEntityForm>
     );

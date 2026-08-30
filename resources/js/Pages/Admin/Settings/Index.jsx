@@ -395,6 +395,7 @@ export default function Index({ settings }) {
                                 { k: 'home_counters_title', l: 'Title', type: 'text' },
                                 { k: 'home_counters_description', l: 'Description', type: 'richtext' },
                                 { k: 'home_counters_button_text', l: 'Button Text', type: 'text' },
+                                { k: 'home_counters_bg_image', l: 'Background Image', type: 'image' },
                             ]},
                             { key: 'initiatives', title: 'Initiatives Section', fields: [
                                 { k: 'home_initiatives_subtitle', l: 'Subtitle', type: 'text' },
@@ -420,6 +421,9 @@ export default function Index({ settings }) {
                                 { k: 'home_gallery_title', l: 'Title', type: 'text' },
                                 { k: 'home_gallery_description', l: 'Description', type: 'richtext' },
                             ]},
+                            { key: 'quote', title: 'Quote Banner', fields: [
+                                { k: 'home_quote_bg_image', l: 'Background Image', type: 'image' },
+                            ]},
                             { key: 'volunteer', title: 'Volunteer CTA Section', fields: [
                                 { k: 'home_volunteer_subtitle', l: 'Subtitle', type: 'text' },
                                 { k: 'home_volunteer_title', l: 'Title', type: 'text' },
@@ -438,9 +442,11 @@ export default function Index({ settings }) {
                                     <div className="row g-3">
                                         {section.fields.map(field => (
                                             <div key={field.k} className={field.type === 'richtext' ? 'col-12' : 'col-md-6'}>
-                                                {field.type === 'richtext' ? (
-                                                    <RichTextField label={field.l} value={data[field.k] || ''} onChange={(val) => setData(field.k, val)} />
-                                                ) : (
+                                        {field.type === 'richtext' ? (
+                                            <RichTextField label={field.l} value={data[field.k] || ''} onChange={(val) => setData(field.k, val)} />
+                                        ) : field.type === 'image' ? (
+                                            <ImageUploadField name={field.k} label={field.l} value={data[field.k] || ''} onChange={(val) => setData(field.k, val)} heroPreview />
+                                        ) : (
                                                     <>
                                                         <label className="form-label">{field.l}</label>
                                                         <input type="text" className="form-control" value={data[field.k] || ''} onChange={(e) => setData(field.k, e.target.value)} />

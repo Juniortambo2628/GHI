@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { usePage } from '@inertiajs/react';
+import { useUploads } from '../../Contexts/UploadContext';
 import mediaUrl from './mediaUrl';
 
 function formatSize(bytes) {
@@ -8,7 +8,7 @@ function formatSize(bytes) {
     return (bytes / 1048576).toFixed(1) + ' MB';
 }
 
-function GalleryItem({ item, onRemove, onRetry, onMove, index, total }) {
+function GalleryItem({ item, onRemove, onMove, index, total }) {
     return (
         <div className="gallery-item-card">
             {item.type === 'video' ? (
@@ -22,24 +22,12 @@ function GalleryItem({ item, onRemove, onRetry, onMove, index, total }) {
                     <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '16px', lineHeight: 1 }}></i>
                 </div>
             )}
-            {item.status === 'error' && (
-                <div style={{ position: 'absolute', top: '8px', right: '8px', zIndex: 10, background: 'rgba(255, 255, 255, 0.9)', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
-                    <i className="bi bi-x-circle-fill text-danger" style={{ fontSize: '16px', lineHeight: 1 }}></i>
-                </div>
-            )}
             {item.status === 'uploading' && (
-                <div className="gallery-progress-bar">
-                    <div className="gallery-progress-fill" style={{ width: item.progress + '%' }}></div>
+                <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,6,86,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
+                    <div className="spinner-border text-light" style={{ width: '1.5rem', height: '1.5rem' }}></div>
                 </div>
             )}
-            {item.status === 'error' && (
-                <div className="gallery-item-error">
-                    <i className="bi bi-exclamation-triangle"></i>
-                    <span>{item.error}</span>
-                    <button onClick={() => onRetry(item.id)}>Retry</button>
-                </div>
-            )}
-            {item.status !== 'uploading' && item.status !== 'error' && (
+            {item.status !== 'uploading' && (
                 <div className="gallery-item-overlay">
                     <button type="button" className="btn btn-sm btn-outline-light" onClick={() => onMove(item.id, -1)} disabled={index === 0} title="Move left">
                         <i className="bi bi-arrow-left"></i>
@@ -66,8 +54,8 @@ function getFileType(file) {
     return 'image';
 }
 
-export default function GalleryUpload({ eventId, images = [], onImagesChange, queueMode = false }) {
-    const { csrf_token: csrfToken } = usePage().props;
+export default function GalleryUpload({ eventId, eventTitle, images = [], onImagesChange }) {
+    const { startBatch, batches } = useUploads();
     const fileInputRef = useRef(null);
     const [items, setItems] = useState(() =>
         images.map(img => ({
@@ -76,15 +64,14 @@ export default function GalleryUpload({ eventId, images = [], onImagesChange, qu
             status: 'done',
             path: img.path,
             type: img.type || 'image',
-            progress: 100,
             sort_order: img.sort_order ?? 0,
             file: null,
         }))
     );
     const [dragOver, setDragOver] = useState(false);
-    const [queuedCount, setQueuedCount] = useState(0);
-    const uploadQueueRef = useRef([]);
-    const processingRef = useRef(false);
+
+    const eventBatches = batches.filter(b => b.eventId === eventId);
+    const bgItems = eventBatches.flatMap(b => b.items.filter(i => i.status === 'done' || i.status === 'uploading' || i.status === 'queued'));
 
     useEffect(() => {
         onImagesChange(items.filter(i => i.status === 'done').map((i, idx) => ({
@@ -95,114 +82,41 @@ export default function GalleryUpload({ eventId, images = [], onImagesChange, qu
         })));
     }, [items]);
 
-    const MAX_FILE_SIZE = 20 * 1024 * 1024;
-
-    const batchUpload = useCallback(async (newItems) => {
-        const formData = new FormData();
-        const imageFiles = newItems.filter(i => i.type === 'image');
-        imageFiles.forEach(item => formData.append('files[]', item.file));
-        formData.append('group', `event-${eventId || 'unassigned'}`);
-
-        newItems.forEach(item => setItems(prev => prev.map(i => i.id === item.id ? { ...i, status: 'uploading', progress: 50 } : i)));
-
-        try {
-            const res = await fetch('/upload/batch', {
-                method: 'POST',
-                headers: { 'X-CSRF-TOKEN': csrfToken || document.querySelector('meta[name="csrf-token"]')?.content || '', Accept: 'application/json' },
-                body: formData,
-            });
-            const payload = await res.json();
-            if (res.ok && payload?.success) {
-                setQueuedCount(prev => prev + payload.queued);
-                newItems.forEach(item => setItems(prev => prev.map(i => i.id === item.id ? { ...i, status: 'queued-bg', progress: 100 } : i)));
-            } else {
-                throw new Error(payload?.message || 'Batch upload failed');
-            }
-        } catch (err) {
-            newItems.forEach(item => setItems(prev => prev.map(i => i.id === item.id ? { ...i, status: 'error', error: err.message, progress: 0 } : i)));
-        }
-    }, [eventId, csrfToken]);
-
-    const uploadFile = useCallback(async (item) => {
-        const formData = new FormData();
-        formData.append('file', item.file);
-
-        try {
-            const xhr = new XMLHttpRequest();
-            return new Promise((resolve, reject) => {
-                xhr.upload.addEventListener('progress', (e) => {
-                    if (e.lengthComputable) {
-                        const pct = Math.round((e.loaded / e.total) * 100);
-                        setItems(prev => prev.map(i => i.id === item.id ? { ...i, progress: pct } : i));
-                    }
-                });
-                xhr.addEventListener('load', () => {
-                    try {
-                        const payload = JSON.parse(xhr.responseText);
-                        if (xhr.status === 200 && payload?.success && payload.path) {
-                            resolve(payload.path);
-                        } else {
-                            reject(new Error(payload.message || 'Upload failed'));
-                        }
-                    } catch { reject(new Error('Invalid server response')); }
-                });
-                xhr.addEventListener('error', () => reject(new Error('Network error')));
-                xhr.addEventListener('abort', () => reject(new Error('Cancelled')));
-                xhr.open('POST', '/upload/media');
-                xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken || document.querySelector('meta[name="csrf-token"]')?.content || '');
-                xhr.setRequestHeader('Accept', 'application/json');
-                xhr.send(formData);
-            });
-        } catch (err) {
-            throw err;
-        }
-    }, [csrfToken]);
-
-    const processQueue = useCallback(async () => {
-        if (processingRef.current) return;
-        processingRef.current = true;
-
-        while (uploadQueueRef.current.length > 0) {
-            const item = uploadQueueRef.current.shift();
-            setItems(prev => prev.map(i => i.id === item.id ? { ...i, status: 'uploading', progress: 0 } : i));
-            try {
-                const path = await uploadFile(item);
-                setItems(prev => prev.map(i => i.id === item.id ? { ...i, status: 'done', path, progress: 100 } : i));
-            } catch (err) {
-                setItems(prev => prev.map(i => i.id === item.id ? { ...i, status: 'error', error: err.message, progress: 0 } : i));
-            }
-        }
-
-        processingRef.current = false;
-    }, [uploadFile]);
-
     const addFiles = useCallback((fileList) => {
-        const newItems = Array.from(fileList).map(file => {
-            const type = getFileType(file);
-            const preview = URL.createObjectURL(file);
-            return {
-                id: 'new-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8),
-                file,
-                preview,
-                type,
-                status: 'queued',
-                path: '',
-                progress: 0,
-                sort_order: 0,
-            };
-        });
+        const newFiles = Array.from(fileList);
+        if (newFiles.length === 0) return;
 
-        setItems(prev => {
-            const updated = [...prev, ...newItems];
-            if (queueMode && newItems.length >= 5) {
-                batchUpload(newItems);
-            } else {
-                newItems.forEach(item => uploadQueueRef.current.push(item));
-                processQueue();
-            }
-            return updated;
+        const previewItems = newFiles.map(file => ({
+            id: 'uploading-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8),
+            file,
+            preview: URL.createObjectURL(file),
+            type: getFileType(file),
+            status: 'uploading',
+            path: '',
+            sort_order: 0,
+        }));
+
+        setItems(prev => [...prev, ...previewItems]);
+
+        startBatch(eventId, eventTitle || `Event #${eventId || 'new'}`, newFiles, (completedItems) => {
+            setItems(prev => {
+                const uploading = prev.filter(i => previewItems.some(p => p.id === i.id));
+                const rest = prev.filter(i => !previewItems.some(p => p.id === i.id));
+                const completed = completedItems
+                    .filter(i => i.status === 'done' && i.path)
+                    .map((ci, idx) => ({
+                        id: ci.id,
+                        preview: mediaUrl(ci.path),
+                        status: 'done',
+                        path: ci.path,
+                        type: ci.type || 'image',
+                        sort_order: rest.length + idx,
+                        file: null,
+                    }));
+                return [...rest, ...completed];
+            });
         });
-    }, [processQueue, batchUpload, queueMode]);
+    }, [eventId, eventTitle, startBatch]);
 
     const handleDrop = useCallback((e) => {
         e.preventDefault();
@@ -217,17 +131,6 @@ export default function GalleryUpload({ eventId, images = [], onImagesChange, qu
         setItems(prev => prev.filter(i => i.id !== id));
     }, []);
 
-    const handleRetry = useCallback((id) => {
-        setItems(prev => {
-            const item = prev.find(i => i.id === id);
-            if (!item) return prev;
-            const retryItem = { ...item, status: 'queued', progress: 0 };
-            uploadQueueRef.current.push(retryItem);
-            processQueue();
-            return prev.map(i => i.id === id ? retryItem : i);
-        });
-    }, [processQueue]);
-
     const handleMove = useCallback((id, direction) => {
         setItems(prev => {
             const idx = prev.findIndex(i => i.id === id);
@@ -240,15 +143,12 @@ export default function GalleryUpload({ eventId, images = [], onImagesChange, qu
         });
     }, []);
 
-    const handleReorder = useCallback((id, direction) => {
-        handleMove(id, direction);
-    }, [handleMove]);
-
-    const totalSize = items.reduce((sum, i) => sum + (i.file?.size || 0), 0);
-    const uploading = items.some(i => i.status === 'uploading');
-    const bgQueued = items.filter(i => i.status === 'queued-bg').length;
-    const errors = items.filter(i => i.status === 'error');
     const done = items.filter(i => i.status === 'done');
+    const uploading = items.filter(i => i.status === 'uploading');
+    const totalSize = items.reduce((sum, i) => sum + (i.file?.size || 0), 0);
+    const bgActiveCount = eventBatches.reduce((sum, b) =>
+        sum + b.items.filter(i => i.status === 'queued' || i.status === 'uploading').length, 0
+    );
 
     return (
         <div>
@@ -278,9 +178,8 @@ export default function GalleryUpload({ eventId, images = [], onImagesChange, qu
                 <>
                     <div className="gallery-upload-summary">
                         <span><strong>{done.length}</strong> file{done.length !== 1 ? 's' : ''}</span>
-                        {uploading && <span><i className="bi bi-arrow-repeat spin me-1"></i>Uploading...</span>}
-                        {bgQueued > 0 && <span className="text-info"><i className="bi bi-hourglass-split me-1"></i>{bgQueued} processing in background</span>}
-                        {errors.length > 0 && <span className="text-danger"><i className="bi bi-exclamation-circle me-1"></i>{errors.length} failed</span>}
+                        {uploading.length > 0 && <span><i className="bi bi-arrow-repeat spin me-1"></i>{uploading.length} uploading...</span>}
+                        {bgActiveCount > 0 && <span className="text-info"><i className="bi bi-hourglass-split me-1"></i>{bgActiveCount} processing in background</span>}
                         {totalSize > 0 && <span>{formatSize(totalSize)}</span>}
                     </div>
                     <div className="gallery-grid">
@@ -291,8 +190,7 @@ export default function GalleryUpload({ eventId, images = [], onImagesChange, qu
                                 index={idx}
                                 total={items.length}
                                 onRemove={handleRemove}
-                                onRetry={handleRetry}
-                                onMove={handleReorder}
+                                onMove={handleMove}
                             />
                         ))}
                     </div>

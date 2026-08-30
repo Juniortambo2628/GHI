@@ -3459,7 +3459,7 @@ h6 {
 }
 
 .card-title-link:hover {
-  color: #fff !important;
+  color: var(--ghi-secondary) !important;
 }
 
 .gallery-title-link {

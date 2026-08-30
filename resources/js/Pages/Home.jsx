@@ -110,7 +110,7 @@ export default function Home({ initiatives, events, stories, recentActivities, g
             </div>
         </div>,
 
-        quote: <div key="quote" className="container-fluid py-5 quote-banner-bg" data-parallax="0.3">
+        quote: <div key="quote" className="container-fluid py-5 quote-banner-bg" data-parallax="0.3" style={settings.home_quote_bg_image ? { '--quote-banner-bg': `url(${mediaUrl(settings.home_quote_bg_image)})` } : undefined}>
             <div className="container py-5">
                 <div className="text-center mx-auto quote-container">
                     {randomQuote && (
@@ -207,7 +207,7 @@ export default function Home({ initiatives, events, stories, recentActivities, g
         </AnimatedSection>,
 
         counters: <AnimatedSection key="counters" animation="fadeUp">
-            <div className="container-fluid counter py-5 counter-section-bg">
+            <div className="container-fluid counter py-5 counter-section-bg" style={settings.home_counters_bg_image ? { '--counter-banner-bg': `url(${mediaUrl(settings.home_counters_bg_image)})` } : undefined}>
                 <div className="container">
                     <SectionHeader subtitle={settings.home_counters_subtitle || 'Our Impact'} title={settings.home_counters_title || 'Making a Measurable Difference'} description={settings.home_counters_description || "Through our collective efforts, we've made significant progress in empowering communities across East Africa. Every number represents lives touched and futures transformed."} light className="pb-5" />
                     <div className="row">
