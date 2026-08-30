@@ -19,6 +19,11 @@
 # Storage key files
 /storage/*.key
 
+# Storage (framework, uploads, logs — managed on server)
+/storage/framework/
+/storage/app/
+/storage/logs/
+
 # IDE / Editor
 /.fleet
 /.idea

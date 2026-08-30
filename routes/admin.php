@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\GetInvolvedSubmissionController;
 use App\Http\Controllers\Admin\ImpactController;
 use App\Http\Controllers\Admin\InitiativeController;
 use App\Http\Controllers\Admin\MediaLibraryController;
+use App\Http\Controllers\Admin\MediaPickerController;
 use App\Http\Controllers\Admin\NewsletterSubscriberController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\SearchController;
@@ -59,6 +60,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin']
     Route::delete('media', [MediaLibraryController::class, 'destroy'])->name('media.destroy');
     Route::delete('media/bulk', [MediaLibraryController::class, 'bulkDestroy'])->name('media.bulk-destroy');
     Route::put('media/rename', [MediaLibraryController::class, 'rename'])->name('media.rename');
+
+    // Media Picker (reusable image library)
+    Route::get('media-picker', [MediaPickerController::class, 'index'])->name('media-picker.index');
+    Route::put('media-picker/{mediaAsset}', [MediaPickerController::class, 'update'])->name('media-picker.update');
+    Route::delete('media-picker/{mediaAsset}', [MediaPickerController::class, 'destroy'])->name('media-picker.destroy');
     Route::get('donations', fn () => redirect()->route('admin.dashboard'))->name('donations.index');
     Route::get('donations/{donation}', fn () => redirect()->route('admin.dashboard'))->name('donations.show');
     Route::get('settings', [SettingsController::class, 'edit'])->name('settings.edit');

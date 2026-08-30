@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\MediaAsset;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -92,13 +93,27 @@ class UploadController extends Controller
         }
 
         if ($request->expectsJson()) {
-            return response()->json([
+            $assetData = [
                 'success' => true,
                 'filename' => $filename,
                 'path' => $path,
                 'url' => Storage::disk('public')->url($path),
                 'size' => $file->getSize(),
-            ]);
+            ];
+
+            if ($isImage) {
+                $asset = MediaAsset::create([
+                    'path' => $path,
+                    'original_name' => $file->getClientOriginalName(),
+                    'file_size' => $file->getSize(),
+                    'mime_type' => $file->getMimeType(),
+                    'group' => $request->input('group'),
+                ]);
+
+                $assetData['asset_id'] = $asset->id;
+            }
+
+            return response()->json($assetData);
         }
 
         return response('storage/'.$path, 200)->header('Content-Type', 'text/plain');

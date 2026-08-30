@@ -9,6 +9,7 @@ import imageCompression from 'browser-image-compression';
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import mediaUrl from './mediaUrl';
+import MediaPicker from './MediaPicker';
 
 FilePond.registerPlugin(FilePondPluginFileValidateType, FilePondPluginImagePreview, FilePondPluginImageResize);
 
@@ -37,6 +38,7 @@ export default function ImageUploadField({ name, value, onChange, label = 'Image
     const [cropData, setCropData] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
     const [aspect, setAspect] = useState(null);
+    const [pickerOpen, setPickerOpen] = useState(false);
 
     useEffect(() => {
         setPreviewUrl(value ? mediaUrl(value) : null);
@@ -138,60 +140,69 @@ export default function ImageUploadField({ name, value, onChange, label = 'Image
         setMode('preview');
     }, [previewUrl, cropData, csrfToken, onChange]);
 
-    if (!previewUrl) {
-        return (
-            <div className="admin-upload-field">
-                <label>{label}{required ? ' *' : ''}</label>
-                <div ref={containerRef}></div>
-                <input type="hidden" name={name} value={value || ''} readOnly />
-            </div>
-        );
-    }
+    const handlePickerSelect = (path) => {
+        onChange(path);
+        setPreviewUrl(mediaUrl(path));
+    };
 
     return (
         <div className="admin-upload-field">
             <label>{label}{required ? ' *' : ''}</label>
-            <div className="admin-upload-preview">
-                {mode === 'crop' ? (
-                    <div className="admin-crop-container">
-                        <Cropper
-                            image={previewUrl}
-                            crop={cropData}
-                            zoom={zoom}
-                            aspect={aspect}
-                            onCropChange={setCropData}
-                            onZoomChange={setZoom}
-                        />
+            {!previewUrl ? (
+                <>
+                    <div className="d-flex gap-2 mb-2">
+                        <div ref={containerRef} className="flex-grow-1"></div>
+                        <button type="button" className="btn btn-outline-primary btn-sm" onClick={() => setPickerOpen(true)} title="Pick from Media Library" style={{ whiteSpace: 'nowrap', alignSelf: 'flex-start', marginTop: '2px' }}>
+                            <i className="bi bi-images me-1"></i>Library
+                        </button>
                     </div>
-                ) : (
-                    <img src={previewUrl} alt={label} draggable={mode === 'drag'} style={{ cursor: mode === 'drag' ? 'grab' : 'default' }} />
-                )}
-                <div className="admin-upload-preview-toolbar">
-                    <button type="button" className={`admin-preview-btn ${mode === 'preview' ? 'active' : ''}`} onClick={() => setMode('preview')} title="Preview"><i className="bi bi-eye"></i></button>
-                    <button type="button" className={`admin-preview-btn ${mode === 'crop' ? 'active' : ''}`} onClick={() => { setMode('crop'); setCropData({ x: 0, y: 0 }); setZoom(1); }} title="Crop"><i className="bi bi-crop"></i></button>
-                    <button type="button" className={`admin-preview-btn ${mode === 'drag' ? 'active' : ''}`} onClick={() => setMode(mode === 'drag' ? 'preview' : 'drag')} title="Drag to reposition"><i className="bi bi-arrows-move"></i></button>
-                    <span className="admin-preview-divider"></span>
-                    <button type="button" className="admin-preview-btn" onClick={downloadImage} title="Download"><i className="bi bi-download"></i></button>
-                    <button type="button" className="admin-preview-btn admin-preview-btn-danger" onClick={removeImage} title="Remove"><i className="bi bi-trash"></i></button>
+                    <input type="hidden" name={name} value={value || ''} readOnly />
+                </>
+            ) : (
+                <div className="admin-upload-preview">
+                    {mode === 'crop' ? (
+                        <div className="admin-crop-container">
+                            <Cropper
+                                image={previewUrl}
+                                crop={cropData}
+                                zoom={zoom}
+                                aspect={aspect}
+                                onCropChange={setCropData}
+                                onZoomChange={setZoom}
+                            />
+                        </div>
+                    ) : (
+                        <img src={previewUrl} alt={label} draggable={mode === 'drag'} style={{ cursor: mode === 'drag' ? 'grab' : 'default' }} />
+                    )}
+                    <div className="admin-upload-preview-toolbar">
+                        <button type="button" className={`admin-preview-btn ${mode === 'preview' ? 'active' : ''}`} onClick={() => setMode('preview')} title="Preview"><i className="bi bi-eye"></i></button>
+                        <button type="button" className={`admin-preview-btn ${mode === 'crop' ? 'active' : ''}`} onClick={() => { setMode('crop'); setCropData({ x: 0, y: 0 }); setZoom(1); }} title="Crop"><i className="bi bi-crop"></i></button>
+                        <button type="button" className={`admin-preview-btn ${mode === 'drag' ? 'active' : ''}`} onClick={() => setMode(mode === 'drag' ? 'preview' : 'drag')} title="Drag to reposition"><i className="bi bi-arrows-move"></i></button>
+                        <span className="admin-preview-divider"></span>
+                        <button type="button" className="admin-preview-btn" onClick={() => setPickerOpen(true)} title="Replace from Library"><i className="bi bi-images"></i></button>
+                        <button type="button" className="admin-preview-btn" onClick={downloadImage} title="Download"><i className="bi bi-download"></i></button>
+                        <button type="button" className="admin-preview-btn admin-preview-btn-danger" onClick={removeImage} title="Remove"><i className="bi bi-trash"></i></button>
+                    </div>
+                    {mode === 'crop' && (
+                        <div className="admin-crop-controls">
+                            <label>Zoom</label>
+                            <input type="range" min="1" max="3" step="0.1" value={zoom} onChange={(e) => setZoom(Number(e.target.value))} />
+                            <label>Aspect</label>
+                            <select value={aspect || ''} onChange={(e) => setAspect(e.target.value ? Number(e.target.value) : null)}>
+                                <option value="">Free</option>
+                                <option value="1">1:1</option>
+                                <option value="4/3">4:3</option>
+                                <option value="16/9">16:9</option>
+                            </select>
+                            <button type="button" className="btn btn-sm btn-primary" onClick={applyCrop}>Apply crop</button>
+                            <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setMode('preview')}>Cancel</button>
+                        </div>
+                    )}
+                    <div ref={containerRef} style={{ display: 'none' }}></div>
+                    <input type="hidden" name={name} value={value || ''} readOnly />
                 </div>
-                {mode === 'crop' && (
-                    <div className="admin-crop-controls">
-                        <label>Zoom</label>
-                        <input type="range" min="1" max="3" step="0.1" value={zoom} onChange={(e) => setZoom(Number(e.target.value))} />
-                        <label>Aspect</label>
-                        <select value={aspect || ''} onChange={(e) => setAspect(e.target.value ? Number(e.target.value) : null)}>
-                            <option value="">Free</option>
-                            <option value="1">1:1</option>
-                            <option value="4/3">4:3</option>
-                            <option value="16/9">16:9</option>
-                        </select>
-                        <button type="button" className="btn btn-sm btn-primary" onClick={applyCrop}>Apply crop</button>
-                        <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setMode('preview')}>Cancel</button>
-                    </div>
-                )}
-            </div>
-            <div ref={containerRef} style={{ display: 'none' }}></div>
-            <input type="hidden" name={name} value={value || ''} readOnly />
+            )}
+            <MediaPicker show={pickerOpen} onClose={() => setPickerOpen(false)} onSelect={handlePickerSelect} />
         </div>
     );
 }
