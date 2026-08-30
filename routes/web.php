@@ -68,6 +68,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/upload/image', [UploadController::class, 'image'])->name('upload.image');
     Route::post('/upload/document', [UploadController::class, 'document'])->name('upload.document');
     Route::post('/upload/media', [UploadController::class, 'media'])->name('upload.media');
+    Route::post('/upload/batch', [UploadController::class, 'batch'])->name('upload.batch');
 });
 
 // Admin routes

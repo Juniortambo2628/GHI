@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\OptimizeImageJob;
 use App\Models\MediaAsset;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -42,6 +43,43 @@ class UploadController extends Controller
         $allowedTypes = array_merge($this->imageTypes, $this->videoTypes);
 
         return $this->uploadFile($request, 'images', $allowedTypes, $this->maxFileSize);
+    }
+
+    public function batch(Request $request): Response
+    {
+        $request->validate([
+            'files' => 'required|array|max:50',
+            'files.*' => 'required|file|max:20480|mimes:jpg,jpeg,png,gif,webp',
+            'group' => 'nullable|string|max:50',
+        ]);
+
+        $group = $request->input('group');
+        $disk = Storage::disk('public');
+        $results = [];
+
+        foreach ($request->file('files') as $file) {
+            $filename = Str::uuid().'.'.$file->getClientOriginalExtension();
+            $tempPath = 'temp/'.$filename;
+            $file->storeAs('temp', $filename, 'public');
+
+            OptimizeImageJob::dispatch(
+                tempPath: $tempPath,
+                originalName: $file->getClientOriginalName(),
+                mimeType: $file->getMimeType(),
+                group: $group,
+            );
+
+            $results[] = [
+                'temp_path' => $tempPath,
+                'original_name' => $file->getClientOriginalName(),
+            ];
+        }
+
+        return response()->json([
+            'success' => true,
+            'queued' => count($results),
+            'message' => count($results).' image(s) queued for optimization.',
+        ]);
     }
 
     private function getUploadedFile(Request $request): ?UploadedFile

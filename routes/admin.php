@@ -56,10 +56,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin']
     Route::put('subscribers/{subscriber}', [NewsletterSubscriberController::class, 'update'])->name('subscribers.update');
     Route::delete('subscribers/{subscriber}', [NewsletterSubscriberController::class, 'destroy'])->name('subscribers.destroy');
     Route::get('media', [MediaLibraryController::class, 'index'])->name('media.index');
-    Route::get('media/download/{path}', [MediaLibraryController::class, 'download'])->where('path', '.*')->name('media.download');
-    Route::delete('media', [MediaLibraryController::class, 'destroy'])->name('media.destroy');
+    Route::post('media', [MediaLibraryController::class, 'upload'])->name('media.upload');
+    Route::put('media/{mediaAsset}', [MediaLibraryController::class, 'update'])->name('media.update');
+    Route::delete('media/{mediaAsset}', [MediaLibraryController::class, 'destroy'])->name('media.destroy');
     Route::delete('media/bulk', [MediaLibraryController::class, 'bulkDestroy'])->name('media.bulk-destroy');
-    Route::put('media/rename', [MediaLibraryController::class, 'rename'])->name('media.rename');
 
     // Media Picker (reusable image library)
     Route::get('media-picker', [MediaPickerController::class, 'index'])->name('media-picker.index');

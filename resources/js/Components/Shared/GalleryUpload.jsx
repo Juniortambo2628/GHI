@@ -66,7 +66,7 @@ function getFileType(file) {
     return 'image';
 }
 
-export default function GalleryUpload({ eventId, images = [], onImagesChange }) {
+export default function GalleryUpload({ eventId, images = [], onImagesChange, queueMode = false }) {
     const { csrf_token: csrfToken } = usePage().props;
     const fileInputRef = useRef(null);
     const [items, setItems] = useState(() =>
@@ -82,6 +82,7 @@ export default function GalleryUpload({ eventId, images = [], onImagesChange }) 
         }))
     );
     const [dragOver, setDragOver] = useState(false);
+    const [queuedCount, setQueuedCount] = useState(0);
     const uploadQueueRef = useRef([]);
     const processingRef = useRef(false);
 
@@ -95,6 +96,32 @@ export default function GalleryUpload({ eventId, images = [], onImagesChange }) 
     }, [items]);
 
     const MAX_FILE_SIZE = 20 * 1024 * 1024;
+
+    const batchUpload = useCallback(async (newItems) => {
+        const formData = new FormData();
+        const imageFiles = newItems.filter(i => i.type === 'image');
+        imageFiles.forEach(item => formData.append('files[]', item.file));
+        formData.append('group', `event-${eventId || 'unassigned'}`);
+
+        newItems.forEach(item => setItems(prev => prev.map(i => i.id === item.id ? { ...i, status: 'uploading', progress: 50 } : i)));
+
+        try {
+            const res = await fetch('/upload/batch', {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': csrfToken || document.querySelector('meta[name="csrf-token"]')?.content || '', Accept: 'application/json' },
+                body: formData,
+            });
+            const payload = await res.json();
+            if (res.ok && payload?.success) {
+                setQueuedCount(prev => prev + payload.queued);
+                newItems.forEach(item => setItems(prev => prev.map(i => i.id === item.id ? { ...i, status: 'queued-bg', progress: 100 } : i)));
+            } else {
+                throw new Error(payload?.message || 'Batch upload failed');
+            }
+        } catch (err) {
+            newItems.forEach(item => setItems(prev => prev.map(i => i.id === item.id ? { ...i, status: 'error', error: err.message, progress: 0 } : i)));
+        }
+    }, [eventId, csrfToken]);
 
     const uploadFile = useCallback(async (item) => {
         const formData = new FormData();
@@ -167,11 +194,15 @@ export default function GalleryUpload({ eventId, images = [], onImagesChange }) 
 
         setItems(prev => {
             const updated = [...prev, ...newItems];
-            newItems.forEach(item => uploadQueueRef.current.push(item));
-            processQueue();
+            if (queueMode && newItems.length >= 5) {
+                batchUpload(newItems);
+            } else {
+                newItems.forEach(item => uploadQueueRef.current.push(item));
+                processQueue();
+            }
             return updated;
         });
-    }, [processQueue]);
+    }, [processQueue, batchUpload, queueMode]);
 
     const handleDrop = useCallback((e) => {
         e.preventDefault();
@@ -215,6 +246,7 @@ export default function GalleryUpload({ eventId, images = [], onImagesChange }) 
 
     const totalSize = items.reduce((sum, i) => sum + (i.file?.size || 0), 0);
     const uploading = items.some(i => i.status === 'uploading');
+    const bgQueued = items.filter(i => i.status === 'queued-bg').length;
     const errors = items.filter(i => i.status === 'error');
     const done = items.filter(i => i.status === 'done');
 
@@ -239,7 +271,7 @@ export default function GalleryUpload({ eventId, images = [], onImagesChange }) 
                 <div className="gallery-upload-text">
                     Drag &amp; drop images or videos here, or <strong>browse</strong>
                 </div>
-                <div className="gallery-upload-limit">Supports JPG, PNG, WebP, GIF, MP4, WebM, MOV. Max 100MB per file.</div>
+                <div className="gallery-upload-limit">Supports JPG, PNG, WebP, GIF, MP4, WebM, MOV. Max 20MB per file.</div>
             </div>
 
             {items.length > 0 && (
@@ -247,6 +279,7 @@ export default function GalleryUpload({ eventId, images = [], onImagesChange }) 
                     <div className="gallery-upload-summary">
                         <span><strong>{done.length}</strong> file{done.length !== 1 ? 's' : ''}</span>
                         {uploading && <span><i className="bi bi-arrow-repeat spin me-1"></i>Uploading...</span>}
+                        {bgQueued > 0 && <span className="text-info"><i className="bi bi-hourglass-split me-1"></i>{bgQueued} processing in background</span>}
                         {errors.length > 0 && <span className="text-danger"><i className="bi bi-exclamation-circle me-1"></i>{errors.length} failed</span>}
                         {totalSize > 0 && <span>{formatSize(totalSize)}</span>}
                     </div>
