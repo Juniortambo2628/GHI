@@ -40,13 +40,11 @@ export default function ImpactShow({ impactActivity }) {
                         )}
                     </>
                 }>
-                <div className="mb-4">
-                    {impactActivity.description}
-                </div>
-                {impactActivity.outcome_summary && (
+                <div className="mb-4" dangerouslySetInnerHTML={{ __html: sanitizeHtml(impactActivity.description || '') }} />
+                        {impactActivity.outcome_summary && (
                     <div className="mb-4 p-4 bg-light rounded">
                         <h4><i className="bi bi-check-circle text-success me-2"></i>Outcome Summary</h4>
-                        <p className="mb-0">{impactActivity.outcome_summary}</p>
+                        <div className="mb-0" dangerouslySetInnerHTML={{ __html: sanitizeHtml(impactActivity.outcome_summary) }} />
                     </div>
                 )}
                 {impactActivity.metric_type && (

@@ -36,7 +36,7 @@ function ChainBreadcrumb({ items }) {
     );
 }
 
-export default function RelatedChain({ currentType, cause, initiative, event, impactActivities = [], initiatives = [], events = [] }) {
+export default function RelatedChain({ currentType, cause, initiative, event, impactActivity, impactActivities = [], initiatives = [], events = [] }) {
     const sections = [];
 
     if (currentType === 'cause') {

@@ -10,11 +10,10 @@ import { Head, Link } from '@inertiajs/react';
 InitiativeShow.layout = page => <PublicLayout>{page}</PublicLayout>;
 
 export default function InitiativeShow({ initiative, events }) {
+    const causes = initiative.causes || [];
     return (
         <>
-            <Head>
-                <title>{initiative.title} - Global Harmony Initiative</title>
-            </Head>
+            <Head title={`${initiative.title} - Global Harmony Initiative`} />
 
             <ShowPageLayout title={initiative.title} section="initiatives" sectionLabel="Initiatives" sectionUrl="/initiatives" image={initiative.image}
                 sidebar={
@@ -23,22 +22,20 @@ export default function InitiativeShow({ initiative, events }) {
                         <ul className="list-unstyled">
                             <li className="mb-2"><strong>Category:</strong> {initiative.category}</li>
                             <li className="mb-2"><strong>Status:</strong> <StatusBadge status={initiative.status} /></li>
-                            {initiative.cause && initiative.cause.length > 0 && (
-                                <li className="mb-2"><strong>Causes:</strong> {initiative.cause.map(c => c.title).join(', ')}</li>
+                            {causes.length > 0 && (
+                                <li className="mb-2"><strong>Causes:</strong> {causes.map(c => c.title).join(', ')}</li>
                             )}
                             <li className="mb-2"><strong>Events:</strong> {events.length}</li>
                         </ul>
                     </div>
                 }>
-                <div className="mb-4">
-                    {initiative.description}
-                </div>
+                <div className="mb-4" dangerouslySetInnerHTML={{ __html: sanitizeHtml(initiative.description || '') }} />
                 {initiative.content && (
                     <div className="mb-4" dangerouslySetInnerHTML={{ __html: sanitizeHtml(initiative.content) }} />
                 )}
             </ShowPageLayout>
 
-            <RelatedChain currentType="initiative" cause={initiative.cause} events={events} />
+            <RelatedChain currentType="initiative" cause={causes} events={events} />
         </>
     );
 }

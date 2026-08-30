@@ -31,7 +31,7 @@ export default function EventShow({ event, impactActivities }) {
                                 {event.location && <li className="mb-2"><i className="bi bi-geo-alt me-2"></i>{event.location}</li>}
                                 {event.initiative && <li className="mb-2"><strong>Initiative:</strong> <Link href={`/initiatives/${event.initiative.slug}`}>{event.initiative.title}</Link></li>}
                                 {event.initiative?.causes && event.initiative.causes.length > 0 && (
-                                    <li className="mb-2"><strong>Cause{event.initiative.causes.length > 1 ? 's' : ''}:</strong> {event.initiative.causes.map(c => <Link key={c.id} href={`/causes/${c.slug}`} className="me-1">{c.title}</Link>).reduce((a, b) => [a, ', ', b])}</li>
+                                    <li className="mb-2"><strong>Cause{event.initiative.causes.length > 1 ? 's' : ''}:</strong> {event.initiative.causes.map(c => <Link key={c.id} href={`/causes/${c.slug}`} className="me-1">{c.title}</Link>)}</li>
                                 )}
                                 <li className="mb-2"><strong>Status:</strong> <StatusBadge status={event.status} /></li>
                             </ul>
@@ -47,9 +47,7 @@ export default function EventShow({ event, impactActivities }) {
                         )}
                     </>
                 }>
-                <div className="mb-4">
-                    {event.description}
-                </div>
+                <div className="mb-4" dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.description || '') }} />
                 {event.content && (
                     <div className="mb-4" dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.content) }} />
                 )}

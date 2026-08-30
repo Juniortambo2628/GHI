@@ -40,9 +40,6 @@ export default function StoryShow({ story }) {
                         </ul>
                     </div>
                 }>
-                {storyImage && (
-                    <FallbackImage src={mediaUrl(storyImage)} className="img-fluid rounded mb-4 w-100" alt={story.title || 'Story image'} />
-                )}
                 <div className="mb-4 story-content" dangerouslySetInnerHTML={{ __html: sanitizeHtml(story.content || '') }} />
             </ShowPageLayout>
         </>

@@ -1,4 +1,5 @@
 import PublicLayout from '../Layouts/PublicLayout';
+import sanitizeHtml from '../Components/Shared/sanitizeHtml';
 import mediaUrl from '../Components/Shared/mediaUrl';
 import FallbackImage from '../Components/Shared/FallbackImage';
 import StatusBadge from '../Components/Shared/StatusBadge';
@@ -11,9 +12,7 @@ CauseShow.layout = page => <PublicLayout>{page}</PublicLayout>;
 export default function CauseShow({ cause, initiatives }) {
     return (
         <>
-            <Head>
-                <title>{cause.title} - Global Harmony Initiative</title>
-            </Head>
+            <Head title={`${cause.title} - Global Harmony Initiative`} />
 
             <ShowPageLayout title={cause.title} section="causes" sectionLabel="Causes" sectionUrl="/causes" image={cause.image}
                 sidebar={
@@ -31,9 +30,7 @@ export default function CauseShow({ cause, initiatives }) {
                         <p className="fst-italic text-primary">"{cause.quote}"</p>
                     </blockquote>
                 )}
-                <div className="mb-4">
-                    {cause.description}
-                </div>
+                <div className="mb-4" dangerouslySetInnerHTML={{ __html: sanitizeHtml(cause.description || '') }} />
             </ShowPageLayout>
 
             <RelatedChain currentType="cause" initiatives={initiatives} />
