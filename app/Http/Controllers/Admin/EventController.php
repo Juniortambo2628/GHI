@@ -112,6 +112,25 @@ class EventController extends Controller
         return back()->with('success', 'Gallery images updated.');
     }
 
+    public function attachImage(Request $request, Event $event)
+    {
+        $validated = $request->validate([
+            'path' => 'required|string|max:255',
+            'type' => 'nullable|string|in:image,video',
+        ]);
+
+        $maxOrder = $event->images()->max('sort_order') ?? -1;
+
+        $image = EventImage::create([
+            'event_id' => $event->id,
+            'path' => $validated['path'],
+            'type' => $validated['type'] ?? 'image',
+            'sort_order' => $maxOrder + 1,
+        ]);
+
+        return response()->json(['success' => true, 'id' => $image->id, 'path' => $image->path]);
+    }
+
     public function destroy(Event $event)
     {
         $event->delete();

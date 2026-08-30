@@ -175,6 +175,23 @@ export function UploadProvider({ children }) {
             try {
                 const path = await uploadFile(batchId, item);
                 updateItem(batchId, itemId, { status: 'done', path, progress: 100 });
+
+                if (batch.eventId) {
+                    try {
+                        await fetch(`/admin/events/${batch.eventId}/images/attach`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': getCsrfToken(),
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest',
+                            },
+                            body: JSON.stringify({ path, type: item.type || 'image' }),
+                        });
+                    } catch {
+                        // non-fatal — image saved to storage, can be synced later via Update Event
+                    }
+                }
             } catch (err) {
                 updateItem(batchId, itemId, { status: 'error', error: err.message, progress: 0 });
             }

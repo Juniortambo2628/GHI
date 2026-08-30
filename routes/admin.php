@@ -34,6 +34,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin']
     // Events
     Route::resource('events', EventController::class)->parameters(['events' => 'event:id']);
     Route::post('events/{event:id}/images', [EventController::class, 'syncImages'])->name('events.images');
+    Route::post('events/{event:id}/images/attach', [EventController::class, 'attachImage'])->name('events.images.attach');
 
     // Impact Activities
     Route::resource('impact', ImpactController::class)->parameters(['impact' => 'impact:id']);
