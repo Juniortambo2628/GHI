@@ -69,6 +69,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/upload/document', [UploadController::class, 'document'])->name('upload.document');
     Route::post('/upload/media', [UploadController::class, 'media'])->name('upload.media');
     Route::post('/upload/batch', [UploadController::class, 'batch'])->name('upload.batch');
+    Route::post('/upload/chunk/init', [UploadController::class, 'chunkInit'])->name('upload.chunk.init');
+    Route::post('/upload/chunk', [UploadController::class, 'chunk'])->name('upload.chunk');
+    Route::post('/upload/chunk/complete', [UploadController::class, 'chunkComplete'])->name('upload.chunk.complete');
 });
 
 // Admin routes

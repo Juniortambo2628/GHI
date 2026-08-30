@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cause;
 use App\Models\Event;
+use App\Models\EventImage;
 use App\Models\ImpactActivity;
 use App\Models\Initiative;
 use App\Models\SiteSetting;
@@ -101,6 +102,23 @@ class HomeController extends Controller
         $randomQuote = $quotes[array_rand($quotes)] ?? ['quote' => '', 'author' => ''];
         $cmsSettings = SiteSetting::grouped(config('site_settings'));
 
+        // Videos from published events
+        $videos = EventImage::where('type', 'video')
+            ->whereHas('event', fn ($q) => $q->where('status', 'published'))
+            ->with('event')
+            ->latest()
+            ->limit(20)
+            ->get()
+            ->map(fn ($img) => [
+                'id' => $img->id,
+                'path' => $img->path,
+                'title' => $img->event?->title ?? 'Event Video',
+                'event_title' => $img->event?->title,
+                'event_id' => $img->event_id,
+                'event_date' => $img->event?->event_date,
+                'image' => $img->event?->image,
+            ]);
+
         return inertia('Home', [
             'initiatives' => $enrichedInitiatives,
             'events' => $enrichedEvents,
@@ -108,6 +126,7 @@ class HomeController extends Controller
             'impactStories' => $impactStories,
             'recentActivities' => $enrichedActivities,
             'galleryImages' => $allGalleryImages->values(),
+            'videos' => $videos,
             'causes' => $causes,
             'stats' => $stats,
             'counters' => $stats,

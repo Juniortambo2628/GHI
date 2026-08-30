@@ -161,6 +161,8 @@ jobs:
 
           # Ensure storage directories exist
           mkdir -p "${GHI_CORE}/storage/app/public"
+          mkdir -p "${GHI_CORE}/storage/app/public/images"
+          mkdir -p "${GHI_CORE}/storage/app/public/videos"
           mkdir -p "${GHI_CORE}/storage/app/private"
           mkdir -p "${GHI_CORE}/storage/framework/cache"
           mkdir -p "${GHI_CORE}/storage/framework/sessions"

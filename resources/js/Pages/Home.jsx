@@ -12,14 +12,16 @@ import mediaUrl from '../Components/Shared/mediaUrl';
 import FallbackImage from '../Components/Shared/FallbackImage';
 import stripHtml from '../Components/Shared/stripHtml';
 import GalleryLightbox from '../Components/Shared/GalleryLightbox';
+import VideoPlayer from '../Components/Shared/VideoPlayer';
 
 Home.layout = page => <PublicLayout>{page}</PublicLayout>;
 
-const defaultSectionOrder = ['hero', 'about', 'quote', 'foundation', 'objectives', 'counters', 'initiatives', 'events', 'stories', 'gallery', 'volunteer'];
+const defaultSectionOrder = ['hero', 'about', 'quote', 'foundation', 'objectives', 'counters', 'initiatives', 'events', 'videos', 'stories', 'gallery', 'volunteer'];
 
-export default function Home({ initiatives, events, stories, recentActivities, galleryImages = [], causes = [], counters, randomQuote, objectives, coreValues, heroSlides: configuredHeroSlides, sectionVisibility, sectionOrder: configuredOrder, settings = {} }) {
+export default function Home({ initiatives, events, stories, recentActivities, galleryImages = [], videos = [], causes = [], counters, randomQuote, objectives, coreValues, heroSlides: configuredHeroSlides, sectionVisibility, sectionOrder: configuredOrder, settings = {} }) {
     const carouselRef = useRef(null);
     const [galleryLightbox, setGalleryLightbox] = useState(null);
+    const [videoPlayer, setVideoPlayer] = useState(null);
     const sectionOrder = configuredOrder?.length === defaultSectionOrder.length ? configuredOrder : defaultSectionOrder;
 
     useEffect(() => {
@@ -289,6 +291,64 @@ export default function Home({ initiatives, events, stories, recentActivities, g
                     </>
                 )}
             </div>
+        </div>,
+
+        videos: <div key="videos" className="container-fluid py-5" style={{ background: '#0a0a2e' }}>
+            <div className="container">
+                <SectionHeader subtitle={settings.home_videos_subtitle || 'Watch & Learn'} title={settings.home_videos_title || 'Featured Videos'} description={settings.home_videos_description || 'Explore our work through video stories from communities across East Africa.'} light className="pb-5" />
+                {videos && videos.length > 0 ? (
+                    <div className="row g-3">
+                        {videos.slice(0, 6).map((video, idx) => (
+                            <div key={video.id || idx} className="col-12 col-md-6 col-lg-4">
+                                <div
+                                    onClick={() => setVideoPlayer({ index: idx })}
+                                    style={{ cursor: 'pointer', borderRadius: '12px', overflow: 'hidden', background: '#111', position: 'relative', transition: 'transform 0.2s' }}
+                                    onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
+                                    onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                                >
+                                    <div style={{ position: 'relative', paddingTop: '56.25%', background: '#000' }}>
+                                        {video.image ? (
+                                            <img src={mediaUrl(video.image)} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.6 }} />
+                                        ) : (
+                                            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#333' }}>
+                                                <i className="bi bi-film" style={{ fontSize: '48px' }}></i>
+                                            </div>
+                                        )}
+                                        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(241,184,41,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.4)' }}>
+                                                <i className="bi bi-play-fill" style={{ fontSize: '24px', color: '#000656', marginLeft: '3px' }}></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style={{ padding: '14px 16px' }}>
+                                        <div style={{ color: '#fff', fontWeight: 600, fontSize: '15px', marginBottom: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                            {video.title || video.event_title || 'Event Video'}
+                                        </div>
+                                        {video.event_date && (
+                                            <div style={{ color: '#aaa', fontSize: '12px' }}>
+                                                <i className="bi bi-calendar3 me-1"></i>
+                                                {new Date(video.event_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-center py-5">
+                        <i className="bi bi-camera-video" style={{ fontSize: '48px', color: '#333' }}></i>
+                        <p className="mt-3" style={{ color: '#888' }}>No videos available yet. Upload videos to your events to see them here.</p>
+                    </div>
+                )}
+            </div>
+            {videoPlayer !== null && videos[videoPlayer.index] && (
+                <VideoPlayer
+                    videos={videos}
+                    startIndex={videoPlayer.index}
+                    onClose={() => setVideoPlayer(null)}
+                />
+            )}
         </div>,
 
         stories: <div key="stories" className="container-fluid blog py-5">

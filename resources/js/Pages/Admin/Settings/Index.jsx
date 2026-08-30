@@ -17,6 +17,7 @@ const sectionLabels = {
     counters: 'Impact Counters',
     initiatives: 'Initiatives Grid',
     events: 'Events List',
+    videos: 'Videos',
     stories: 'Stories Grid',
     gallery: 'Activity Gallery',
     volunteer: 'Volunteer CTA',
@@ -409,6 +410,11 @@ export default function Index({ settings }) {
                                 { k: 'home_events_subtitle', l: 'Subtitle', type: 'text' },
                                 { k: 'home_events_title', l: 'Title', type: 'richtext' },
                                 { k: 'home_events_empty_message', l: 'Empty State Message', type: 'text' },
+                            ]},
+                            { key: 'videos', title: 'Videos Section', fields: [
+                                { k: 'home_videos_subtitle', l: 'Subtitle', type: 'text' },
+                                { k: 'home_videos_title', l: 'Title', type: 'text' },
+                                { k: 'home_videos_description', l: 'Description', type: 'richtext' },
                             ]},
                             { key: 'stories', title: 'Stories Section', fields: [
                                 { k: 'home_stories_subtitle', l: 'Subtitle', type: 'text' },

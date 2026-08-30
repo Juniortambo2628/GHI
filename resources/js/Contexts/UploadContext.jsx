@@ -4,15 +4,14 @@ const UploadContext = createContext(null);
 
 let batchCounter = 0;
 
+const CHUNK_THRESHOLD = 50 * 1024 * 1024; // 50MB — use chunked upload above this
+const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB per chunk
+
 export function UploadProvider({ children }) {
     const [batches, setBatches] = useState([]);
     const processingRef = useRef({});
 
     const getCsrfToken = () => document.querySelector('meta[name="csrf-token"]')?.content || '';
-
-    const updateBatch = useCallback((batchId, updates) => {
-        setBatches(prev => prev.map(b => b.id === batchId ? { ...b, ...updates } : b));
-    }, []);
 
     const updateItem = useCallback((batchId, itemId, updates) => {
         setBatches(prev => prev.map(b => {
@@ -28,7 +27,7 @@ export function UploadProvider({ children }) {
         setBatches(prev => prev.filter(b => b.id !== batchId));
     }, []);
 
-    const uploadFile = useCallback((batchId, item) => {
+    const uploadSmallFile = useCallback((batchId, item) => {
         return new Promise((resolve, reject) => {
             const formData = new FormData();
             formData.append('file', item.file);
@@ -37,7 +36,7 @@ export function UploadProvider({ children }) {
             xhr.upload.addEventListener('progress', (e) => {
                 if (e.lengthComputable) {
                     const pct = Math.round((e.loaded / e.total) * 100);
-                    updateItem(batchId, item.id, { progress: pct, status: 'uploading' });
+                    updateItem(batchId, item.id, { progress: pct });
                 }
             });
             xhr.addEventListener('load', () => {
@@ -60,6 +59,85 @@ export function UploadProvider({ children }) {
             xhr.send(formData);
         });
     }, [updateItem]);
+
+    const uploadChunkedFile = useCallback(async (batchId, item) => {
+        const file = item.file;
+        const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+        const csrf = getCsrfToken();
+
+        const initRes = await fetch('/upload/chunk/init', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrf,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+                filename: file.name,
+                mime_type: file.type,
+                total_chunks: totalChunks,
+                total_size: file.size,
+            }),
+        });
+        const initData = await initRes.json();
+        if (!initRes.ok || !initData?.success) {
+            throw new Error(initData?.message || 'Failed to init chunked upload');
+        }
+        const uploadId = initData.upload_id;
+
+        for (let i = 0; i < totalChunks; i++) {
+            const start = i * CHUNK_SIZE;
+            const end = Math.min(start + CHUNK_SIZE, file.size);
+            const chunk = file.slice(start, end);
+
+            const formData = new FormData();
+            formData.append('chunk', chunk, `chunk_${i}`);
+            formData.append('upload_id', uploadId);
+            formData.append('chunk_number', i);
+            formData.append('total_chunks', totalChunks);
+
+            const chunkRes = await fetch('/upload/chunk', {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' },
+                body: formData,
+            });
+            const chunkData = await chunkRes.json();
+            if (!chunkRes.ok || !chunkData?.success) {
+                throw new Error(chunkData?.message || `Chunk ${i} failed`);
+            }
+
+            const pct = Math.round(((i + 1) / totalChunks) * 100);
+            updateItem(batchId, item.id, { progress: pct });
+        }
+
+        const completeRes = await fetch('/upload/chunk/complete', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrf,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+                upload_id: uploadId,
+                filename: file.name,
+                mime_type: file.type,
+                total_chunks: totalChunks,
+            }),
+        });
+        const completeData = await completeRes.json();
+        if (!completeRes.ok || !completeData?.success) {
+            throw new Error(completeData?.message || 'Failed to assemble file');
+        }
+
+        return completeData.path;
+    }, [updateItem]);
+
+    const uploadFile = useCallback((batchId, item) => {
+        if (item.file.size > CHUNK_THRESHOLD) {
+            return uploadChunkedFile(batchId, item);
+        }
+        return uploadSmallFile(batchId, item);
+    }, [uploadSmallFile, uploadChunkedFile]);
 
     const processQueue = useCallback(async (batchId) => {
         if (processingRef.current[batchId]) return;
@@ -146,8 +224,6 @@ export function UploadProvider({ children }) {
     const retryItem = useCallback((batchId, itemId) => {
         setBatches(prev => prev.map(b => {
             if (b.id !== batchId) return b;
-            const item = b.items.find(i => i.id === itemId);
-            if (!item) return b;
             return {
                 ...b,
                 items: b.items.map(i => i.id === itemId ? { ...i, status: 'queued', progress: 0, error: null } : i),

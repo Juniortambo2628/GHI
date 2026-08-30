@@ -171,7 +171,7 @@ export default function GalleryUpload({ eventId, eventTitle, images = [], onImag
                 <div className="gallery-upload-text">
                     Drag &amp; drop images or videos here, or <strong>browse</strong>
                 </div>
-                <div className="gallery-upload-limit">Supports JPG, PNG, WebP, GIF, MP4, WebM, MOV. Max 20MB per file.</div>
+                <div className="gallery-upload-limit">Supports JPG, PNG, WebP, GIF, MP4, WebM, MOV. Videos up to 200MB (chunked upload).</div>
             </div>
 
             {items.length > 0 && (
