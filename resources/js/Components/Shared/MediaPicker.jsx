@@ -2,14 +2,14 @@ import { useState, useEffect, useCallback } from 'react';
 import { usePage } from '@inertiajs/react';
 import mediaUrl from './mediaUrl';
 
-export default function MediaPicker({ show, onClose, onSelect }) {
+export default function MediaPicker({ show, onClose, onSelect, multiSelect = false }) {
     const { csrf_token: csrfToken } = usePage().props;
     const [assets, setAssets] = useState([]);
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState('');
     const [page, setPage] = useState(1);
     const [lastPage, setLastPage] = useState(1);
-    const [selectedId, setSelectedId] = useState(null);
+    const [selectedIds, setSelectedIds] = useState([]);
 
     const fetchAssets = useCallback(async (p = 1, q = '') => {
         setLoading(true);
@@ -34,7 +34,7 @@ export default function MediaPicker({ show, onClose, onSelect }) {
             setAssets([]);
             setPage(1);
             setSearch('');
-            setSelectedId(null);
+            setSelectedIds([]);
             fetchAssets(1, '');
         }
     }, [show, fetchAssets]);
@@ -52,10 +52,25 @@ export default function MediaPicker({ show, onClose, onSelect }) {
         }
     };
 
+    const toggleSelection = (id) => {
+        if (multiSelect) {
+            setSelectedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+        } else {
+            setSelectedIds([id]);
+        }
+    };
+
     const handleSelect = () => {
-        const asset = assets.find(a => a.id === selectedId);
-        if (asset && onSelect) {
-            onSelect(asset.path);
+        if (multiSelect) {
+            const selectedAssets = assets.filter(a => selectedIds.includes(a.id));
+            if (selectedAssets.length > 0 && onSelect) {
+                onSelect(selectedAssets);
+            }
+        } else {
+            const asset = assets.find(a => selectedIds.includes(a.id));
+            if (asset && onSelect) {
+                onSelect(asset.path);
+            }
         }
         onClose();
     };
@@ -84,13 +99,13 @@ export default function MediaPicker({ show, onClose, onSelect }) {
                             {assets.map(asset => (
                                 <div key={asset.id} className="col-4 col-md-3 col-lg-2">
                                     <div
-                                        className={`media-picker-thumb position-relative ${selectedId === asset.id ? 'selected' : ''}`}
-                                        onClick={() => setSelectedId(asset.id)}
-                                        onDoubleClick={() => { onSelect(asset.path); onClose(); }}
-                                        style={{ cursor: 'pointer', aspectRatio: '1', overflow: 'hidden', borderRadius: '6px', border: selectedId === asset.id ? '3px solid var(--bs-primary)' : '3px solid transparent', transition: 'border-color 0.15s' }}
+                                        className={`media-picker-thumb position-relative ${selectedIds.includes(asset.id) ? 'selected' : ''}`}
+                                        onClick={() => toggleSelection(asset.id)}
+                                        onDoubleClick={() => { if (!multiSelect) { onSelect(asset.path); onClose(); } }}
+                                        style={{ cursor: 'pointer', aspectRatio: '1', overflow: 'hidden', borderRadius: '6px', border: selectedIds.includes(asset.id) ? '3px solid var(--bs-primary)' : '3px solid transparent', transition: 'border-color 0.15s' }}
                                     >
                                         <img src={mediaUrl(asset.path)} alt={asset.alt_text || asset.original_name || ''} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
-                                        {selectedId === asset.id && (
+                                        {selectedIds.includes(asset.id) && (
                                             <div className="position-absolute top-0 end-0 m-1">
                                                 <i className="bi bi-check-circle-fill text-primary fs-5"></i>
                                             </div>
@@ -109,8 +124,8 @@ export default function MediaPicker({ show, onClose, onSelect }) {
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-outline-secondary" onClick={onClose}>Cancel</button>
-                        <button type="button" className="btn btn-primary" onClick={handleSelect} disabled={!selectedId}>
-                            <i className="bi bi-check-lg me-1"></i>Select Image
+                        <button type="button" className="btn btn-primary" onClick={handleSelect} disabled={selectedIds.length === 0}>
+                            <i className="bi bi-check-lg me-1"></i>{multiSelect ? `Select Image${selectedIds.length !== 1 ? 's' : ''} (${selectedIds.length})` : 'Select Image'}
                         </button>
                     </div>
                 </div>

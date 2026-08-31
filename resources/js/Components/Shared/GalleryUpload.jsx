@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useUploads } from '../../Contexts/UploadContext';
 import mediaUrl from './mediaUrl';
+import MediaPicker from './MediaPicker';
 
 function formatSize(bytes) {
     if (bytes < 1024) return bytes + ' B';
@@ -69,6 +70,26 @@ export default function GalleryUpload({ eventId, eventTitle, images = [], onImag
         }))
     );
     const [dragOver, setDragOver] = useState(false);
+    const [showMediaPicker, setShowMediaPicker] = useState(false);
+
+    const handleMediaSelect = useCallback((selectedAssets) => {
+        if (!selectedAssets || selectedAssets.length === 0) return;
+        
+        setItems(prev => {
+            const currentCount = prev.length;
+            const newItems = selectedAssets.map((asset, idx) => ({
+                id: 'library-' + asset.id + '-' + Date.now() + idx,
+                preview: mediaUrl(asset.path),
+                status: 'done',
+                path: asset.path,
+                type: (asset.mime_type && asset.mime_type.startsWith('video/')) || (asset.original_name && videoTypes.includes(asset.original_name.split('.').pop()?.toLowerCase())) ? 'video' : 'image',
+                sort_order: currentCount + idx,
+                file: null,
+            }));
+            
+            return [...prev, ...newItems];
+        });
+    }, []);
 
     const eventBatches = batches.filter(b => b.eventId === eventId);
     const bgItems = eventBatches.flatMap(b => b.items.filter(i => i.status === 'done' || i.status === 'uploading' || i.status === 'queued'));
@@ -172,6 +193,11 @@ export default function GalleryUpload({ eventId, eventTitle, images = [], onImag
                     Drag &amp; drop images or videos here, or <strong>browse</strong>
                 </div>
                 <div className="gallery-upload-limit">Supports JPG, PNG, WebP, GIF, MP4, WebM, MOV. Videos up to 200MB (chunked upload).</div>
+                <div className="mt-3">
+                    <button type="button" className="btn btn-sm btn-outline-primary" onClick={(e) => { e.stopPropagation(); setShowMediaPicker(true); }}>
+                        <i className="bi bi-images me-1"></i>Select from Media Library
+                    </button>
+                </div>
             </div>
 
             {items.length > 0 && (
@@ -196,6 +222,13 @@ export default function GalleryUpload({ eventId, eventTitle, images = [], onImag
                     </div>
                 </>
             )}
+
+            <MediaPicker 
+                show={showMediaPicker} 
+                onClose={() => setShowMediaPicker(false)} 
+                onSelect={handleMediaSelect} 
+                multiSelect={true} 
+            />
         </div>
     );
 }
