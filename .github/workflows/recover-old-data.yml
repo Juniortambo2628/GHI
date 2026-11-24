@@ -1,0 +1,106 @@
+# One-off: pull the production database + uploaded images off the old
+# (suspended) host before it is decommissioned. Uses the SSH_* secrets the
+# old cPanel deploy used. Run manually from the Actions tab.
+#
+# Produces the `old-host-data` artifact:
+#   ghi-prod-dump.sql     — mysqldump of the production DB (schema + data)
+#   ghi-uploads.tar.gz    — storage/app/public from GHI-core and GHI-shared
+name: Recover old-host data
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Configure SSH
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "${SSH_PORT:-22}" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          cat > ~/.ssh/config <<CFG
+          Host oldhost
+            HostName ${SSH_HOST}
+            Port ${SSH_PORT:-22}
+            User ${SSH_USER}
+            IdentityFile ~/.ssh/deploy_key
+            IdentitiesOnly yes
+            StrictHostKeyChecking yes
+            ServerAliveInterval 30
+          CFG
+
+      - name: Dump database and pack uploads
+        run: |
+          ssh oldhost 'bash -s' << 'REMOTE'
+          set -uo pipefail
+          cd "$HOME"
+
+          echo "== looking for .env =="
+          ENVF=""
+          for f in "$HOME/GHI-shared/.env" "$HOME/GHI-core/.env"; do
+            [ -f "$f" ] && ENVF="$f" && break
+          done
+          [ -n "$ENVF" ] || { echo "FATAL: no .env found in GHI-shared/ or GHI-core/"; exit 1; }
+          echo "using $ENVF"
+
+          get() { sed -n "s/^$1=//p" "$ENVF" | head -1 | tr -d '"\r' | sed "s/^['\"]//;s/['\"]$//"; }
+          DB_HOST="$(get DB_HOST)";     DB_HOST="${DB_HOST:-127.0.0.1}"
+          DB_PORT="$(get DB_PORT)";     DB_PORT="${DB_PORT:-3306}"
+          DB_DATABASE="$(get DB_DATABASE)"
+          DB_USERNAME="$(get DB_USERNAME)"
+          DB_PASSWORD="$(get DB_PASSWORD)"
+          [ -n "$DB_DATABASE" ] && [ -n "$DB_USERNAME" ] || { echo "FATAL: could not parse DB creds from $ENVF"; exit 1; }
+          echo "dumping $DB_USERNAME@$DB_HOST:$DB_PORT/$DB_DATABASE"
+
+          export MYSQL_PWD="$DB_PASSWORD"
+          mysqldump -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USERNAME" \
+            --single-transaction --routines --triggers --no-tablespaces \
+            "$DB_DATABASE" > /tmp/ghi-prod-dump.sql
+          echo "dump: $(wc -c < /tmp/ghi-prod-dump.sql) bytes, $(grep -c '^CREATE TABLE' /tmp/ghi-prod-dump.sql) tables"
+
+          echo "== packing uploads =="
+          DIRS=""
+          for d in "$HOME/GHI-core/storage/app/public" "$HOME/GHI-shared/storage/app/public"; do
+            [ -d "$d" ] && DIRS="$DIRS $d"
+          done
+          [ -n "$DIRS" ] || { echo "FATAL: no storage/app/public dirs found"; exit 1; }
+          tar czf /tmp/ghi-uploads.tar.gz $DIRS
+          echo "uploads: $(du -h /tmp/ghi-uploads.tar.gz | cut -f1), $(tar tzf /tmp/ghi-uploads.tar.gz | grep -c 'images/' || true) image paths"
+          REMOTE
+
+      - name: Download to runner
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          scp -P "${SSH_PORT:-22}" -i ~/.ssh/deploy_key \
+            "${SSH_USER}@${SSH_HOST}:/tmp/ghi-prod-dump.sql" .
+          scp -P "${SSH_PORT:-22}" -i ~/.ssh/deploy_key \
+            "${SSH_USER}@${SSH_HOST}:/tmp/ghi-uploads.tar.gz" .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: old-host-data
+          path: |
+            ghi-prod-dump.sql
+            ghi-uploads.tar.gz
+          retention-days: 7
+          if-no-files-found: error
+
+      - name: Clean up remote temp files
+        if: always()
+        run: ssh oldhost 'rm -f /tmp/ghi-prod-dump.sql /tmp/ghi-uploads.tar.gz' || true
