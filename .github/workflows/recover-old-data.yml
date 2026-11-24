@@ -26,14 +26,17 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          echo "HOST=${SSH_HOST} PORT=${SSH_PORT} USER=${SSH_USER}"
+          # Booleans only — GitHub masks the raw secret values in logs.
+          [ "$SSH_HOST" = "54.37.142.31" ] && echo "HOST is 54.37.142.31" || echo "HOST is NOT 54.37.142.31 (length ${#SSH_HOST})"
+          [ "$SSH_PORT" = "1624" ] && echo "PORT is 1624" || echo "PORT is NOT 1624 (length ${#SSH_PORT})"
+          [ "$SSH_USER" = "jhoffkau" ] && echo "USER is jhoffkau" || echo "USER is NOT jhoffkau (length ${#SSH_USER})"
           printf '%s\n' "$SSH_PRIVATE_KEY" > /tmp/k
-          echo "key header: $(head -1 /tmp/k)"
+          chmod 600 /tmp/k
           if ssh-keygen -y -f /tmp/k > /tmp/k.pub 2>/tmp/k.err; then
-            echo "derived pubkey: $(awk '{print $1, substr($2,1,20)\"...\"}' /tmp/k.pub)"
-            echo "fingerprint: $(ssh-keygen -lf /tmp/k.pub)"
+            echo "key parses OK, fingerprint: $(ssh-keygen -lf /tmp/k.pub | awk '{print $2}')"
+            echo "pubkey (safe): $(awk '{print $1, $2}' /tmp/k.pub | cut -c1-60)..."
           else
-            echo "KEY PARSE FAILED: $(cat /tmp/k.err)"
+            echo "KEY PARSE FAILED: $(head -3 /tmp/k.err)"
           fi
 
       - name: Configure SSH
